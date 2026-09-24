@@ -9,7 +9,9 @@
     "test": "vitest run",
     "build": "tsc --noEmit -p tsconfig.json"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@composio/core": "0.21.0"
+  },
   "devDependencies": {
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
