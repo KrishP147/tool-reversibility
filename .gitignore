@@ -1,0 +1,11 @@
+node_modules/
+.next/
+dist/
+.env
+.env.*
+!.env.example
+fixtures/catalog/*/
+!fixtures/catalog/trimmed/
+*.db
+.turbo/
+coverage/
