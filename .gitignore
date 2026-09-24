@@ -9,3 +9,6 @@ fixtures/catalog/*/
 *.db
 .turbo/
 coverage/
+*.tsbuildinfo
+next-env.d.ts
+.pnpm-store/
