@@ -62,7 +62,7 @@ on TS dashboard/SDK/docs work, and the side-quest PRs land in `ts/packages/*`. e
 - **Compare/report.** For each tool, record the rule class, LLM class, agreement, hints, tier, and `GAP` = (both say irreversible) ∧
   ¬destructiveHint. REPORT.md holds totals, a confusion matrix, per-toolkit tables, the top-50 gaps and a disagreement sample.
   The header of every report is stamped with date, commit hash, SDK version, model id, prompt version and catalog manifest hash.
-- CLI: `pnpm audit fetch|classify|report|all [--toolkits gmail,slack] [--offline]`.
+- CLI: `pnpm audit:cli fetch|classify|report|all [--toolkits gmail,slack] [--offline]` (D17; `pnpm audit` is a pnpm builtin).
 
 ### 3b. `apps/inbox`: the approval inbox for "ask" actions (Zephyr's review UX, rebuilt on Sessions)
 - **List view.** Toolkit logo, slug, reversibility badge (irreversible red, compensable amber, reversible green),
@@ -165,3 +165,5 @@ A ready-to-paste Composio feature-request issue. **Problem:** the hints describe
 - D14 #4571: TypeScript first; Python only if the TS PR is acked by a maintainer.
 - D15 Branches: `krish/issue-N` (hub convention).
 - D16 Replit deploy (P4) is issue 7; `.replit` keys must be verified against docs.replit.com before commit. Replit deploy itself may cost money → user approval before deploying.
+- D17 (2026-09-24, #1) CLI entry is root script `pnpm audit:cli <cmd>` (= `pnpm --filter audit start -- <cmd>`). `pnpm audit` is a pnpm builtin (security audit) and shadows any root script named `audit`; §3a CLI line updated.
+- D18 (2026-09-24, #9, verifier on user's behalf) Side-quest fork branch `krish/4571-google-session-parity` stays local-only (`C:\Users\User\_worktrees\composio`) until a maintainer acks the #4571 comment; pushing is a human step per `side-quests/README.md`. Amends §6 item 9 "Done when: branches are pushed to the fork" → drafts in `side-quests/*.md` + local checks pass; push after ack. Why: Composio CONTRIBUTING is issue-first; an unacked public branch/PR is premature.
