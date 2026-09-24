@@ -10,7 +10,7 @@ Full scaffold per `skilleddocs/plan.md` §6 item 1. Commits, oldest to newest:
 
 1. `3843773` chore: root tooling — pnpm-workspace.yaml, tsconfig.base.json, eslint.config.mjs
    (flat, typescript-eslint), .prettierrc/.prettierignore, vitest.workspace.ts, root package.json
-   (`packageManager: pnpm@10.28.1`, `engines.node >=22`), `.npmrc` (`shamefully-hoist=true` — see
+   (`packageManager: pnpm@10.28.1`, `engines.node >=22`), `.npmrc` (later removed, see
    Deviations), `.nvmrc` = 22, pnpm-lock.yaml.
 2. `fb896b9` feat: `packages/audit` — tsx CLI, pure `parseArgs`/`buildProgram` in `src/program.ts`
    (unit-tested, 7 vitest cases), `fetch|classify|report|all` stubs print `"<cmd>: not implemented"`,
@@ -55,7 +55,7 @@ to the base commit (`git diff --stat` against them is empty).
   `parseArgs` filter out any literal `"--"` token from argv before parsing (see
   `packages/audit/src/program.ts`, with a regression test for it). Without this fix,
   `pnpm --filter audit start -- fetch` would print help instead of "fetch: not implemented".
-- **Added `.npmrc` with `shamefully-hoist=true`.** Not explicitly requested, but needed for
+- **(Reverted by manager review: `.npmrc` removed, pipeline verified green with default strict isolation; redundant `@typescript-eslint/{parser,eslint-plugin}` devDeps dropped.)** Originally added `.npmrc` with `shamefully-hoist=true`. Not explicitly requested, but needed for
   predictable module/bin resolution across the two packages without hand-duplicating every
   dev-tool in every package.json. Verified working end to end (clean install + full pipeline).
   If a future session wants strict pnpm isolation instead, each package's `devDependencies` would
@@ -83,7 +83,7 @@ to the base commit (`git diff --stat` against them is empty).
 ## Repro / key files
 
 - Root: `package.json`, `pnpm-workspace.yaml`, `tsconfig.base.json`, `eslint.config.mjs`,
-  `.prettierrc`, `.prettierignore`, `vitest.workspace.ts`, `.npmrc`, `.nvmrc`.
+  `.prettierrc`, `.prettierignore`, `vitest.workspace.ts`, `.nvmrc`.
 - `packages/audit/src/{cli.ts,program.ts,program.test.ts}`.
 - `apps/inbox/app/{layout.tsx,page.tsx,globals.css}`, `apps/inbox/lib/{mode.ts,mode.test.ts}`.
 - `.github/workflows/ci.yml`.
