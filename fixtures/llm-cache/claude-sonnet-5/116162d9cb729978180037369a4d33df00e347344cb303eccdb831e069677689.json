@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "116162d9cb729978180037369a4d33df00e347344cb303eccdb831e069677689",
+  "slug": "NOTION_CREATE_VIEW_QUERY",
+  "provenance": "recorded",
+  "output": {
+    "slug": "NOTION_CREATE_VIEW_QUERY",
+    "class": "compensable",
+    "inverse_tool": "NOTION_DELETE_VIEW_QUERY",
+    "rationale": "Synthetic fixture, not model output: verb CREATE maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb CREATE maps to compensable.",
+      "inverse_tool: NOTION_DELETE_VIEW_QUERY"
+    ]
+  }
+}

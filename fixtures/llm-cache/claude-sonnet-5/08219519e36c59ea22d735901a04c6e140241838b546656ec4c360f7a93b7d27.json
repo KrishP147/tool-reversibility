@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "08219519e36c59ea22d735901a04c6e140241838b546656ec4c360f7a93b7d27",
+  "slug": "NOTION_ADD_MULTIPLE_PAGE_CONTENT",
+  "provenance": "recorded",
+  "output": {
+    "slug": "NOTION_ADD_MULTIPLE_PAGE_CONTENT",
+    "class": "compensable",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb ADD maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb ADD maps to compensable."
+    ]
+  }
+}

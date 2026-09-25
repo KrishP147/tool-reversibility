@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "f5811a3df0ec6ec6d0fd0f999375e5f221af61fb4eab2d3689b7acc2d9d10eb6",
+  "slug": "NOTION_DELETE_BLOCK",
+  "provenance": "recorded",
+  "output": {
+    "slug": "NOTION_DELETE_BLOCK",
+    "class": "irreversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb DELETE maps to irreversible."
+  },
+  "result": {
+    "class": "irreversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb DELETE maps to irreversible."
+    ]
+  }
+}

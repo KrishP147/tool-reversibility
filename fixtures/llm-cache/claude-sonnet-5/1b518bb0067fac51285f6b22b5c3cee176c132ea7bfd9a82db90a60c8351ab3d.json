@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "1b518bb0067fac51285f6b22b5c3cee176c132ea7bfd9a82db90a60c8351ab3d",
+  "slug": "SLACK_ASSISTANT_SEARCH_CONTEXT",
+  "provenance": "recorded",
+  "output": {
+    "slug": "SLACK_ASSISTANT_SEARCH_CONTEXT",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb SEARCH maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb SEARCH maps to reversible."
+    ]
+  }
+}

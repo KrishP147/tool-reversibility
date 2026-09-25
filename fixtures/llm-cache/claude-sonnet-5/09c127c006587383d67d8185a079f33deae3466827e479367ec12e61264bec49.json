@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "09c127c006587383d67d8185a079f33deae3466827e479367ec12e61264bec49",
+  "slug": "GITHUB_LIST_ORGANIZATION_CODESPACES_SECRETS",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GITHUB_LIST_ORGANIZATION_CODESPACES_SECRETS",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb LIST maps to reversible."
+    ]
+  }
+}

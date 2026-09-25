@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "76b8c6b0e40c47c1a633f556fbbe41165c8dc2167654b0973fb2ef2b2b1ee175",
+  "slug": "SLACK_GET_APP_PERMISSION_SCOPES",
+  "provenance": "recorded",
+  "output": {
+    "slug": "SLACK_GET_APP_PERMISSION_SCOPES",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb GET maps to reversible."
+    ]
+  }
+}

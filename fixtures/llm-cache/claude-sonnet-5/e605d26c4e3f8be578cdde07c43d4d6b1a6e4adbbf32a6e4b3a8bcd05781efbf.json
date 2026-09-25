@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "e605d26c4e3f8be578cdde07c43d4d6b1a6e4adbbf32a6e4b3a8bcd05781efbf",
+  "slug": "NOTION_RETRIEVE_COMMENT",
+  "provenance": "recorded",
+  "output": {
+    "slug": "NOTION_RETRIEVE_COMMENT",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb RETRIEVE maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb RETRIEVE maps to reversible."
+    ]
+  }
+}

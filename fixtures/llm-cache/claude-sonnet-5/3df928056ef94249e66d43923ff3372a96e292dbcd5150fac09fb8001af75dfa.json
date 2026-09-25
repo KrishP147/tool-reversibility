@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "3df928056ef94249e66d43923ff3372a96e292dbcd5150fac09fb8001af75dfa",
+  "slug": "GOOGLECALENDAR_QUICK_ADD",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GOOGLECALENDAR_QUICK_ADD",
+    "class": "compensable",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb QUICK maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb QUICK maps to compensable."
+    ]
+  }
+}

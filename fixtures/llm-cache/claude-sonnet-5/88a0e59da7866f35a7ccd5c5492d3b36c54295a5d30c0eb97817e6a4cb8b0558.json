@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "88a0e59da7866f35a7ccd5c5492d3b36c54295a5d30c0eb97817e6a4cb8b0558",
+  "slug": "GMAIL_REPLY_TO_THREAD",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GMAIL_REPLY_TO_THREAD",
+    "class": "irreversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb REPLY maps to irreversible."
+  },
+  "result": {
+    "class": "irreversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb REPLY maps to irreversible."
+    ]
+  }
+}

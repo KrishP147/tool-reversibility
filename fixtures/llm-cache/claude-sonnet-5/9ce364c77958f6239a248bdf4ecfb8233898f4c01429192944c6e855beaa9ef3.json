@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "9ce364c77958f6239a248bdf4ecfb8233898f4c01429192944c6e855beaa9ef3",
+  "slug": "GMAIL_STOP_WATCH",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GMAIL_STOP_WATCH",
+    "class": "unknown",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb none maps to unknown."
+  },
+  "result": {
+    "class": "unknown",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb none maps to unknown."
+    ]
+  }
+}

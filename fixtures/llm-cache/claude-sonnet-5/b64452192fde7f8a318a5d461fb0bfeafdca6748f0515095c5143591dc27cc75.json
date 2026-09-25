@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "b64452192fde7f8a318a5d461fb0bfeafdca6748f0515095c5143591dc27cc75",
+  "slug": "GITHUB_MAP_A_COMMIT_AUTHOR",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GITHUB_MAP_A_COMMIT_AUTHOR",
+    "class": "unknown",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb none maps to unknown."
+  },
+  "result": {
+    "class": "unknown",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb none maps to unknown."
+    ]
+  }
+}

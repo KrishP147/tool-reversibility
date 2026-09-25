@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "3f13e971fa0e48e68ed814cca6cf6451a4d7cd170db9e61ff81d1c862a39efbd",
+  "slug": "NOTION_LIST_DATA_SOURCE_TEMPLATES",
+  "provenance": "recorded",
+  "output": {
+    "slug": "NOTION_LIST_DATA_SOURCE_TEMPLATES",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb LIST maps to reversible."
+    ]
+  }
+}

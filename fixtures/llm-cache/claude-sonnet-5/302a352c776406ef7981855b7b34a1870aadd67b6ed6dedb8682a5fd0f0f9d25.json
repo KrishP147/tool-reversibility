@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "302a352c776406ef7981855b7b34a1870aadd67b6ed6dedb8682a5fd0f0f9d25",
+  "slug": "GITHUB_UPDATE_A_CODE_SCANNING_ALERT",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GITHUB_UPDATE_A_CODE_SCANNING_ALERT",
+    "class": "compensable",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb UPDATE maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb UPDATE maps to compensable."
+    ]
+  }
+}

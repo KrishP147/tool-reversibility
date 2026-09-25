@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "6be52e94229bc146dc0c373f99e7b9cfd2c121183a09113d5b9a675d2d84ab61",
+  "slug": "GMAIL_FETCH_EMAILS",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GMAIL_FETCH_EMAILS",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb FETCH maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb FETCH maps to reversible."
+    ]
+  }
+}

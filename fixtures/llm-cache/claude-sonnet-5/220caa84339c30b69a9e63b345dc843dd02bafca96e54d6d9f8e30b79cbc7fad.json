@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "220caa84339c30b69a9e63b345dc843dd02bafca96e54d6d9f8e30b79cbc7fad",
+  "slug": "SLACK_GET_WORKSPACE_CONNECTIONS_FOR_CHANNEL",
+  "provenance": "recorded",
+  "output": {
+    "slug": "SLACK_GET_WORKSPACE_CONNECTIONS_FOR_CHANNEL",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb GET maps to reversible."
+    ]
+  }
+}

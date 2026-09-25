@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "de4703790781d2bb30d70592247da56991b2803d9b335fd607e9d98119c3f804",
+  "slug": "GITHUB_LIST_REACTIONS_FOR_A_TEAM_DISCUSSION",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GITHUB_LIST_REACTIONS_FOR_A_TEAM_DISCUSSION",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb LIST maps to reversible."
+    ]
+  }
+}

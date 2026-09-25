@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "6bbdb404ec9e4c38ef4a90c2f616138ee8a71b8a6d2da1ecbe5a10728ff58d9c",
+  "slug": "GITHUB_ABORT_REPOSITORY_MIGRATION",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GITHUB_ABORT_REPOSITORY_MIGRATION",
+    "class": "unknown",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb none maps to unknown."
+  },
+  "result": {
+    "class": "unknown",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb none maps to unknown."
+    ]
+  }
+}

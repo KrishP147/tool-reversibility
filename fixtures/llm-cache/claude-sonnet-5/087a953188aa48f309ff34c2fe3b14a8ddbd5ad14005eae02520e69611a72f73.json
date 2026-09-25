@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "087a953188aa48f309ff34c2fe3b14a8ddbd5ad14005eae02520e69611a72f73",
+  "slug": "SLACK_LIST_IDP_GROUPS_LINKED_TO_CHANNEL",
+  "provenance": "recorded",
+  "output": {
+    "slug": "SLACK_LIST_IDP_GROUPS_LINKED_TO_CHANNEL",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb LIST maps to reversible."
+    ]
+  }
+}

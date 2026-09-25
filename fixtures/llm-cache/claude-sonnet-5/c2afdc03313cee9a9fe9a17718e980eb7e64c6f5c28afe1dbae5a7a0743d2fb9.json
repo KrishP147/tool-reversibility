@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "c2afdc03313cee9a9fe9a17718e980eb7e64c6f5c28afe1dbae5a7a0743d2fb9",
+  "slug": "GITHUB_ENCRYPT_AND_UPDATE_DEV_SECRET",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GITHUB_ENCRYPT_AND_UPDATE_DEV_SECRET",
+    "class": "compensable",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb ENCRYPT maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb ENCRYPT maps to compensable."
+    ]
+  }
+}

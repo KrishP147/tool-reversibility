@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "813d4a298749efb1f708e1dad2c40ed3edb9d78cf7630f8e2e2038fce4cfd984",
+  "slug": "SLACK_CHAT_POST_MESSAGE",
+  "provenance": "recorded",
+  "output": {
+    "slug": "SLACK_CHAT_POST_MESSAGE",
+    "class": "irreversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb POST maps to irreversible."
+  },
+  "result": {
+    "class": "irreversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb POST maps to irreversible."
+    ]
+  }
+}

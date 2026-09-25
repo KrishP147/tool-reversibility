@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "dd63b52d4fe098ac996196709a631f6e97ea0db4dd7f12dbcf43c982a6b7927c",
+  "slug": "SLACK_UPDATE_CALL_INFO",
+  "provenance": "recorded",
+  "output": {
+    "slug": "SLACK_UPDATE_CALL_INFO",
+    "class": "compensable",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb UPDATE maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb UPDATE maps to compensable."
+    ]
+  }
+}

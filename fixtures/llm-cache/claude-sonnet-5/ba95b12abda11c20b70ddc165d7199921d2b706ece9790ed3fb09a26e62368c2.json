@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "ba95b12abda11c20b70ddc165d7199921d2b706ece9790ed3fb09a26e62368c2",
+  "slug": "SLACK_ARCHIVE_CONVERSATION",
+  "provenance": "recorded",
+  "output": {
+    "slug": "SLACK_ARCHIVE_CONVERSATION",
+    "class": "compensable",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb ARCHIVE maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb ARCHIVE maps to compensable."
+    ]
+  }
+}

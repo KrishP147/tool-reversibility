@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "757ac182a1bc79b7c89c12be52fbdae54f104dcd7c82117a36d97d5a88150ed8",
+  "slug": "SLACK_SET_USER_PRESENCE",
+  "provenance": "recorded",
+  "output": {
+    "slug": "SLACK_SET_USER_PRESENCE",
+    "class": "compensable",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb SET maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb SET maps to compensable."
+    ]
+  }
+}

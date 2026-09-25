@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "16941794ff5164b807bea219fd770da3a902032b9ac03b54438c51d8307ad463",
+  "slug": "GMAIL_PATCH_SEND_AS",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GMAIL_PATCH_SEND_AS",
+    "class": "compensable",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb PATCH maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb PATCH maps to compensable."
+    ]
+  }
+}

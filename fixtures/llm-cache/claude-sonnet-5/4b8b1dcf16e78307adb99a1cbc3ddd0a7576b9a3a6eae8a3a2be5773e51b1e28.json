@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "4b8b1dcf16e78307adb99a1cbc3ddd0a7576b9a3a6eae8a3a2be5773e51b1e28",
+  "slug": "GMAIL_FORWARD_MESSAGE",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GMAIL_FORWARD_MESSAGE",
+    "class": "irreversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb FORWARD maps to irreversible."
+  },
+  "result": {
+    "class": "irreversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb FORWARD maps to irreversible."
+    ]
+  }
+}
