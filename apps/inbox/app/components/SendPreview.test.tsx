@@ -22,6 +22,17 @@ describe("SendPreview", () => {
     expect(screen.getByTestId("send-preview-channel")).toBeTruthy();
   });
 
+  it("reads Composio GMAIL_SEND_EMAIL field names (recipient_email)", () => {
+    render(<SendPreview payload={{ recipient_email: "ops@example.com", subject: "Hi" }} />);
+    expect(screen.getByText("ops@example.com")).toBeTruthy();
+    expect(screen.getByTestId("send-preview-email")).toBeTruthy();
+  });
+
+  it("reads Composio SLACK_SEND_MESSAGE field names (markdown_text)", () => {
+    render(<SendPreview payload={{ channel: "#ops", markdown_text: "Shipped" }} />);
+    expect(screen.getByText("Shipped")).toBeTruthy();
+  });
+
   it("falls back to raw JSON for an unrecognized shape", () => {
     render(<SendPreview payload={{ weird: "shape" }} />);
     expect(screen.getByTestId("send-preview-raw").textContent).toContain("weird");

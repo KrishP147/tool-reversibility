@@ -1,13 +1,13 @@
 {
   "id": "003-notion-delete-page",
-  "slug": "NOTION_DELETE_PAGE",
+  "slug": "NOTION_ARCHIVE_NOTION_PAGE",
   "toolkit": "notion",
   "kind": "delete",
   "payload": {
     "page_id": "a1b2c3d4-e5f6-4788-9a0b-1c2d3e4f5a6b",
-    "title": "Q3 planning notes"
+    "archive": true
   },
   "illustrative": true,
-  "note": "Illustrative fixture, not a real Composio catalog entry (fixtures/catalog/ lands with issue #2). Slug/shape modeled on Notion's page-delete action; classifiers disagree on whether Notion's trash makes this compensable (see report entry).",
+  "note": "Slug and payload field names match the real Composio catalog snapshot (2026-09-24, see fixtures/catalog/); payload values are illustrative. The catalog has no NOTION_DELETE_PAGE; archive (moves the page to trash) is Notion's delete path. Classifiers disagree on reversible vs compensable (see stub report entry).",
   "createdAt": "2026-09-24T09:10:00.000Z"
 }

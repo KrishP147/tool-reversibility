@@ -1,6 +1,6 @@
 {
   "stub": true,
-  "note": "STUB report bundled with apps/inbox. These are illustrative classifications for demo fixtures only — not output from a real Composio catalog run (packages/audit, issue #5). No counts, percentages, or catalog totals here are real. Once reports/report.json exists at the repo root, the app reads that instead and this file is unused.",
+  "note": "STUB report bundled with apps/inbox. These are demo entries for the pending fixtures. Slugs, hints (from real catalog tags, D21) and ruleClass (rules classifier on the 2026-09-24 snapshot) are real; llmClass and reasons are illustrative — not output from a real Composio catalog run (packages/audit, issue #5). No counts, percentages, or catalog totals here are real. Once reports/report.json exists at the repo root, the app reads that instead and this file is unused.",
   "tools": [
     {
       "slug": "GMAIL_SEND_EMAIL",
@@ -37,7 +37,7 @@
         "openWorldHint": true,
         "createHint": true,
         "updateHint": false,
-        "important": false
+        "important": true
       },
       "tier": "Write",
       "tierSource": "derived",
@@ -47,7 +47,7 @@
       ]
     },
     {
-      "slug": "GITHUB_UPDATE_ISSUE",
+      "slug": "GITHUB_UPDATE_AN_ISSUE",
       "toolkit": "github",
       "ruleClass": "compensable",
       "llmClass": "compensable",
@@ -55,7 +55,7 @@
       "hints": {
         "readOnlyHint": false,
         "destructiveHint": false,
-        "idempotentHint": true,
+        "idempotentHint": false,
         "openWorldHint": true,
         "createHint": false,
         "updateHint": true,
@@ -67,30 +67,31 @@
         "UPDATE verb with an id param",
         "prior field values are known, so another update can restore them"
       ],
-      "compensatingTool": "GITHUB_UPDATE_ISSUE"
+      "compensatingTool": "GITHUB_UPDATE_AN_ISSUE"
     },
     {
-      "slug": "NOTION_DELETE_PAGE",
+      "slug": "NOTION_ARCHIVE_NOTION_PAGE",
       "toolkit": "notion",
-      "ruleClass": "irreversible",
-      "llmClass": "compensable",
+      "ruleClass": "compensable",
+      "llmClass": "reversible",
       "agree": false,
       "hints": {
         "readOnlyHint": false,
         "destructiveHint": true,
-        "idempotentHint": true,
-        "openWorldHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true,
         "createHint": false,
-        "updateHint": false,
-        "important": true
+        "updateHint": true,
+        "important": false
       },
       "tier": "Destructive",
       "tierSource": "derived",
       "reasons": [
-        "DELETE verb with no documented restore in this fixture's tool description",
-        "rules classifier: no restore documented -> irreversible",
-        "LLM classifier: Notion pages are typically trashed, not hard-deleted -> compensable via restore-from-trash (unverified for this fixture)"
-      ]
+        "rules classifier: ARCHIVE verb -> compensable (page goes to trash, restorable)",
+        "LLM classifier (illustrative): same tool with archive=false restores the page -> reversible",
+        "destructiveHint set, so Enhanced Controls would flag this"
+      ],
+      "compensatingTool": "NOTION_ARCHIVE_NOTION_PAGE"
     },
     {
       "slug": "SLACK_LIST_CONVERSATIONS",
@@ -102,14 +103,14 @@
         "readOnlyHint": true,
         "destructiveHint": false,
         "idempotentHint": true,
-        "openWorldHint": false,
+        "openWorldHint": true,
         "createHint": false,
         "updateHint": false,
         "important": false
       },
       "tier": "Read",
       "tierSource": "derived",
-      "reasons": ["LIST verb, readOnlyHint set, no external effect"]
+      "reasons": ["LIST verb, readOnlyHint set"]
     }
   ]
 }
