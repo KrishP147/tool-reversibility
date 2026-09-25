@@ -15,6 +15,18 @@ export interface ParsedArgs {
   refresh: boolean;
   out: string | null;
   maxTools: number | null;
+  /** classify: run the rule classifier. */
+  rules: boolean;
+  /** classify: run the LLM classifier. */
+  llm: boolean;
+  /** classify: allow a paid Batches submission (also needs ANTHROPIC_API_KEY). */
+  live: boolean;
+  /** classify: model id (default CLASSIFIER_MODEL env, else claude-sonnet-5). */
+  model: string | null;
+  /** classify: snapshot dir, absolute or repo-relative. */
+  snapshot: string | null;
+  /** classify: send deprecated tools to the LLM too. */
+  includeDeprecated: boolean;
 }
 
 function isCommand(value: string): value is Command {
@@ -35,6 +47,12 @@ export function parseArgs(argv: string[]): ParsedArgs {
     refresh: false,
     out: null,
     maxTools: null,
+    rules: false,
+    llm: false,
+    live: false,
+    model: null,
+    snapshot: null,
+    includeDeprecated: false,
   };
 
   // `pnpm <script> -- <args>` (and `npm run` before it) forwards the literal
@@ -57,6 +75,21 @@ export function parseArgs(argv: string[]): ParsedArgs {
       result.dryRun = true;
     } else if (arg === "--refresh") {
       result.refresh = true;
+    } else if (arg === "--rules") {
+      result.rules = true;
+    } else if (arg === "--llm") {
+      result.llm = true;
+    } else if (arg === "--live") {
+      result.live = true;
+    } else if (arg === "--include-deprecated") {
+      result.includeDeprecated = true;
+    } else if (arg === "--model" || arg === "--snapshot") {
+      const value = rest[i + 1];
+      if (value && !value.startsWith("--")) {
+        if (arg === "--model") result.model = value;
+        else result.snapshot = value;
+        i += 1;
+      }
     } else if (arg === "--out") {
       const value = rest[i + 1];
       if (value) {
@@ -105,6 +138,13 @@ export function helpText(): string {
     "  --refresh           Re-fetch toolkits already on disk (default: resume)",
     "  --out <dir>         fetch: output dir (default fixtures/catalog/<YYYY-MM-DD>)",
     "  --max-tools <n>     fetch: keep at most n tools per toolkit (trimmed fixture)",
+    "  --rules             classify: run the rule classifier",
+    "  --llm               classify: run the LLM classifier (neither flag = both)",
+    "  --live              classify: submit uncached tools to the paid Batches API",
+    "                      (needs ANTHROPIC_API_KEY and the user's approval of the dry-run cost)",
+    "  --model <id>        classify: model id (default $CLASSIFIER_MODEL, else claude-sonnet-5)",
+    "  --snapshot <dir>    classify: snapshot dir (default latest fixtures/catalog/<date>, else trimmed)",
+    "  --include-deprecated  classify: also send deprecated tools to the LLM",
     "  -h, --help          Show this help",
   ].join("\n");
 }

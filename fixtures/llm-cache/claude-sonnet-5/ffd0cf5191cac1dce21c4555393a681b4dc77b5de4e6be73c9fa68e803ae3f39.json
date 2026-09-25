@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "ffd0cf5191cac1dce21c4555393a681b4dc77b5de4e6be73c9fa68e803ae3f39",
+  "slug": "GMAIL_GET_ATTACHMENT",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GMAIL_GET_ATTACHMENT",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb GET maps to reversible."
+    ]
+  }
+}

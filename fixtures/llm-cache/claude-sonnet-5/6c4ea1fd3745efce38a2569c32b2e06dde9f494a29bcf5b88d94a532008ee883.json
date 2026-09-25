@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "6c4ea1fd3745efce38a2569c32b2e06dde9f494a29bcf5b88d94a532008ee883",
+  "slug": "NOTION_SEND_FILE_UPLOAD",
+  "provenance": "recorded",
+  "output": {
+    "slug": "NOTION_SEND_FILE_UPLOAD",
+    "class": "irreversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb SEND maps to irreversible."
+  },
+  "result": {
+    "class": "irreversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb SEND maps to irreversible."
+    ]
+  }
+}

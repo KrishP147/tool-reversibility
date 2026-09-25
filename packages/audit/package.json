@@ -5,11 +5,13 @@
   "type": "module",
   "scripts": {
     "start": "tsx src/cli.ts",
+    "fixture:llm": "tsx src/testing/buildLlmFixture.ts",
     "lint": "eslint .",
     "test": "vitest run",
     "build": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.128.0",
     "@composio/core": "0.21.0"
   },
   "devDependencies": {

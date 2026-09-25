@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "bce4e0b061218140d74f95b229453193bd27e303f696a783ba35b8d04849ed5c",
+  "slug": "GITHUB_GET_CUSTOM_DEPLOYMENT_PROTECTION_RULE",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GITHUB_GET_CUSTOM_DEPLOYMENT_PROTECTION_RULE",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb GET maps to reversible."
+    ]
+  }
+}

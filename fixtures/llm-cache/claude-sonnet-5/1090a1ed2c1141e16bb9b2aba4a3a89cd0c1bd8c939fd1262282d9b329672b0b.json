@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "1090a1ed2c1141e16bb9b2aba4a3a89cd0c1bd8c939fd1262282d9b329672b0b",
+  "slug": "GITHUB_MERGE_A_BRANCH",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GITHUB_MERGE_A_BRANCH",
+    "class": "irreversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb MERGE maps to irreversible."
+  },
+  "result": {
+    "class": "irreversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb MERGE maps to irreversible."
+    ]
+  }
+}

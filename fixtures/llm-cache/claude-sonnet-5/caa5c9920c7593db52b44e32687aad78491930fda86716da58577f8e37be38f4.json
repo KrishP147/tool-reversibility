@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "caa5c9920c7593db52b44e32687aad78491930fda86716da58577f8e37be38f4",
+  "slug": "SLACK_REVOKE_FILE_PUBLIC_SHARING",
+  "provenance": "recorded",
+  "output": {
+    "slug": "SLACK_REVOKE_FILE_PUBLIC_SHARING",
+    "class": "irreversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb REVOKE maps to irreversible."
+  },
+  "result": {
+    "class": "irreversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb REVOKE maps to irreversible."
+    ]
+  }
+}

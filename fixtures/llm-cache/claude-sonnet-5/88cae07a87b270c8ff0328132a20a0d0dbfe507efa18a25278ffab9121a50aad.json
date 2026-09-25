@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "88cae07a87b270c8ff0328132a20a0d0dbfe507efa18a25278ffab9121a50aad",
+  "slug": "NOTION_APPEND_TEXT_BLOCKS",
+  "provenance": "recorded",
+  "output": {
+    "slug": "NOTION_APPEND_TEXT_BLOCKS",
+    "class": "compensable",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb APPEND maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb APPEND maps to compensable."
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "25d230df8d69a40e50ffee6abefb91935b88332e2582f51e8eae111af2c27379",
+  "slug": "NOTION_UPDATE_VIEW",
+  "provenance": "recorded",
+  "output": {
+    "slug": "NOTION_UPDATE_VIEW",
+    "class": "compensable",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb UPDATE maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb UPDATE maps to compensable."
+    ]
+  }
+}

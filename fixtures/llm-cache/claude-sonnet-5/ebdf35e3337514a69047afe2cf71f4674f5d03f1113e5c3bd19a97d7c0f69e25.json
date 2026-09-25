@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "ebdf35e3337514a69047afe2cf71f4674f5d03f1113e5c3bd19a97d7c0f69e25",
+  "slug": "NOTION_MOVE_PAGE",
+  "provenance": "recorded",
+  "output": {
+    "slug": "NOTION_MOVE_PAGE",
+    "class": "compensable",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb MOVE maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb MOVE maps to compensable."
+    ]
+  }
+}

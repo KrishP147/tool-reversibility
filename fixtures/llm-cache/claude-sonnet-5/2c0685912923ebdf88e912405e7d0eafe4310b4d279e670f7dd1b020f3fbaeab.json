@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "2c0685912923ebdf88e912405e7d0eafe4310b4d279e670f7dd1b020f3fbaeab",
+  "slug": "GOOGLECALENDAR_ACL_INSERT",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GOOGLECALENDAR_ACL_INSERT",
+    "class": "compensable",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb INSERT maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb INSERT maps to compensable."
+    ]
+  }
+}

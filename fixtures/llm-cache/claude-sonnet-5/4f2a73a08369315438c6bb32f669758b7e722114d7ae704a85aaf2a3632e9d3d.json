@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "4f2a73a08369315438c6bb32f669758b7e722114d7ae704a85aaf2a3632e9d3d",
+  "slug": "SLACK_UNARCHIVE_CHANNEL",
+  "provenance": "recorded",
+  "output": {
+    "slug": "SLACK_UNARCHIVE_CHANNEL",
+    "class": "compensable",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb UNARCHIVE maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb UNARCHIVE maps to compensable."
+    ]
+  }
+}

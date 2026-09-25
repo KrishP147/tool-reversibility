@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "a60f7478ceec3bda786029757bec52042e7c2d68be38ceb21b0dbba62a670565",
+  "slug": "SLACK_ADD_CALL_PARTICIPANTS",
+  "provenance": "recorded",
+  "output": {
+    "slug": "SLACK_ADD_CALL_PARTICIPANTS",
+    "class": "compensable",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb ADD maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb ADD maps to compensable."
+    ]
+  }
+}

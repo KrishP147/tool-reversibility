@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "abaa596fa4de32e20ec746aa48034ecb05d5b273acd367b86f8d0d81d6d57066",
+  "slug": "SLACK_RESET_USER_SESSIONS",
+  "provenance": "recorded",
+  "output": {
+    "slug": "SLACK_RESET_USER_SESSIONS",
+    "class": "irreversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb RESET maps to irreversible."
+  },
+  "result": {
+    "class": "irreversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb RESET maps to irreversible."
+    ]
+  }
+}

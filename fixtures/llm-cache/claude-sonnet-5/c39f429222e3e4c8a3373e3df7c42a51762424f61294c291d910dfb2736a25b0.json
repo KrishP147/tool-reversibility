@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "c39f429222e3e4c8a3373e3df7c42a51762424f61294c291d910dfb2736a25b0",
+  "slug": "GITHUB_CREATE_A_REFERENCE",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GITHUB_CREATE_A_REFERENCE",
+    "class": "compensable",
+    "inverse_tool": "GITHUB_DELETE_A_REFERENCE",
+    "rationale": "Synthetic fixture, not model output: verb CREATE maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb CREATE maps to compensable.",
+      "inverse_tool: GITHUB_DELETE_A_REFERENCE"
+    ]
+  }
+}

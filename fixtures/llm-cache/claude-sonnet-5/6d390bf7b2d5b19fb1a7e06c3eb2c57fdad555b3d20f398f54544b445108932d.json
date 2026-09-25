@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "6d390bf7b2d5b19fb1a7e06c3eb2c57fdad555b3d20f398f54544b445108932d",
+  "slug": "GITHUB_REMOVE_TEAM_MEMBERSHIP",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GITHUB_REMOVE_TEAM_MEMBERSHIP",
+    "class": "irreversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb REMOVE maps to irreversible."
+  },
+  "result": {
+    "class": "irreversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb REMOVE maps to irreversible."
+    ]
+  }
+}

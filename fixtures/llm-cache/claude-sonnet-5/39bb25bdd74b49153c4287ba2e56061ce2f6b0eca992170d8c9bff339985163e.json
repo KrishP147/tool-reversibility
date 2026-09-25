@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "39bb25bdd74b49153c4287ba2e56061ce2f6b0eca992170d8c9bff339985163e",
+  "slug": "GMAIL_CREATE_LABEL",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GMAIL_CREATE_LABEL",
+    "class": "compensable",
+    "inverse_tool": "GMAIL_DELETE_LABEL",
+    "rationale": "Synthetic fixture, not model output: verb CREATE maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb CREATE maps to compensable.",
+      "inverse_tool: GMAIL_DELETE_LABEL"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "1429c7ec33ec3009c032d8706608f1551842fd957d3ed655e96c9aefa8a2eca6",
+  "slug": "GITHUB_LIST_SECURITY_ADVISORIES_GRAPHQL",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GITHUB_LIST_SECURITY_ADVISORIES_GRAPHQL",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb LIST maps to reversible."
+    ]
+  }
+}
