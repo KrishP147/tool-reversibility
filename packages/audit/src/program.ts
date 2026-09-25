@@ -14,6 +14,7 @@ export interface ParsedArgs {
   dryRun: boolean;
   refresh: boolean;
   out: string | null;
+  maxTools: number | null;
 }
 
 function isCommand(value: string): value is Command {
@@ -33,6 +34,7 @@ export function parseArgs(argv: string[]): ParsedArgs {
     dryRun: false,
     refresh: false,
     out: null,
+    maxTools: null,
   };
 
   // `pnpm <script> -- <args>` (and `npm run` before it) forwards the literal
@@ -59,6 +61,12 @@ export function parseArgs(argv: string[]): ParsedArgs {
       const value = rest[i + 1];
       if (value) {
         result.out = value;
+        i += 1;
+      }
+    } else if (arg === "--max-tools") {
+      const n = Number(rest[i + 1]);
+      if (Number.isInteger(n) && n > 0) {
+        result.maxTools = n;
         i += 1;
       }
     } else if (arg === "--toolkits") {
@@ -94,8 +102,9 @@ export function helpText(): string {
     "  --toolkits <a,b,c>  Limit to specific toolkit slugs",
     "  --offline           Use the committed trimmed fixture, no network",
     "  --dry-run           Print a cost estimate and exit before spending",
-    "  --refresh           Ignore cached snapshots/results",
+    "  --refresh           Re-fetch toolkits already on disk (default: resume)",
     "  --out <dir>         fetch: output dir (default fixtures/catalog/<YYYY-MM-DD>)",
+    "  --max-tools <n>     fetch: keep at most n tools per toolkit (trimmed fixture)",
     "  -h, --help          Show this help",
   ].join("\n");
 }

@@ -9,6 +9,8 @@ import {
 import {
   buildManifest,
   readToolkitFile,
+  SNAPSHOT_SCHEMA_VERSION,
+  trimTools,
   writeManifest,
   writeToolkitFile,
   type Manifest,
@@ -151,6 +153,8 @@ export interface FetchOptions {
   concurrency?: number;
   sdkToolLimit?: number;
   restPageSize?: number;
+  /** Keep at most this many tools per toolkit (trimmed fixture); full count still recorded. */
+  maxTools?: number;
   retry?: RetryOptions;
   log?: (msg: string) => void;
   manifest: { sdkVersion: string; date: string; command: string };
@@ -263,13 +267,15 @@ export async function runFetch(opts: FetchOptions): Promise<FetchResult> {
         restPageSize,
         retry,
       });
+      const kept = opts.maxTools ? trimTools(tools, opts.maxTools) : tools;
       writeToolkitFile(opts.outDir, {
-        schemaVersion: 1,
+        schemaVersion: SNAPSHOT_SCHEMA_VERSION,
         toolkit: tk,
         source,
         fetchedAt: now().toISOString(),
-        toolCount: tools.length,
-        tools,
+        toolCount: kept.length,
+        fullToolCount: tools.length,
+        tools: kept,
       });
       fetched.push(tk.slug);
       if (source === "rest-cursor") fallbacks.push(tk.slug);

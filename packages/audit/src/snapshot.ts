@@ -13,12 +13,17 @@ export interface ToolkitFile {
   toolkit: ToolkitSummary;
   source: ToolSource;
   fetchedAt: string;
+  /** Tools in `tools`. */
   toolCount: number;
+  /** Full toolkit size before `--max-tools` trimming; equals toolCount when untrimmed. */
+  fullToolCount: number;
   tools: SnapshotTool[];
 }
 
 export interface ManifestToolkitEntry {
   tools: number;
+  /** Full toolkit size (differs from `tools` only in a trimmed fixture). */
+  fullTools: number;
   deprecated: number;
   metaToolsCount: number | null;
   source: ToolSource;
@@ -30,7 +35,13 @@ export interface Manifest {
   date: string;
   generatedAt: string;
   command: string;
-  counts: { toolkits: number; tools: number; deprecatedTools: number; restFallbacks: number };
+  counts: {
+    toolkits: number;
+    tools: number;
+    fullTools: number;
+    deprecatedTools: number;
+    restFallbacks: number;
+  };
   failures: { slug: string; error: string }[];
   toolkits: Record<string, ManifestToolkitEntry>;
 }
@@ -52,6 +63,7 @@ function isToolkitFile(v: unknown): v is ToolkitFile {
   return (
     f.schemaVersion === SNAPSHOT_SCHEMA_VERSION &&
     typeof f.toolkit?.slug === "string" &&
+    typeof f.fullToolCount === "number" &&
     Array.isArray(f.tools)
   );
 }
@@ -96,6 +108,7 @@ export interface ManifestInput {
 export function buildManifest(dir: string, input: ManifestInput): Manifest {
   const toolkits: Record<string, ManifestToolkitEntry> = {};
   let tools = 0;
+  let fullTools = 0;
   let deprecatedTools = 0;
   let restFallbacks = 0;
   for (const slug of listSnapshotSlugs(dir)) {
@@ -104,11 +117,13 @@ export function buildManifest(dir: string, input: ManifestInput): Manifest {
     const deprecated = file.tools.filter((t) => t.isDeprecated).length;
     toolkits[slug] = {
       tools: file.tools.length,
+      fullTools: file.fullToolCount,
       deprecated,
       metaToolsCount: file.toolkit.toolsCount,
       source: file.source,
     };
     tools += file.tools.length;
+    fullTools += file.fullToolCount;
     deprecatedTools += deprecated;
     if (file.source === "rest-cursor") restFallbacks += 1;
   }
@@ -118,7 +133,13 @@ export function buildManifest(dir: string, input: ManifestInput): Manifest {
     date: input.date,
     generatedAt: (input.now ?? new Date()).toISOString(),
     command: input.command,
-    counts: { toolkits: Object.keys(toolkits).length, tools, deprecatedTools, restFallbacks },
+    counts: {
+      toolkits: Object.keys(toolkits).length,
+      tools,
+      fullTools,
+      deprecatedTools,
+      restFallbacks,
+    },
     failures: input.failures,
     toolkits,
   };
@@ -126,4 +147,38 @@ export function buildManifest(dir: string, input: ManifestInput): Manifest {
 
 export function writeManifest(dir: string, manifest: Manifest): void {
   writeJsonAtomic(path.join(dir, MANIFEST_FILE), manifest);
+}
+
+/** Slugs always kept in a trimmed fixture (the headline example, plan §1). */
+const PINNED_SLUGS = new Set(["GMAIL_SEND_EMAIL"]);
+/** Slug verbs always kept in a trimmed fixture (issue 3 tests need them). */
+const PINNED_VERB = /_(SEND|DELETE|LIST|POST|CREATE|UPDATE|GET|MERGE|REPLY|FORWARD|ARCHIVE|INVITE)(_|$)/;
+
+/**
+ * Deterministically cut `tools` (already slug-sorted) to at most `max`: up to
+ * half the budget goes to one tool per pinned verb, the rest is an even
+ * stride over the remainder. Output stays slug-sorted.
+ */
+export function trimTools(tools: SnapshotTool[], max: number): SnapshotTool[] {
+  if (max <= 0 || tools.length <= max) return tools;
+  const keep = new Set<number>();
+  const seenVerb = new Set<string>();
+  const pinBudget = Math.floor(max / 2);
+  tools.forEach((t, i) => {
+    if (PINNED_SLUGS.has(t.slug)) keep.add(i);
+  });
+  tools.forEach((t, i) => {
+    const m = PINNED_VERB.exec(t.slug);
+    if (m && m[1] && !seenVerb.has(m[1]) && keep.size < pinBudget) {
+      seenVerb.add(m[1]);
+      keep.add(i);
+    }
+  });
+  const rest = tools.map((_, i) => i).filter((i) => !keep.has(i));
+  const need = max - keep.size;
+  for (let k = 0; k < need; k += 1) {
+    const idx = rest[Math.floor((k * rest.length) / need)];
+    if (idx !== undefined) keep.add(idx);
+  }
+  return tools.filter((_, i) => keep.has(i));
 }
