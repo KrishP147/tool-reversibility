@@ -32,6 +32,37 @@ describe("parseArgs", () => {
     expect(r).toMatchObject({ refresh: true, out: "x/y", maxTools: 40 });
   });
 
+  it("parses classify options", () => {
+    const r = parseArgs([
+      "classify",
+      "--rules",
+      "--llm",
+      "--live",
+      "--model",
+      "claude-opus-5",
+      "--snapshot",
+      "C:/snap",
+      "--include-deprecated",
+    ]);
+    expect(r).toMatchObject({
+      command: "classify",
+      rules: true,
+      llm: true,
+      live: true,
+      model: "claude-opus-5",
+      snapshot: "C:/snap",
+      includeDeprecated: true,
+      dryRun: false,
+    });
+  });
+
+  it("defaults classify options off and ignores a flag-valued --model", () => {
+    const r = parseArgs(["classify", "--model", "--dry-run"]);
+    expect(r).toMatchObject({ rules: false, llm: false, live: false, model: null, dryRun: true });
+    expect(r.snapshot).toBeNull();
+    expect(r.includeDeprecated).toBe(false);
+  });
+
   it("ignores a non-positive --max-tools", () => {
     expect(parseArgs(["fetch", "--max-tools", "0"]).maxTools).toBeNull();
   });
