@@ -13,6 +13,7 @@ import {
   trimTools,
   writeManifest,
   writeToolkitFile,
+  type FallbackReason,
   type Manifest,
   type ToolSource,
 } from "./snapshot.js";
@@ -191,14 +192,23 @@ export async function fetchToolkitTools(
   client: CatalogClient,
   toolkit: ToolkitSummary,
   opts: { sdkToolLimit: number; restPageSize: number; retry: RetryOptions },
-): Promise<{ tools: SnapshotTool[]; source: ToolSource }> {
-  const sdkRaw = await withRetry(
-    () => client.getRawTools(toolkit.slug, opts.sdkToolLimit),
-    opts.retry,
-  );
-  const sdkTools = sdkRaw.map((t) => normalizeTool(t, toolkit.slug));
-  if (!looksTruncated(sdkTools, toolkit, opts.sdkToolLimit)) {
-    return { tools: sortTools(sdkTools), source: "sdk" };
+): Promise<{ tools: SnapshotTool[]; source: ToolSource; fallbackReason?: FallbackReason }> {
+  let fallbackReason: FallbackReason = "truncated";
+  try {
+    const sdkRaw = await withRetry(
+      () => client.getRawTools(toolkit.slug, opts.sdkToolLimit),
+      opts.retry,
+    );
+    const sdkTools = sdkRaw.map((t) => normalizeTool(t, toolkit.slug));
+    if (!looksTruncated(sdkTools, toolkit, opts.sdkToolLimit)) {
+      return { tools: sortTools(sdkTools), source: "sdk" };
+    }
+  } catch (err) {
+    // HTTP errors (incl. retries exhausted on 429/5xx) fail this toolkit.
+    if (isRetryable(err) || errorStatus(err) !== null) throw err;
+    // Otherwise the SDK rejected the payload (e.g. its zod schema refuses a
+    // boolean JSON-schema node, D19); the raw REST list has no such check.
+    fallbackReason = "sdk-error";
   }
   const restRaw = await drainPages((cursor) =>
     withRetry(
@@ -211,7 +221,7 @@ export async function fetchToolkitTools(
     const tool = normalizeTool(t, toolkit.slug);
     bySlug.set(tool.slug, tool);
   }
-  return { tools: sortTools([...bySlug.values()]), source: "rest-cursor" };
+  return { tools: sortTools([...bySlug.values()]), source: "rest-cursor", fallbackReason };
 }
 
 export function errorMessage(err: unknown): string {
@@ -268,7 +278,7 @@ export async function runFetch(opts: FetchOptions): Promise<FetchResult> {
       return;
     }
     try {
-      const { tools, source } = await fetchToolkitTools(opts.client, tk, {
+      const { tools, source, fallbackReason } = await fetchToolkitTools(opts.client, tk, {
         sdkToolLimit,
         restPageSize,
         retry,
@@ -278,6 +288,7 @@ export async function runFetch(opts: FetchOptions): Promise<FetchResult> {
         schemaVersion: SNAPSHOT_SCHEMA_VERSION,
         toolkit: tk,
         source,
+        ...(fallbackReason ? { fallbackReason } : {}),
         fetchedAt: now().toISOString(),
         toolCount: kept.length,
         fullToolCount: tools.length,
@@ -286,7 +297,9 @@ export async function runFetch(opts: FetchOptions): Promise<FetchResult> {
       fetched.push(tk.slug);
       if (source === "rest-cursor") fallbacks.push(tk.slug);
       done += 1;
-      log(`[${done}/${summaries.length}] ${tk.slug}: ${tools.length} tools (${source})`);
+      log(
+        `[${done}/${summaries.length}] ${tk.slug}: ${tools.length} tools (${source}${fallbackReason ? `, ${fallbackReason}` : ""})`,
+      );
     } catch (err) {
       done += 1;
       failures.push({ slug: tk.slug, error: errorMessage(err) });
