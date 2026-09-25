@@ -88,8 +88,10 @@ export function checkText(text, report = null) {
         out.push({ line, message: `unknown placeholder "${m[0]}"` });
         continue;
       }
-      usesReportKey = true;
       const key = body.slice("report:".length);
+      // The literal "[[report:KEY]]" is how docs name the syntax itself; it is not a real key.
+      if (key === "KEY") continue;
+      usesReportKey = true;
       if (!KEY_PATTERNS.some((re) => re.test(key))) {
         out.push({ line, message: `unknown report key "${key}" (see KEY_PATTERNS)` });
         continue;
