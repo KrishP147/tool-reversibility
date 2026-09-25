@@ -28,7 +28,7 @@ _Demo GIF: coming soon._
 > Write tier, e.g. `GMAIL_SEND_EMAIL`.
 
 The numbers are filled in only from a stamped, reproducible run:
-[reports/REPORT.md](reports/REPORT.md) (lands with issue #5). Until the paid LLM pass has run
+[reports/REPORT.md](reports/REPORT.md) (rules-only for now). Until the paid LLM pass has run
 live, the headline stays `[[pending live run]]`. How numbers are stamped and checked:
 [docs/stamping.md](docs/stamping.md).
 
@@ -89,7 +89,10 @@ It prints the tool and request counts, estimated tokens and the Batch-priced dol
 
 **3. Build the report.** `pnpm audit:cli report` writes `reports/REPORT.md` and
 `reports/report.json`, stamped with date, commit, SDK version, model, LLM status, prompt version,
-manifest hash and the regenerate command. **Not built yet: it lands with issue #5.**
+manifest hash and the regenerate command. Pass `--snapshot fixtures/catalog/<date>` for the full
+catalog. LLM columns come from the cache only, and only `live` entries count: until the approved
+live pass exists, every LLM-dependent number is `[[pending live run]]` (plan.md D31). The full
+per-tool CSV goes to `reports/full/tools.csv` (gitignored).
 
 **Current CLI state** (see `packages/audit/src/program.ts`, `classifyCommand.ts`):
 
@@ -98,7 +101,8 @@ manifest hash and the regenerate command. **Not built yet: it lands with issue #
 | `fetch`            | works (resumable, backoff on 429/5xx, REST fallback where the SDK rejects a payload)                |
 | `classify --llm`   | works: `--dry-run` cost gate, cache replay, `--live` Batches submission behind the key and approval |
 | `classify --rules` | works: rule classifier table (`rules.ts`) with derived tier; default `classify` runs rules then LLM |
-| `report`, `all`    | print `not implemented`; land with issue #5                                                         |
+| `report`           | works: stamped `reports/REPORT.md` + `report.json`; rules-only until a live LLM pass (D31)          |
+| `all`              | prints `not implemented`                                                                            |
 
 ### Mock inbox (zero keys)
 
@@ -107,7 +111,7 @@ pnpm --filter inbox dev     # http://localhost:3000
 ```
 
 Mock mode (`INBOX_MODE=mock`) is the default. It reads the pending actions in
-`fixtures/pending/*.json` (real catalog slugs and field names, illustrative values) and `reports/report.json`; until issue #5 ships a report it falls back to
+`fixtures/pending/*.json` (real catalog slugs and field names, illustrative values) and `reports/report.json`; without a report it falls back to
 a stub and shows a banner saying so. Details: [apps/inbox/README.md](apps/inbox/README.md).
 
 ## Limitations
@@ -115,9 +119,9 @@ a stub and shows a banner saying so. Details: [apps/inbox/README.md](apps/inbox/
 - **Our classification is not ground truth.** Reversible / compensable / irreversible is our
   judgement from each tool's name, description and schema. The report shows how often the rules
   and the LLM disagree ([[report:agreement.rate]] agreement) and scores the rules against a
-  hand-labelled spot-check set ([[report:spotcheck.n]] tools, precision
-  [[report:spotcheck.rules.precision]], recall [[report:spotcheck.rules.recall]]). See
-  [reports/REPORT.md](reports/REPORT.md).
+  hand-labelled spot-check set, labelled blind and pending Krish's review:
+  74 tools, "irreversible" precision 0.64, recall 0.8 [report 2026-09-24, commit 30e305e].
+  See [reports/REPORT.md](reports/REPORT.md).
 - **The tier is derived, not Composio's.** Neither the SDK nor the REST tool objects expose the
   Enhanced Controls tier, so it is derived from the hints (plan.md D22). The real mapping may
   differ per slug (ComposioHQ/composio#4327).
