@@ -59,7 +59,8 @@ export function DecisionPanel({ payload, decide }: DecisionPanelProps) {
   if (feedback?.kind === "done") {
     return (
       <p data-testid="decision-confirmation" className="text-sm text-green-700">
-        Recorded: {feedback.decision}. Payload hash: <span className="font-mono">{feedback.hash}</span>
+        Recorded: {feedback.decision}. Payload hash:{" "}
+        <span className="font-mono">{feedback.hash}</span>
       </p>
     );
   }

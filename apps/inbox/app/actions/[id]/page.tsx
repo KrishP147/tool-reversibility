@@ -13,11 +13,7 @@ import { decideOnAction } from "./actions";
 // recorded), so this route is never statically prerendered at build.
 export const dynamic = "force-dynamic";
 
-export default async function ActionDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function ActionDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const action = getPendingAction(id);
   if (!action) notFound();

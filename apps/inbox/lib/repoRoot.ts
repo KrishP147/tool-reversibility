@@ -17,9 +17,7 @@ export function findRepoRoot(startDir: string = process.cwd()): string {
 
     const parent = path.dirname(dir);
     if (parent === dir) {
-      throw new Error(
-        `findRepoRoot: no pnpm-workspace.yaml found walking up from ${startDir}`,
-      );
+      throw new Error(`findRepoRoot: no pnpm-workspace.yaml found walking up from ${startDir}`);
     }
     dir = parent;
   }
