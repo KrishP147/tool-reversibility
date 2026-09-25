@@ -40,31 +40,31 @@ any tag that moves them out of the Write tier. `GMAIL_SEND_EMAIL` is one of them
 
 | catalog                            | value                                            |
 | ---------------------------------- | ------------------------------------------------ |
-| tools classified (non-deprecated)  | 55,557 [report 2026-09-24, commit 30e305e]       |
-| toolkits                           | 1,562 [report 2026-09-24, commit 30e305e]        |
-| deprecated tools excluded          | 659 [report 2026-09-24, commit 30e305e]          |
+| tools classified (non-deprecated)  | 55,557 [report 2026-09-24, commit ace084d]       |
+| toolkits                           | 1,562 [report 2026-09-24, commit ace084d]        |
+| deprecated tools excluded          | 659 [report 2026-09-24, commit ace084d]          |
 | rules and LLM agree                | [[report:agreement.rate]]                        |
 | irreversible, both classifiers (M) | [[report:gap.M]]                                 |
 | of those, no `destructiveHint` (N) | [[report:gap.N]]                                 |
 | share (P)                          | [[report:gap.P]]                                 |
-| same gap, rule classifier alone    | 989 of 5,966 [report 2026-09-24, commit 30e305e] |
+| same gap, rule classifier alone    | 913 of 6,009 [report 2026-09-24, commit ace084d] |
 
 The eight Enhanced Controls apps:
 
 | toolkit         | tools                                   | irreversible (both)                               | no `destructiveHint`                     |
 | --------------- | --------------------------------------- | ------------------------------------------------- | ---------------------------------------- |
-| Gmail           | 60 [report 2026-09-24, commit 30e305e]  | [[report:perToolkit.gmail.irreversible]]          | [[report:perToolkit.gmail.gap]]          |
-| Outlook         | 287 [report 2026-09-24, commit 30e305e] | [[report:perToolkit.outlook.irreversible]]        | [[report:perToolkit.outlook.gap]]        |
-| Slack           | 159 [report 2026-09-24, commit 30e305e] | [[report:perToolkit.slack.irreversible]]          | [[report:perToolkit.slack.gap]]          |
-| Google Sheets   | 50 [report 2026-09-24, commit 30e305e]  | [[report:perToolkit.googlesheets.irreversible]]   | [[report:perToolkit.googlesheets.gap]]   |
-| Google Calendar | 47 [report 2026-09-24, commit 30e305e]  | [[report:perToolkit.googlecalendar.irreversible]] | [[report:perToolkit.googlecalendar.gap]] |
-| Google Drive    | 91 [report 2026-09-24, commit 30e305e]  | [[report:perToolkit.googledrive.irreversible]]    | [[report:perToolkit.googledrive.gap]]    |
-| GitHub          | 874 [report 2026-09-24, commit 30e305e] | [[report:perToolkit.github.irreversible]]         | [[report:perToolkit.github.gap]]         |
-| Notion          | 54 [report 2026-09-24, commit 30e305e]  | [[report:perToolkit.notion.irreversible]]         | [[report:perToolkit.notion.gap]]         |
+| Gmail           | 60 [report 2026-09-24, commit ace084d]  | [[report:perToolkit.gmail.irreversible]]          | [[report:perToolkit.gmail.gap]]          |
+| Outlook         | 287 [report 2026-09-24, commit ace084d] | [[report:perToolkit.outlook.irreversible]]        | [[report:perToolkit.outlook.gap]]        |
+| Slack           | 159 [report 2026-09-24, commit ace084d] | [[report:perToolkit.slack.irreversible]]          | [[report:perToolkit.slack.gap]]          |
+| Google Sheets   | 50 [report 2026-09-24, commit ace084d]  | [[report:perToolkit.googlesheets.irreversible]]   | [[report:perToolkit.googlesheets.gap]]   |
+| Google Calendar | 47 [report 2026-09-24, commit ace084d]  | [[report:perToolkit.googlecalendar.irreversible]] | [[report:perToolkit.googlecalendar.gap]] |
+| Google Drive    | 91 [report 2026-09-24, commit ace084d]  | [[report:perToolkit.googledrive.irreversible]]    | [[report:perToolkit.googledrive.gap]]    |
+| GitHub          | 874 [report 2026-09-24, commit ace084d] | [[report:perToolkit.github.irreversible]]         | [[report:perToolkit.github.gap]]         |
+| Notion          | 54 [report 2026-09-24, commit ace084d]  | [[report:perToolkit.notion.irreversible]]         | [[report:perToolkit.notion.gap]]         |
 
 How far to trust the classes: they are our classification, not ground truth. On a hand-labelled
 spot-check set (labelled blind, pending review) the rule classifier scores, on "irreversible",
-0.64 precision and 0.8 recall over 74 tools [report 2026-09-24, commit 30e305e], and the report
+0.667 precision and 0.8 recall over 74 tools [report 2026-09-24, commit ace084d], and the report
 lists every case where rules and the LLM disagree. The tier is
 **derived** from the hints (destructiveHint gives Destructive, readOnlyHint gives Read, anything
 else is Write), because neither the SDK nor the REST tool objects expose the real Enhanced
