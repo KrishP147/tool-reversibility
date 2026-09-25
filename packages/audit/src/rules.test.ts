@@ -133,6 +133,19 @@ describe("classifyTool: fixture tools with a specified class (plan §3a / issue 
 });
 
 describe("classifyTool: synthetic edge cases", () => {
+  it.each([
+    ["SLACK_DELETE_SLACK_LIST_ITEM", 'desc:"cannot be undone"'],
+    ["GMAIL_BATCH_DELETE_MESSAGES", 'desc:"permanently"'],
+  ])("%s: explicit no-way-back text beats a restore keyword (undone/Trash)", (slug, reason) => {
+    const result = classifyTool(fixture(slug));
+    expect(result.class).toBe("irreversible");
+    expect(result.reasons).toContain(reason);
+  });
+
+  it("NOTION_DELETE_BLOCK (archives, restorable) stays compensable", () => {
+    expect(classifyTool(fixture("NOTION_DELETE_BLOCK")).class).toBe("compensable");
+  });
+
   it("a DELETE tool whose description mentions trash is compensable, not irreversible", () => {
     const tool = synthTool({
       slug: "TESTKIT_DELETE_WIDGET",

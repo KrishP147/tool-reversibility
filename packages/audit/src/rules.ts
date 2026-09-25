@@ -73,6 +73,8 @@ const IRREVERSIBLE_KEYWORDS: DescKeyword[] = [
   { stem: "cannot be undone", label: "cannot be undone" },
   { stem: "permanently", label: "permanently" },
   { stem: "no undo", label: "no undo" },
+  { stem: "no recovery", label: "no recovery" },
+  { stem: "bypassing trash", label: "bypassing trash" },
 ];
 
 function findDescKeyword(description: string, keywords: DescKeyword[]): string | null {
@@ -153,7 +155,10 @@ export function classifyTool(tool: SnapshotTool): ClassifierResult {
   const emptyTrash = hasEmptyTrash(tokens);
   if (deleteVerb || emptyTrash) {
     const verbLabel = deleteVerb ?? "EMPTY_TRASH";
-    const restoreHit = findDescKeyword(description, RESTORE_KEYWORDS);
+    // An explicit no-way-back statement beats a restore keyword ("cannot be undone"
+    // contains "undo"; "bypassing Trash with no recovery" contains "trash").
+    const irreversibleHit = findDescKeyword(description, IRREVERSIBLE_KEYWORDS);
+    const restoreHit = irreversibleHit ? null : findDescKeyword(description, RESTORE_KEYWORDS);
     if (restoreHit) {
       return {
         class: "compensable",
@@ -163,9 +168,8 @@ export function classifyTool(tool: SnapshotTool): ClassifierResult {
     }
     const reasons = [`verb:${verbLabel}`, "desc:no-restore-documented"];
     let confidence = 0.85;
-    const descHit = findDescKeyword(description, IRREVERSIBLE_KEYWORDS);
-    if (descHit) {
-      reasons.push(`desc:"${descHit}"`);
+    if (irreversibleHit) {
+      reasons.push(`desc:"${irreversibleHit}"`);
       confidence = clamp01(confidence + 0.05);
     }
     if (hints.createHint && hints.openWorldHint) {
