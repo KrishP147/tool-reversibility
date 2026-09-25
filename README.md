@@ -25,7 +25,23 @@ pnpm --filter audit start -- --help
 pnpm audit:cli --help          # root shortcut, forwards to the same thing
 ```
 
-Commands (`fetch|classify|report|all`) are stubs today ("not implemented") — see `skilleddocs/plan.md` §6.
+`classify|report|all` are stubs today ("not implemented") — see `skilleddocs/plan.md` §6.
+
+**`fetch`: snapshot the Composio catalog** (free-tier catalog GETs only, no spend). Needs `COMPOSIO_API_KEY` in
+`.env` at the repo root (loaded automatically; never logged).
+
+```sh
+pnpm audit:cli fetch                           # all toolkits -> fixtures/catalog/<YYYY-MM-DD>/ (gitignored)
+pnpm audit:cli fetch --toolkits gmail,slack    # only these toolkits
+pnpm audit:cli fetch --refresh                 # re-fetch toolkits already on disk (default: resume/skip)
+# regenerate the committed trimmed fixture:
+pnpm audit:cli fetch --toolkits gmail,slack,github,googlecalendar,notion --out fixtures/catalog/trimmed --max-tools 25 --refresh
+```
+
+One `<toolkit>.json` per toolkit plus `manifest.json` (SDK version, date, command, counts, failures). Concurrency ≤4,
+exponential backoff on 429/5xx; an interrupted run resumes where it stopped. Pagination/fallback details:
+`skilleddocs/plan.md` §10 (D17–D22). Tests use a fake client and need no key; the live test is opt-in:
+`AUDIT_LIVE=1 pnpm --filter audit test`.
 
 Mock mode is the default for `apps/inbox` (`INBOX_MODE=mock`, zero keys). No secrets are required to lint, test or
 build; CI runs gitleaks on every push/PR.
