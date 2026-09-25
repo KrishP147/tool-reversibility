@@ -51,7 +51,7 @@ on TS dashboard/SDK/docs work, and the side-quest PRs land in `ts/packages/*`. e
   Irreversible: SEND, POST, PUBLISH, PAY, CHARGE, TRANSFER, NOTIFY, INVITE, REPLY, FORWARD, MERGE, DEPLOY,
   EXECUTE, and DELETE/PURGE/EMPTY_TRASH when no restore is documented (explicit no-way-back text, e.g. "cannot be undone", beats restore keywords, D26). Compensable (an inverse exists): CREATE/ADD/
   INSERT/UPDATE/PATCH/MOVE/ARCHIVE/LABEL, and update with an id param. Reversible (no external effect):
-  GET/LIST/SEARCH/FETCH/READ/FIND/DESCRIBE, or `readOnlyHint`. Anything else is `unknown` (missing verbs tracked in #18, D27).
+  GET/LIST/SEARCH/FETCH/READ/FIND/DESCRIBE, or `readOnlyHint`. Anything else is `unknown` (missing verbs tracked in #16, D27).
   Output: `{ class, confidence, reasons[] }`.
 - **LLM** (`llm.ts`). `claude-opus-5` at effort `low` (D3), overridable with `CLASSIFIER_MODEL`. Send ~25 tools per
   request through the Message Batches API (50% cost). Get structured output via `output_config.format` with a JSON schema
@@ -179,7 +179,7 @@ A ready-to-paste Composio feature-request issue. **Problem:** the hints describe
 ## 11. Issues 3/4/6 verification (2026-09-25, verifier on user's behalf)
 - D25 **Token estimate (#4):** `--dry-run` estimates tokens locally at 3.5 chars/token instead of calling `count_tokens`. Why: a dry run must never need a key or touch a paid/remote API (D11); the estimate only gates approval. §3a amended.
 - D26 **DELETE precedence (#3):** in the DELETE branch, explicit no-way-back description text ("cannot be undone", "no recovery", "bypassing Trash") wins over restore keywords ("undo", "trash"). Fixes `SLACK_DELETE_SLACK_LIST_ITEM` and `GMAIL_BATCH_DELETE_MESSAGES` being compensable; `NOTION_DELETE_BLOCK` (archive, restorable) stays compensable.
-- D27 **Missing verbs (#3):** REMOVE/REVOKE/WATCH/DUPLICATE/SET/UNARCHIVE/ABORT are not in the rule table and fall to `unknown`, matching §3a as written. Tracked as #18 (sonnet). Slug-noun misreads (`GMAIL_PATCH_SEND_AS` -> SEND) are accepted heuristic noise for now; #5's rule-vs-LLM compare surfaces them.
+- D27 **Missing verbs (#3):** REMOVE/REVOKE/WATCH/DUPLICATE/SET/UNARCHIVE/ABORT are not in the rule table and fall to `unknown`, matching §3a as written. Tracked as #16 (sonnet). Slug-noun misreads (`GMAIL_PATCH_SEND_AS` -> SEND) are accepted heuristic noise for now; #5's rule-vs-LLM compare surfaces them.
 - D28 **Deprecated tools (#4):** excluded from the LLM pass by default (`--include-deprecated` adds them); the rules pass still classifies them. Full catalog: 55,557 of 56,216 sent. Report totals (#5) must state which population they cover.
 - D29 **Request shape (#4):** effort `low`, thinking disabled, structured output via json_schema (`additionalProperties: false`) inside a Batch; no temperature, prefill or fallbacks. Not yet tried against the real API, so the first live run is the trimmed fixture (~$0.12 on sonnet-5), approval-gated per D11.
 - D30 **Packing (#4):** requests are packed to a 40k-token budget with a 25-tool cap; an oversized tool goes alone. On the real catalog the 25-tool cap binds first.
