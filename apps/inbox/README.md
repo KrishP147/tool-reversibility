@@ -20,8 +20,8 @@ pnpm --filter inbox build && pnpm --filter inbox start
 inbox reads:
 
 - `fixtures/pending/*.json` — hand-written, illustrative pending actions (`lib/pending.ts`).
-  Every fixture is marked `"illustrative": true`; they are not a real Composio catalog snapshot
-  (that lands with issue #2's `fixtures/catalog/`).
+  Slugs and payload field names match the real catalog snapshot (`fixtures/catalog/`, plan.md
+  D34); values are made up, so every fixture stays marked `"illustrative": true`.
 - `<repoRoot>/reports/report.json` — the stamped classifier report from issue #5's
   `packages/audit` pipeline, if it exists.
 
@@ -39,7 +39,14 @@ Every Approve / Reject / Edit decision is appended to `apps/inbox/.data/audit.js
 (gitignored, created lazily on first decision — `lib/audit.ts`). Each line is one JSON record:
 
 ```json
-{"actionId":"001-gmail-send-email","slug":"GMAIL_SEND_EMAIL","decision":"approve","who":"mock-user","when":"2026-09-24T21:00:00.000Z","payloadHash":"<sha256 of the canonical JSON of the payload actually approved>"}
+{
+  "actionId": "001-gmail-send-email",
+  "slug": "GMAIL_SEND_EMAIL",
+  "decision": "approve",
+  "who": "mock-user",
+  "when": "2026-09-24T21:00:00.000Z",
+  "payloadHash": "<sha256 of the canonical JSON of the payload actually approved>"
+}
 ```
 
 `who` comes from `INBOX_USER` if set, else `"mock-user"`. The log is append-only (never

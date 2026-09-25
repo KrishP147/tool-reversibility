@@ -8,6 +8,6 @@
     "limit": 50
   },
   "illustrative": true,
-  "note": "Illustrative fixture, not a real Composio catalog entry (fixtures/catalog/ lands with issue #2). Slug/shape modeled on Slack's conversations-list action.",
+  "note": "Slug and payload field names match the real Composio catalog snapshot (2026-09-24, see fixtures/catalog/); payload values are illustrative.",
   "createdAt": "2026-09-24T09:15:00.000Z"
 }

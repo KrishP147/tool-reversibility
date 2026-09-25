@@ -5,9 +5,9 @@
   "kind": "send",
   "payload": {
     "channel": "#eng-alerts",
-    "text": "Deploy of api@2.14.0 finished successfully."
+    "markdown_text": "Deploy of api@2.14.0 finished successfully."
   },
   "illustrative": true,
-  "note": "Illustrative fixture, not a real Composio catalog entry (fixtures/catalog/ lands with issue #2). Slug/shape modeled on Slack's post-message action.",
+  "note": "Slug and payload field names match the real Composio catalog snapshot (2026-09-24, see fixtures/catalog/); payload values are illustrative.",
   "createdAt": "2026-09-24T09:20:00.000Z"
 }

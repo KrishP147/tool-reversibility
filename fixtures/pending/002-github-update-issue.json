@@ -1,19 +1,30 @@
 {
   "id": "002-github-update-issue",
-  "slug": "GITHUB_UPDATE_ISSUE",
+  "slug": "GITHUB_UPDATE_AN_ISSUE",
   "toolkit": "github",
   "kind": "update",
   "before": {
+    "owner": "acme",
+    "repo": "web",
+    "issue_number": 112,
     "title": "Login button misaligned on mobile",
     "state": "open",
-    "labels": ["bug"]
+    "labels": [
+      "bug"
+    ]
   },
   "payload": {
+    "owner": "acme",
+    "repo": "web",
+    "issue_number": 112,
     "title": "Login button misaligned on mobile (fixed in #118)",
     "state": "closed",
-    "labels": ["bug", "fixed"]
+    "labels": [
+      "bug",
+      "fixed"
+    ]
   },
   "illustrative": true,
-  "note": "Illustrative fixture, not a real Composio catalog entry (fixtures/catalog/ lands with issue #2). Slug/shape modeled on GitHub's issue-update action.",
+  "note": "Slug and payload field names match the real Composio catalog snapshot (2026-09-24, see fixtures/catalog/); payload values are illustrative.",
   "createdAt": "2026-09-24T09:05:00.000Z"
 }
