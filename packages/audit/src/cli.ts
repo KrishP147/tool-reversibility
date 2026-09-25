@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { classifyCommand } from "./classifyCommand.js";
 import { fetchCommand } from "./fetchCommand.js";
 import { buildProgram, helpText, parseArgs } from "./program.js";
 
@@ -10,7 +11,10 @@ async function main(argv: string[]): Promise<void> {
     return;
   }
 
-  const program = buildProgram({ fetch: (a) => fetchCommand(a) });
+  const program = buildProgram({
+    fetch: (a) => fetchCommand(a),
+    classify: (a) => classifyCommand(a),
+  });
   const command = program.find((c) => c.name === args.command);
   if (!command) {
     console.log(helpText());

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "7e9ad43883fef83eb6b5d9f306cf06c2edb6fbb23a6617cc376cfc08167eebe9",
+  "slug": "GOOGLECALENDAR_CALENDARS_DELETE",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GOOGLECALENDAR_CALENDARS_DELETE",
+    "class": "irreversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb DELETE maps to irreversible."
+  },
+  "result": {
+    "class": "irreversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb DELETE maps to irreversible."
+    ]
+  }
+}

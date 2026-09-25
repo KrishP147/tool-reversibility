@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "0e805350658d578488e7b9deb6120a13227da084d419b3bb522b0ed19914db47",
+  "slug": "NOTION_FETCH_DATABASE",
+  "provenance": "recorded",
+  "output": {
+    "slug": "NOTION_FETCH_DATABASE",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb FETCH maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb FETCH maps to reversible."
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "e1fbf2267f7dffa8185564b1d225fb4b3ed2eac7f3deb55ba641201bdf444a28",
+  "slug": "GITHUB_GET_ACCESS_RESTRICTIONS",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GITHUB_GET_ACCESS_RESTRICTIONS",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb GET maps to reversible."
+    ]
+  }
+}

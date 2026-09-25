@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "296f4c21006aec43cd1fd7d886db6735b72a8c808223f81489a46fe56cd10527",
+  "slug": "GITHUB_CHECK_REPOSITORY_STARRED",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GITHUB_CHECK_REPOSITORY_STARRED",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb CHECK maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb CHECK maps to reversible."
+    ]
+  }
+}

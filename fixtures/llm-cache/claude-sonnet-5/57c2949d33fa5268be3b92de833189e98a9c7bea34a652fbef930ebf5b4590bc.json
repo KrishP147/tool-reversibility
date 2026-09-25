@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "57c2949d33fa5268be3b92de833189e98a9c7bea34a652fbef930ebf5b4590bc",
+  "slug": "SLACK_LIST_ALL_USERS",
+  "provenance": "recorded",
+  "output": {
+    "slug": "SLACK_LIST_ALL_USERS",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb LIST maps to reversible."
+    ]
+  }
+}

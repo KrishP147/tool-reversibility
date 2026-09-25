@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "a57ad639fbcf017bb708eecb97766457bae9c5f6748b71c75f934e2c5a20411d",
+  "slug": "GITHUB_CREATE_REACTION_FOR_A_TEAM_DISCUSSION_COMMENT",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GITHUB_CREATE_REACTION_FOR_A_TEAM_DISCUSSION_COMMENT",
+    "class": "compensable",
+    "inverse_tool": "GITHUB_DELETE_REACTION_FOR_A_TEAM_DISCUSSION_COMMENT",
+    "rationale": "Synthetic fixture, not model output: verb CREATE maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb CREATE maps to compensable.",
+      "inverse_tool: GITHUB_DELETE_REACTION_FOR_A_TEAM_DISCUSSION_COMMENT"
+    ]
+  }
+}

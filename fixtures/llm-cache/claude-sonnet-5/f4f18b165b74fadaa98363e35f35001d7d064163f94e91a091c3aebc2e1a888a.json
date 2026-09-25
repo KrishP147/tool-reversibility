@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "f4f18b165b74fadaa98363e35f35001d7d064163f94e91a091c3aebc2e1a888a",
+  "slug": "NOTION_LIST_FILE_UPLOADS",
+  "provenance": "recorded",
+  "output": {
+    "slug": "NOTION_LIST_FILE_UPLOADS",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb LIST maps to reversible."
+    ]
+  }
+}

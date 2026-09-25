@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "f4d7b449b18aed2eef444f17c3459e7097354be9171f1f8c5d2e659d914c36e0",
+  "slug": "SLACK_CREATE_A_REMINDER",
+  "provenance": "recorded",
+  "output": {
+    "slug": "SLACK_CREATE_A_REMINDER",
+    "class": "compensable",
+    "inverse_tool": "SLACK_DELETE_A_REMINDER",
+    "rationale": "Synthetic fixture, not model output: verb CREATE maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb CREATE maps to compensable.",
+      "inverse_tool: SLACK_DELETE_A_REMINDER"
+    ]
+  }
+}

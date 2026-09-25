@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "8ab853cd25ed91a9816be353aa20d62d50814c063dd3541f34c9eda218853b77",
+  "slug": "GMAIL_MODIFY_THREAD_LABELS",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GMAIL_MODIFY_THREAD_LABELS",
+    "class": "compensable",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb MODIFY maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb MODIFY maps to compensable."
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "481d6492be149e90cff01540dab9f6d588ac09587b5ab1a03b000ef08c81d596",
+  "slug": "GMAIL_DELETE_LABEL",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GMAIL_DELETE_LABEL",
+    "class": "irreversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb DELETE maps to irreversible."
+  },
+  "result": {
+    "class": "irreversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb DELETE maps to irreversible."
+    ]
+  }
+}

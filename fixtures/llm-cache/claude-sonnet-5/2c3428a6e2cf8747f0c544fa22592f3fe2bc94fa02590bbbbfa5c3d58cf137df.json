@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "2c3428a6e2cf8747f0c544fa22592f3fe2bc94fa02590bbbbfa5c3d58cf137df",
+  "slug": "GMAIL_LIST_MESSAGES",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GMAIL_LIST_MESSAGES",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb LIST maps to reversible."
+    ]
+  }
+}

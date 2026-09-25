@@ -1,0 +1,632 @@
+{
+  "note": "Synthetic test data from a slug-verb heuristic, not model output. Regenerate with `pnpm --filter audit fixture:llm`.",
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "answers": {
+    "GITHUB_ABORT_REPOSITORY_MIGRATION": {
+      "class": "unknown",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb none maps to unknown."
+    },
+    "GITHUB_ADD_OR_UPDATE_TEAM_MEMBERSHIP_FOR_USER": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb ADD maps to compensable."
+    },
+    "GITHUB_AUTH_USER_DOCKER_CONFLICT_PACKAGES_LIST": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+    },
+    "GITHUB_CHECK_REPOSITORY_STARRED": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb CHECK maps to reversible."
+    },
+    "GITHUB_CREATE_AN_AUTOLINK_REFERENCE_FOR_A_REPOSITORY": {
+      "class": "compensable",
+      "inverse_tool": "GITHUB_DELETE_AN_AUTOLINK_REFERENCE_FOR_A_REPOSITORY",
+      "rationale": "Synthetic fixture, not model output: verb CREATE maps to compensable."
+    },
+    "GITHUB_CREATE_A_REFERENCE": {
+      "class": "compensable",
+      "inverse_tool": "GITHUB_DELETE_A_REFERENCE",
+      "rationale": "Synthetic fixture, not model output: verb CREATE maps to compensable."
+    },
+    "GITHUB_CREATE_REACTION_FOR_A_TEAM_DISCUSSION_COMMENT": {
+      "class": "compensable",
+      "inverse_tool": "GITHUB_DELETE_REACTION_FOR_A_TEAM_DISCUSSION_COMMENT",
+      "rationale": "Synthetic fixture, not model output: verb CREATE maps to compensable."
+    },
+    "GITHUB_DELETE_ACCESS_RESTRICTIONS": {
+      "class": "irreversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb DELETE maps to irreversible."
+    },
+    "GITHUB_DELETE_ENVIRONMENT_SECRET": {
+      "class": "irreversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb DELETE maps to irreversible."
+    },
+    "GITHUB_DOWNLOAD_A_REPOSITORY_ARCHIVE_TAR": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb DOWNLOAD maps to reversible."
+    },
+    "GITHUB_ENCRYPT_AND_UPDATE_DEV_SECRET": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb ENCRYPT maps to compensable."
+    },
+    "GITHUB_GET_ACCESS_RESTRICTIONS": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+    },
+    "GITHUB_GET_A_RELEASE_ASSET": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+    },
+    "GITHUB_GET_CUSTOM_DEPLOYMENT_PROTECTION_RULE": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+    },
+    "GITHUB_GET_ORG_OIDC_SUBJECT_CLAIM_TEMPLATE": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+    },
+    "GITHUB_GET_WORKFLOW_EXTERNAL_ACCESS": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+    },
+    "GITHUB_LIST_DISCUSSION_COMMENTS": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+    },
+    "GITHUB_LIST_ORGANIZATION_CODESPACES_SECRETS": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+    },
+    "GITHUB_LIST_REACTIONS_FOR_A_TEAM_DISCUSSION": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+    },
+    "GITHUB_LIST_SECURITY_ADVISORIES_GRAPHQL": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+    },
+    "GITHUB_MAP_A_COMMIT_AUTHOR": {
+      "class": "unknown",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb none maps to unknown."
+    },
+    "GITHUB_MERGE_A_BRANCH": {
+      "class": "irreversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb MERGE maps to irreversible."
+    },
+    "GITHUB_REMOVE_TEAM_MEMBERSHIP": {
+      "class": "irreversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb REMOVE maps to irreversible."
+    },
+    "GITHUB_SET_A_THREAD_SUBSCRIPTION": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb SET maps to compensable."
+    },
+    "GITHUB_UPDATE_A_CODE_SCANNING_ALERT": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb UPDATE maps to compensable."
+    },
+    "GMAIL_ADD_LABEL_TO_EMAIL": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb ADD maps to compensable."
+    },
+    "GMAIL_BATCH_DELETE_MESSAGES": {
+      "class": "irreversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb DELETE maps to irreversible."
+    },
+    "GMAIL_CREATE_EMAIL_DRAFT": {
+      "class": "compensable",
+      "inverse_tool": "GMAIL_DELETE_EMAIL_DRAFT",
+      "rationale": "Synthetic fixture, not model output: verb CREATE maps to compensable."
+    },
+    "GMAIL_CREATE_LABEL": {
+      "class": "compensable",
+      "inverse_tool": "GMAIL_DELETE_LABEL",
+      "rationale": "Synthetic fixture, not model output: verb CREATE maps to compensable."
+    },
+    "GMAIL_DELETE_LABEL": {
+      "class": "irreversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb DELETE maps to irreversible."
+    },
+    "GMAIL_FETCH_EMAILS": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb FETCH maps to reversible."
+    },
+    "GMAIL_FORWARD_MESSAGE": {
+      "class": "irreversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb FORWARD maps to irreversible."
+    },
+    "GMAIL_GET_ATTACHMENT": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+    },
+    "GMAIL_GET_CONTACTS": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+    },
+    "GMAIL_GET_LABEL": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+    },
+    "GMAIL_GET_PROFILE": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+    },
+    "GMAIL_LIST_CSE_IDENTITIES": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+    },
+    "GMAIL_LIST_CSE_KEYPAIRS": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+    },
+    "GMAIL_LIST_FORWARDING_ADDRESSES": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+    },
+    "GMAIL_LIST_MESSAGES": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+    },
+    "GMAIL_MODIFY_THREAD_LABELS": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb MODIFY maps to compensable."
+    },
+    "GMAIL_PATCH_LABEL": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb PATCH maps to compensable."
+    },
+    "GMAIL_PATCH_SEND_AS": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb PATCH maps to compensable."
+    },
+    "GMAIL_REPLY_TO_THREAD": {
+      "class": "irreversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb REPLY maps to irreversible."
+    },
+    "GMAIL_SEND_DRAFT": {
+      "class": "irreversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb SEND maps to irreversible."
+    },
+    "GMAIL_SEND_EMAIL": {
+      "class": "irreversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb SEND maps to irreversible."
+    },
+    "GMAIL_STOP_WATCH": {
+      "class": "unknown",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb none maps to unknown."
+    },
+    "GMAIL_UPDATE_DRAFT": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb UPDATE maps to compensable."
+    },
+    "GMAIL_UPDATE_IMAP_SETTINGS": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb UPDATE maps to compensable."
+    },
+    "GMAIL_UPDATE_POP_SETTINGS": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb UPDATE maps to compensable."
+    },
+    "GOOGLECALENDAR_ACL_DELETE": {
+      "class": "irreversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb DELETE maps to irreversible."
+    },
+    "GOOGLECALENDAR_ACL_GET": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+    },
+    "GOOGLECALENDAR_ACL_INSERT": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb INSERT maps to compensable."
+    },
+    "GOOGLECALENDAR_ACL_LIST": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+    },
+    "GOOGLECALENDAR_ACL_UPDATE": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb UPDATE maps to compensable."
+    },
+    "GOOGLECALENDAR_ACL_WATCH": {
+      "class": "unknown",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb none maps to unknown."
+    },
+    "GOOGLECALENDAR_CALENDARS_DELETE": {
+      "class": "irreversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb DELETE maps to irreversible."
+    },
+    "GOOGLECALENDAR_CALENDAR_LIST_DELETE": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+    },
+    "GOOGLECALENDAR_CALENDAR_LIST_PATCH": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+    },
+    "GOOGLECALENDAR_CALENDAR_LIST_WATCH": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+    },
+    "GOOGLECALENDAR_CLEAR_CALENDAR": {
+      "class": "irreversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb CLEAR maps to irreversible."
+    },
+    "GOOGLECALENDAR_CREATE_CALENDAR": {
+      "class": "compensable",
+      "inverse_tool": "GOOGLECALENDAR_DELETE_CALENDAR",
+      "rationale": "Synthetic fixture, not model output: verb CREATE maps to compensable."
+    },
+    "GOOGLECALENDAR_CREATE_EVENT": {
+      "class": "compensable",
+      "inverse_tool": "GOOGLECALENDAR_DELETE_EVENT",
+      "rationale": "Synthetic fixture, not model output: verb CREATE maps to compensable."
+    },
+    "GOOGLECALENDAR_EVENTS_GET": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+    },
+    "GOOGLECALENDAR_EVENTS_INSTANCES": {
+      "class": "unknown",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb none maps to unknown."
+    },
+    "GOOGLECALENDAR_EVENTS_LIST_ALL_CALENDARS": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+    },
+    "GOOGLECALENDAR_EVENTS_WATCH": {
+      "class": "unknown",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb none maps to unknown."
+    },
+    "GOOGLECALENDAR_FREE_BUSY_QUERY": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb FREE maps to reversible."
+    },
+    "GOOGLECALENDAR_GET_CALENDAR_PROFILE": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+    },
+    "GOOGLECALENDAR_GET_CURRENT_USER": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+    },
+    "GOOGLECALENDAR_LIST_CALENDARS": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+    },
+    "GOOGLECALENDAR_PATCH_CALENDAR": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb PATCH maps to compensable."
+    },
+    "GOOGLECALENDAR_QUICK_ADD": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb QUICK maps to compensable."
+    },
+    "GOOGLECALENDAR_SETTINGS_GET": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+    },
+    "GOOGLECALENDAR_SETTINGS_WATCH": {
+      "class": "unknown",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb none maps to unknown."
+    },
+    "NOTION_ADD_MULTIPLE_PAGE_CONTENT": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb ADD maps to compensable."
+    },
+    "NOTION_APPEND_BLOCK_CHILDREN": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb APPEND maps to compensable."
+    },
+    "NOTION_APPEND_MEDIA_BLOCKS": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb APPEND maps to compensable."
+    },
+    "NOTION_APPEND_TEXT_BLOCKS": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb APPEND maps to compensable."
+    },
+    "NOTION_ARCHIVE_NOTION_PAGE": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb ARCHIVE maps to compensable."
+    },
+    "NOTION_CREATE_COMMENT": {
+      "class": "compensable",
+      "inverse_tool": "NOTION_DELETE_COMMENT",
+      "rationale": "Synthetic fixture, not model output: verb CREATE maps to compensable."
+    },
+    "NOTION_CREATE_NOTION_PAGE": {
+      "class": "compensable",
+      "inverse_tool": "NOTION_DELETE_NOTION_PAGE",
+      "rationale": "Synthetic fixture, not model output: verb CREATE maps to compensable."
+    },
+    "NOTION_CREATE_VIEW_QUERY": {
+      "class": "compensable",
+      "inverse_tool": "NOTION_DELETE_VIEW_QUERY",
+      "rationale": "Synthetic fixture, not model output: verb CREATE maps to compensable."
+    },
+    "NOTION_DELETE_BLOCK": {
+      "class": "irreversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb DELETE maps to irreversible."
+    },
+    "NOTION_DUPLICATE_PAGE": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb DUPLICATE maps to compensable."
+    },
+    "NOTION_FETCH_BLOCK_METADATA": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb FETCH maps to reversible."
+    },
+    "NOTION_FETCH_DATABASE": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb FETCH maps to reversible."
+    },
+    "NOTION_GET_ABOUT_ME": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+    },
+    "NOTION_GET_PAGE_MARKDOWN": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+    },
+    "NOTION_GET_VIEW_QUERY_RESULTS": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+    },
+    "NOTION_LIST_DATA_SOURCE_TEMPLATES": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+    },
+    "NOTION_LIST_FILE_UPLOADS": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+    },
+    "NOTION_MOVE_PAGE": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb MOVE maps to compensable."
+    },
+    "NOTION_QUERY_DATA_SOURCE": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb QUERY maps to reversible."
+    },
+    "NOTION_RETRIEVE_COMMENT": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb RETRIEVE maps to reversible."
+    },
+    "NOTION_RETRIEVE_PAGE": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb RETRIEVE maps to reversible."
+    },
+    "NOTION_SEND_FILE_UPLOAD": {
+      "class": "irreversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb SEND maps to irreversible."
+    },
+    "NOTION_UPDATE_BLOCK": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb UPDATE maps to compensable."
+    },
+    "NOTION_UPDATE_PAGE": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb UPDATE maps to compensable."
+    },
+    "NOTION_UPDATE_VIEW": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb UPDATE maps to compensable."
+    },
+    "SLACK_ADD_CALL_PARTICIPANTS": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb ADD maps to compensable."
+    },
+    "SLACK_ARCHIVE_CONVERSATION": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb ARCHIVE maps to compensable."
+    },
+    "SLACK_ASSISTANT_SEARCH_CONTEXT": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb SEARCH maps to reversible."
+    },
+    "SLACK_CHAT_POST_MESSAGE": {
+      "class": "irreversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb POST maps to irreversible."
+    },
+    "SLACK_CREATE_A_REMINDER": {
+      "class": "compensable",
+      "inverse_tool": "SLACK_DELETE_A_REMINDER",
+      "rationale": "Synthetic fixture, not model output: verb CREATE maps to compensable."
+    },
+    "SLACK_CREATE_USER_GROUP": {
+      "class": "compensable",
+      "inverse_tool": "SLACK_DELETE_USER_GROUP",
+      "rationale": "Synthetic fixture, not model output: verb CREATE maps to compensable."
+    },
+    "SLACK_DELETE_CANVAS": {
+      "class": "irreversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb DELETE maps to irreversible."
+    },
+    "SLACK_DELETE_SLACK_LIST_ITEM": {
+      "class": "irreversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb DELETE maps to irreversible."
+    },
+    "SLACK_FETCH_CONVERSATION_HISTORY": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb FETCH maps to reversible."
+    },
+    "SLACK_GET_APP_PERMISSION_SCOPES": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+    },
+    "SLACK_GET_CALL_INFO": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+    },
+    "SLACK_GET_WORKSPACE_CONNECTIONS_FOR_CHANNEL": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+    },
+    "SLACK_INVITE_USERS_TO_A_SLACK_CHANNEL": {
+      "class": "irreversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb INVITE maps to irreversible."
+    },
+    "SLACK_LIST_ADMIN_APPS_APPROVED": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+    },
+    "SLACK_LIST_ALL_USERS": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+    },
+    "SLACK_LIST_IDP_GROUPS_LINKED_TO_CHANNEL": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+    },
+    "SLACK_LIST_USER_GROUPS": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+    },
+    "SLACK_READ_AUDIT_LOGS": {
+      "class": "reversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb READ maps to reversible."
+    },
+    "SLACK_RESET_USER_SESSIONS": {
+      "class": "irreversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb RESET maps to irreversible."
+    },
+    "SLACK_REVOKE_FILE_PUBLIC_SHARING": {
+      "class": "irreversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb REVOKE maps to irreversible."
+    },
+    "SLACK_SEND_EPHEMERAL_MESSAGE": {
+      "class": "irreversible",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb SEND maps to irreversible."
+    },
+    "SLACK_SET_CONVERSATION_PREFS": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb SET maps to compensable."
+    },
+    "SLACK_SET_USER_PRESENCE": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb SET maps to compensable."
+    },
+    "SLACK_UNARCHIVE_CHANNEL": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb UNARCHIVE maps to compensable."
+    },
+    "SLACK_UPDATE_CALL_INFO": {
+      "class": "compensable",
+      "inverse_tool": null,
+      "rationale": "Synthetic fixture, not model output: verb UPDATE maps to compensable."
+    }
+  }
+}

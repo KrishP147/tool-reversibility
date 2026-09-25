@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "af3c05e1aefc2198fc0b784363e7d287cce60287ee490497689615e87aa3438a",
+  "slug": "GMAIL_GET_LABEL",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GMAIL_GET_LABEL",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb GET maps to reversible."
+    ]
+  }
+}

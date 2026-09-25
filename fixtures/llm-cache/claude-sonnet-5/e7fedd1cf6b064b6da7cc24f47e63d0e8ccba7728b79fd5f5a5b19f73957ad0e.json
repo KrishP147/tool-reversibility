@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "e7fedd1cf6b064b6da7cc24f47e63d0e8ccba7728b79fd5f5a5b19f73957ad0e",
+  "slug": "GOOGLECALENDAR_CREATE_EVENT",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GOOGLECALENDAR_CREATE_EVENT",
+    "class": "compensable",
+    "inverse_tool": "GOOGLECALENDAR_DELETE_EVENT",
+    "rationale": "Synthetic fixture, not model output: verb CREATE maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb CREATE maps to compensable.",
+      "inverse_tool: GOOGLECALENDAR_DELETE_EVENT"
+    ]
+  }
+}

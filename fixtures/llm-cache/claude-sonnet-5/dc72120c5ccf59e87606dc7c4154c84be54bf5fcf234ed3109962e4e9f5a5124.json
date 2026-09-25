@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "dc72120c5ccf59e87606dc7c4154c84be54bf5fcf234ed3109962e4e9f5a5124",
+  "slug": "GMAIL_UPDATE_POP_SETTINGS",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GMAIL_UPDATE_POP_SETTINGS",
+    "class": "compensable",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb UPDATE maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb UPDATE maps to compensable."
+    ]
+  }
+}

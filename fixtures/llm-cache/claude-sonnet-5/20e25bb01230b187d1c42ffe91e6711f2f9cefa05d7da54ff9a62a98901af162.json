@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "20e25bb01230b187d1c42ffe91e6711f2f9cefa05d7da54ff9a62a98901af162",
+  "slug": "GITHUB_SET_A_THREAD_SUBSCRIPTION",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GITHUB_SET_A_THREAD_SUBSCRIPTION",
+    "class": "compensable",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb SET maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb SET maps to compensable."
+    ]
+  }
+}

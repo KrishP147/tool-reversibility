@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "14f87b9c8e423f590e4b7a020cc8b2220c5aea7c517363589b536d3a1551dbc5",
+  "slug": "GOOGLECALENDAR_CLEAR_CALENDAR",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GOOGLECALENDAR_CLEAR_CALENDAR",
+    "class": "irreversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb CLEAR maps to irreversible."
+  },
+  "result": {
+    "class": "irreversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb CLEAR maps to irreversible."
+    ]
+  }
+}
