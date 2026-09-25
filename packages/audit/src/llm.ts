@@ -493,6 +493,8 @@ export interface RunResult {
   /** Result per input tool slug. */
   results: Map<string, ClassifierResult>;
   hits: number;
+  /** Hits that are recorded fixtures (synthetic), not real model output. */
+  recordedHits: number;
   misses: number;
   submittedRequests: number;
   batchIds: string[];
@@ -580,6 +582,7 @@ export async function runLlmClassify(o: RunOptions): Promise<RunResult> {
   return {
     results,
     hits: plan.hits.size,
+    recordedHits: [...plan.hits.values()].filter((e) => e.provenance === "recorded").length,
     misses: plan.misses.length,
     submittedRequests,
     batchIds,

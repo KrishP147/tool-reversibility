@@ -93,7 +93,7 @@ export async function classifyCommand(
     return { output: `classify: snapshot dir not found: ${dir}`, exitCode: 2 };
   }
   const tools = loadSnapshotTools(dir, args.toolkits);
-  const rel = path.relative(repoRoot, dir) || ".";
+  const rel = (path.relative(repoRoot, dir) || ".").split(path.sep).join("/");
   const lines = [`classify: snapshot ${rel.startsWith("..") ? dir : rel}, ${tools.length} tools`];
   if (tools.length === 0) {
     lines.push("classify: no tools found (check --snapshot / --toolkits)");
@@ -185,6 +185,11 @@ export async function classifyCommand(
       (res.batchIds.length ? `, batches ${res.batchIds.join(",")}` : ""),
     `  ${CLASSES.map((c) => `${c} ${counts[c]}`).join(", ")}`,
   );
+  if (res.recordedHits > 0) {
+    lines.push(
+      `  note: ${res.recordedHits} results are recorded fixtures (synthetic, not model output); not usable for reports`,
+    );
+  }
   if (res.failed.length > 0) {
     const reasons = new Map<string, number>();
     for (const f of res.failed) reasons.set(f.reason, (reasons.get(f.reason) ?? 0) + 1);
