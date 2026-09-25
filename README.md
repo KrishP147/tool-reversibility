@@ -148,7 +148,8 @@ Zephyr was a team project. **Krish owned:**
 - the human-in-the-loop approval fixes: revised actions are re-authorized and may only narrow
   scope, runs pause and resume, and a blocked completion pauses for a human;
 - the Connections page: Composio, generic MCP servers and a reviewed tool inventory;
-- the sponsor integrations (a Gemini route, a GPTZero check, Sentry), each behind a mock twin.
+- the sponsor integrations (a Gemini route, a GPTZero check, Sentry), each behind a mock twin;
+  the Gemini and GPTZero paths were not run live at submission.
 
 The core runtime, the Hermes adapter, the tool registry, the browser family and the provider
 pipeline were teammates' work.
