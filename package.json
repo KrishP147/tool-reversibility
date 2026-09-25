@@ -12,7 +12,8 @@
     "build": "pnpm -r build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "audit:cli": "pnpm --filter audit start --"
+    "audit:cli": "pnpm --filter audit start --",
+    "check:stamped": "node --test scripts/check-stamped.test.mjs && node scripts/check-stamped.mjs"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
