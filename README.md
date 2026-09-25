@@ -93,12 +93,12 @@ manifest hash and the regenerate command. **Not built yet: it lands with issue #
 
 **Current CLI state** (see `packages/audit/src/program.ts`, `classifyCommand.ts`):
 
-| command            | status                                                                                                                                                 |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `fetch`            | works (resumable, backoff on 429/5xx, REST fallback where the SDK rejects a payload)                                                                   |
-| `classify --llm`   | works: `--dry-run` cost gate, cache replay, `--live` Batches submission behind the key and approval                                                    |
-| `classify --rules` | classifier built and tested (`rules.ts`, `rulesCommand.ts`); the CLI flag still prints `rules: not implemented (#3)` until it is wired in (`TODO(#3)`) |
-| `report`, `all`    | print `not implemented`; land with issue #5                                                                                                            |
+| command            | status                                                                                              |
+| ------------------ | --------------------------------------------------------------------------------------------------- |
+| `fetch`            | works (resumable, backoff on 429/5xx, REST fallback where the SDK rejects a payload)                |
+| `classify --llm`   | works: `--dry-run` cost gate, cache replay, `--live` Batches submission behind the key and approval |
+| `classify --rules` | works: rule classifier table (`rules.ts`) with derived tier; default `classify` runs rules then LLM |
+| `report`, `all`    | print `not implemented`; land with issue #5                                                         |
 
 ### Mock inbox (zero keys)
 
@@ -106,8 +106,8 @@ manifest hash and the regenerate command. **Not built yet: it lands with issue #
 pnpm --filter inbox dev     # http://localhost:3000
 ```
 
-Mock mode (`INBOX_MODE=mock`) is the default. It reads the illustrative pending actions in
-`fixtures/pending/*.json` and `reports/report.json`; until issue #5 ships a report it falls back to
+Mock mode (`INBOX_MODE=mock`) is the default. It reads the pending actions in
+`fixtures/pending/*.json` (real catalog slugs and field names, illustrative values) and `reports/report.json`; until issue #5 ships a report it falls back to
 a stub and shows a banner saying so. Details: [apps/inbox/README.md](apps/inbox/README.md).
 
 ## Limitations

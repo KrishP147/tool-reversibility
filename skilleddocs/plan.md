@@ -34,31 +34,31 @@ on TS dashboard/SDK/docs work, and the side-quest PRs land in `ts/packages/*`. e
 ### 3a. `packages/audit`: fetch → extract → classify (rules, llm) → compare → report
 - **Fetch.** `new Composio({ apiKey: process.env.COMPOSIO_API_KEY })`. Enumerate toolkits with
   `composio.toolkits.get({ limit, cursor })`. The query fields `category, cursor, limit, managedBy, sortBy` are verified; the
-  next-cursor field is `next_cursor`, visible only on the raw client, so we page via `composio.getClient().toolkits.list` (resolved, D17). Then, per toolkit, call
+  next-cursor field is `next_cursor`, visible only on the raw client, so we page via `composio.getClient().toolkits.list` (resolved, D19). Then, per toolkit, call
   `composio.tools.getRawComposioTools({ toolkits: [slug], limit })`. `tool.types.ts` confirms `ToolListParams` is a
   union that requires one of `tools | toolkits | search | tags | authConfigIds`. There is no unfiltered call and
   no `cursor` on this method. `limit: 1000` does not truncate any current toolkit (max 896, github); the guard still
-  compares against toolkit metadata and falls back to the REST tools list with a cursor (resolved, D18; SDK payload rejection also falls back, D19).
+  compares against toolkit metadata and falls back to the REST tools list with a cursor (resolved, D20; SDK payload rejection also falls back, D21).
   Concurrency ≤4, exponential backoff on 429/5xx, resumable (skip toolkits already snapshotted), and `--refresh`.
 - **Snapshot.** `fixtures/catalog/<date>/<toolkit>.json` holds the normalized Tool (`slug, name, description, tags,
   inputParameters, toolkit, version, isDeprecated, scopes`; fields verified in the docs). `manifest.json` records the SDK
   version, date and counts. A trimmed 5-toolkit fixture is committed so tests and CI run without a key.
 - **Hints.** Map `tags[]` to 7 booleans and keep unknown tags raw. The SDK does not expose the Enhanced Controls tier
-  (resolved, D20: no tier field on Tool or toolkit, raw or SDK). So derive the effective tier from
+  (resolved, D22: no tier field on Tool or toolkit, raw or SDK). So derive the effective tier from
   the hints (destructiveHint→Destructive, readOnlyHint→Read, else Write) and label the column "derived". Cite #4327, which
   shows the real mapping is keyed by slug and drifts.
 - **Rules** (`rules.ts`, pure, table-tested). Tokenize the slug verb (after the toolkit prefix), the description and the schema.
   Irreversible: SEND, POST, PUBLISH, PAY, CHARGE, TRANSFER, NOTIFY, INVITE, REPLY, FORWARD, MERGE, DEPLOY,
-  EXECUTE, and DELETE/PURGE/EMPTY_TRASH when no restore is documented. Compensable (an inverse exists): CREATE/ADD/
+  EXECUTE, and DELETE/PURGE/EMPTY_TRASH when no restore is documented (explicit no-way-back text, e.g. "cannot be undone", beats restore keywords, D26). Compensable (an inverse exists): CREATE/ADD/
   INSERT/UPDATE/PATCH/MOVE/ARCHIVE/LABEL, and update with an id param. Reversible (no external effect):
-  GET/LIST/SEARCH/FETCH/READ/FIND/DESCRIBE, or `readOnlyHint`. Anything else is `unknown`.
+  GET/LIST/SEARCH/FETCH/READ/FIND/DESCRIBE, or `readOnlyHint`. Anything else is `unknown` (missing verbs tracked in #18, D27).
   Output: `{ class, confidence, reasons[] }`.
 - **LLM** (`llm.ts`). `claude-opus-5` at effort `low` (D3), overridable with `CLASSIFIER_MODEL`. Send ~25 tools per
   request through the Message Batches API (50% cost). Get structured output via `output_config.format` with a JSON schema
   `{slug, class, inverse_tool?, rationale≤200}`. Don't set temperature (it's removed on current models). Key results
   by `custom_id`, never by position. Handle `stop_reason: "refusal"` by marking the tool `unknown`. Cache each result at
   `fixtures/llm-cache/<model>/<sha256(prompt_version+tool JSON)>.json` so re-runs are free. The prompt lives in
-  `prompts/classify.v1.md`. `--dry-run` prints the `count_tokens` estimate and the dollar cost before spending anything.
+  `prompts/classify.v1.md`. `--dry-run` prints a local token estimate (3.5 chars/token, no API call, D25) and the dollar cost before spending anything. Packing, deprecated handling and request shape: D28-D30.
 - **Compare/report.** For each tool, record the rule class, LLM class, agreement, hints, tier, and `GAP` = (both say irreversible) ∧
   ¬destructiveHint. REPORT.md holds totals, a confusion matrix, per-toolkit tables, the top-50 gaps and a disagreement sample.
   The header of every report is stamped with date, commit hash, SDK version, model id, prompt version and catalog manifest hash.
@@ -175,3 +175,15 @@ A ready-to-paste Composio feature-request issue. **Problem:** the hints describe
 - D22 **Tier exposure:** not exposed. Neither the SDK `Tool` (`slug, name, description, inputParameters, outputParameters, tags, toolkit, version, isDeprecated, availableVersions, scopes, isNoAuth`) nor the raw tool (adds `scope_requirements, no_auth, human_description, deprecated`) nor the toolkit object carries a Read/Write/Destructive tier; the only `permissions` in the SDK is session elicitation config. Per D6 the tier column is **derived** from hints.
 - D23 **`GMAIL_SEND_EMAIL` tags:** `important, openWorldHint, createHint` (SDK and raw agree). No `destructiveHint`, so it is a GAP candidate under D2.
 - D24 **Snapshot shape:** `fixtures/catalog/<date>/<slug>.json` = `{ schemaVersion, toolkit, source, fallbackReason?, fetchedAt, toolCount, fullToolCount, tools[] }`; `manifest.json` = SDK version, date, command, counts, failures, per-toolkit counts. Resume skips any toolkit with a valid file; `--refresh` re-fetches. Full run: `pnpm audit:cli fetch` at commit `abdba72` (resume pass) → 1562 toolkits, 56,216 tools (659 deprecated), 0 failures, 0 truncation fallbacks, 8 sdk-error fallbacks; ~169 MB, gitignored. Trimmed fixture: `--toolkits gmail,slack,github,googlecalendar,notion --out fixtures/catalog/trimmed --max-tools 25`; slugs unchanged; 125 of 1,233 tools kept (pins `GMAIL_SEND_EMAIL` and one tool per common verb).
+
+## 11. Issues 3/4/6 verification (2026-09-25, verifier on user's behalf)
+- D25 **Token estimate (#4):** `--dry-run` estimates tokens locally at 3.5 chars/token instead of calling `count_tokens`. Why: a dry run must never need a key or touch a paid/remote API (D11); the estimate only gates approval. §3a amended.
+- D26 **DELETE precedence (#3):** in the DELETE branch, explicit no-way-back description text ("cannot be undone", "no recovery", "bypassing Trash") wins over restore keywords ("undo", "trash"). Fixes `SLACK_DELETE_SLACK_LIST_ITEM` and `GMAIL_BATCH_DELETE_MESSAGES` being compensable; `NOTION_DELETE_BLOCK` (archive, restorable) stays compensable.
+- D27 **Missing verbs (#3):** REMOVE/REVOKE/WATCH/DUPLICATE/SET/UNARCHIVE/ABORT are not in the rule table and fall to `unknown`, matching §3a as written. Tracked as #18 (sonnet). Slug-noun misreads (`GMAIL_PATCH_SEND_AS` -> SEND) are accepted heuristic noise for now; #5's rule-vs-LLM compare surfaces them.
+- D28 **Deprecated tools (#4):** excluded from the LLM pass by default (`--include-deprecated` adds them); the rules pass still classifies them. Full catalog: 55,557 of 56,216 sent. Report totals (#5) must state which population they cover.
+- D29 **Request shape (#4):** effort `low`, thinking disabled, structured output via json_schema (`additionalProperties: false`) inside a Batch; no temperature, prefill or fallbacks. Not yet tried against the real API, so the first live run is the trimmed fixture (~$0.12 on sonnet-5), approval-gated per D11.
+- D30 **Packing (#4):** requests are packed to a 40k-token budget with a 25-tool cap; an oversized tool goes alone. On the real catalog the 25-tool cap binds first.
+- D31 **Synthetic cache (#4):** the committed trimmed cache (`fixtures/llm-cache`, `provenance: "recorded"`) is a slug-verb heuristic, not model output. `--dry-run` and `--live` ignore it, a plain `classify --llm` warns when it is used, and **#5 must never report numbers from it as Composio/model results**.
+- D32 **Formatting (#3/#4/#6):** `classification.ts` is one file (both branches were byte-identical, merged cleanly). Reformatted with prettier rather than prettier-ignored, along with 10 inbox files from #6; the byte-identical rule only existed to avoid a merge conflict. `prettier --check --end-of-line auto packages apps` is clean.
+- D33 **`classify --rules` (#3/#4):** wired to `rulesCommand` (the #4 `TODO(#3)` stub is gone); default `classify` runs rules then LLM. classify tests now pin `--snapshot fixtures/catalog/trimmed`, because a local gitignored dated snapshot otherwise wins `resolveSnapshotDir` and the tests fail (and take minutes) on any machine that has run a full fetch.
+- D34 **Inbox fixtures (#6):** `fixtures/pending/*` and the stub report now use real catalog slugs and field names: `GMAIL_SEND_EMAIL.recipient_email`, `GITHUB_UPDATE_AN_ISSUE` (owner/repo/issue_number), `NOTION_ARCHIVE_NOTION_PAGE` (the catalog has no `NOTION_DELETE_PAGE`), `SLACK_SEND_MESSAGE.markdown_text`. Stub hints come from real tags (D23) and `ruleClass` from the rules classifier; `llmClass` stays illustrative and the report keeps `stub: true`. `SendPreview` reads the real names and still accepts the legacy `to`/`text`.
