@@ -26,6 +26,7 @@ import {
 import type { SnapshotTool } from "./normalize.js";
 import { catalogRoot, findRepoRoot } from "./paths.js";
 import type { CommandResult, ParsedArgs } from "./program.js";
+import { rulesCommand } from "./rulesCommand.js";
 import { listSnapshotSlugs, MANIFEST_FILE, readToolkitFile } from "./snapshot.js";
 
 export interface ClassifyCommandDeps {
@@ -105,8 +106,9 @@ export async function classifyCommand(
   let exitCode = 0;
 
   if (runRules) {
-    // TODO(#3): wire rulesCommand from ./rulesCommand.js once #3 lands.
-    lines.push("rules: not implemented (#3)");
+    const rules = await rulesCommand({ snapshotDir: dir, toolkits: args.toolkits });
+    lines.push(rules.output);
+    if (rules.exitCode !== 0) exitCode = rules.exitCode;
   }
   if (!runLlm) return { output: lines.join("\n"), exitCode };
 

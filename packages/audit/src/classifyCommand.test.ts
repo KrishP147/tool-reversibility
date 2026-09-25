@@ -10,6 +10,8 @@ import { recordedDir } from "./testing/buildLlmFixture.js";
 import { createFakeBatchClient, recordedResponder } from "./testing/fakeAnthropic.js";
 
 const repoRoot = findRepoRoot();
+// Pin the committed fixture: a local gitignored dated snapshot would otherwise win.
+const TRIMMED = "fixtures/catalog/trimmed";
 const SECRET = "sk-ant-test-DO-NOT-PRINT-0123456789";
 const answers = (
   JSON.parse(readFileSync(path.join(recordedDir(repoRoot), "trimmed.answers.json"), "utf8")) as {
@@ -42,7 +44,7 @@ describe("classify --llm --dry-run", () => {
   it("prints tokens + $ for sonnet and opus and never constructs a client", async () => {
     const factory = neverClient();
     const res = await classifyCommand(
-      parseArgs(["classify", "--llm", "--dry-run"]),
+      parseArgs(["classify", "--snapshot", TRIMMED, "--llm", "--dry-run"]),
       deps(factory, { ANTHROPIC_API_KEY: SECRET }),
     );
     expect(res.exitCode).toBe(0);
@@ -65,22 +67,34 @@ describe("classify --llm --dry-run", () => {
   });
 
   it("does not count recorded (synthetic) cache entries as hits", async () => {
-    const res = await classifyCommand(parseArgs(["classify", "--llm", "--dry-run"]), {
-      ...deps(neverClient()),
-      cacheRoot: undefined,
-    });
+    const res = await classifyCommand(
+      parseArgs(["classify", "--snapshot", TRIMMED, "--llm", "--dry-run"]),
+      {
+        ...deps(neverClient()),
+        cacheRoot: undefined,
+      },
+    );
     expect(res.output).toContain("claude-sonnet-5: 0 cache hits");
   });
 
   it("excludes live cache hits and honours --include-deprecated and --model", async () => {
     const fake = createFakeBatchClient({ respond: recordedResponder(answers) });
     await classifyCommand(
-      parseArgs(["classify", "--llm", "--live", "--toolkits", "gmail"]),
+      parseArgs(["classify", "--snapshot", TRIMMED, "--llm", "--live", "--toolkits", "gmail"]),
       deps(() => fake, { ANTHROPIC_API_KEY: SECRET }),
     );
     const factory = neverClient();
     const res = await classifyCommand(
-      parseArgs(["classify", "--llm", "--dry-run", "--include-deprecated", "--model", "claude-x"]),
+      parseArgs([
+        "classify",
+        "--snapshot",
+        TRIMMED,
+        "--llm",
+        "--dry-run",
+        "--include-deprecated",
+        "--model",
+        "claude-x",
+      ]),
       deps(factory, { ANTHROPIC_API_KEY: SECRET }),
     );
     expect(factory).not.toHaveBeenCalled();
@@ -97,7 +111,7 @@ describe("classify --llm (no dry run)", () => {
   it("refuses to call the API without --live when tools are uncached", async () => {
     const factory = neverClient();
     const res = await classifyCommand(
-      parseArgs(["classify", "--llm"]),
+      parseArgs(["classify", "--snapshot", TRIMMED, "--llm"]),
       deps(factory, { ANTHROPIC_API_KEY: SECRET }),
     );
     expect(res.exitCode).toBe(2);
@@ -107,7 +121,10 @@ describe("classify --llm (no dry run)", () => {
 
   it("refuses --live without ANTHROPIC_API_KEY", async () => {
     const factory = neverClient();
-    const res = await classifyCommand(parseArgs(["classify", "--llm", "--live"]), deps(factory));
+    const res = await classifyCommand(
+      parseArgs(["classify", "--snapshot", TRIMMED, "--llm", "--live"]),
+      deps(factory),
+    );
     expect(res.exitCode).toBe(2);
     expect(factory).not.toHaveBeenCalled();
     expect(res.output).toContain("--live needs ANTHROPIC_API_KEY");
@@ -117,7 +134,7 @@ describe("classify --llm (no dry run)", () => {
     const fake = createFakeBatchClient({ respond: recordedResponder(answers), shuffle: true });
     const factory = vi.fn((_key: string) => fake as BatchClient);
     const first = await classifyCommand(
-      parseArgs(["classify", "--llm", "--live"]),
+      parseArgs(["classify", "--snapshot", TRIMMED, "--llm", "--live"]),
       deps(factory, { ANTHROPIC_API_KEY: SECRET }),
     );
     expect(first.exitCode).toBe(0);
@@ -128,7 +145,7 @@ describe("classify --llm (no dry run)", () => {
 
     const again = neverClient();
     const second = await classifyCommand(
-      parseArgs(["classify", "--llm", "--live"]),
+      parseArgs(["classify", "--snapshot", TRIMMED, "--llm", "--live"]),
       deps(again, { ANTHROPIC_API_KEY: SECRET }),
     );
     expect(second.exitCode).toBe(0);
@@ -139,7 +156,7 @@ describe("classify --llm (no dry run)", () => {
 
   it("uses the committed recorded cache offline and says it is synthetic", async () => {
     const factory = neverClient();
-    const res = await classifyCommand(parseArgs(["classify", "--llm"]), {
+    const res = await classifyCommand(parseArgs(["classify", "--snapshot", TRIMMED, "--llm"]), {
       ...deps(factory),
       cacheRoot: undefined,
     });
@@ -151,9 +168,16 @@ describe("classify --llm (no dry run)", () => {
 });
 
 describe("classify --rules", () => {
-  it("reports rules as not implemented until #3 lands", async () => {
-    const res = await classifyCommand(parseArgs(["classify", "--rules"]), deps(neverClient()));
-    expect(res.output).toContain("rules: not implemented (#3)");
+  it("runs the rule classifier table and skips the LLM", async () => {
+    const factory = neverClient();
+    const res = await classifyCommand(
+      parseArgs(["classify", "--snapshot", TRIMMED, "--rules", "--toolkits", "gmail"]),
+      deps(factory),
+    );
+    expect(res.exitCode).toBe(0);
+    expect(factory).not.toHaveBeenCalled();
+    expect(res.output).toContain("tier (derived)");
+    expect(res.output).toMatch(/GMAIL_SEND_EMAIL\s.*irreversible/);
     expect(res.output).not.toContain("llm");
   });
 });
