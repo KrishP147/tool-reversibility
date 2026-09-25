@@ -25,6 +25,9 @@ const IRREVERSIBLE_VERBS: ReadonlySet<string> = new Set([
 /** DELETE/PURGE/EMPTY_TRASH are irreversible only when no restore is documented. */
 const DELETE_LIKE_VERBS: ReadonlySet<string> = new Set(["DELETE", "PURGE"]);
 
+/** WATCH/DUPLICATE/SET/UNARCHIVE added for #16/D27: each has a plain inverse
+ * (unwatch/discard the copy/re-set the old value/re-archive), so all four are
+ * flat compensable, no description check needed. */
 const COMPENSABLE_VERBS: ReadonlySet<string> = new Set([
   "CREATE",
   "ADD",
@@ -34,6 +37,10 @@ const COMPENSABLE_VERBS: ReadonlySet<string> = new Set([
   "MOVE",
   "ARCHIVE",
   "LABEL",
+  "WATCH",
+  "DUPLICATE",
+  "SET",
+  "UNARCHIVE",
 ]);
 
 const READ_VERBS: ReadonlySet<string> = new Set([
@@ -44,6 +51,50 @@ const READ_VERBS: ReadonlySet<string> = new Set([
   "READ",
   "FIND",
   "DESCRIBE",
+]);
+
+/**
+ * REMOVE/REVOKE (#16/D27): default compensable (an add/grant inverse exists,
+ * e.g. re-add the member, re-share the link), unless the description states
+ * the removal itself is permanent/irreversible (reuses IRREVERSIBLE_KEYWORDS,
+ * e.g. GITHUB_REMOVE_TEAM_MEMBERSHIP: "This action is irreversible").
+ */
+const REMOVE_REVOKE_VERBS: ReadonlySet<string> = new Set(["REMOVE", "REVOKE"]);
+
+/**
+ * ABORT/CANCEL (#16/D27): stopping something not yet started is compensable
+ * (nothing external happened yet — just retry it later); stopping something
+ * already in flight is irreversible when it can't be resumed (e.g.
+ * GITHUB_ABORT_REPOSITORY_MIGRATION: "queued or in progress" / "ongoing
+ * migration operation" — the migration can't be picked back up). Decided via
+ * the description; default (no in-flight signal found) is compensable.
+ */
+const ABORT_CANCEL_VERBS: ReadonlySet<string> = new Set(["ABORT", "CANCEL"]);
+
+/** Evidence a description shows the stopped operation was already in flight. */
+const INFLIGHT_KEYWORDS: DescKeyword[] = [
+  { stem: "in progress", label: "in progress" },
+  { stem: "in-flight", label: "in-flight" },
+  { stem: "ongoing", label: "ongoing" },
+  { stem: "already running", label: "already running" },
+  { stem: "underway", label: "underway" },
+  { stem: "cannot be resumed", label: "cannot be resumed" },
+  { stem: "can't be resumed", label: "cannot be resumed" },
+];
+
+/**
+ * Tokens after which a later SEND/POST token is a noun, not a verb (#16/D27):
+ * GMAIL_PATCH_SEND_AS patches a "send-as" alias, it doesn't send anything;
+ * the real verb is the one before it. Scoped to SEND/POST only — those are
+ * the two irreversible verbs that also double as common noun phrases
+ * ("send-as", "post message" as a resource) in these slugs.
+ */
+const NOUN_PRECEDING_VERBS: ReadonlySet<string> = new Set([
+  "PATCH",
+  "UPDATE",
+  "GET",
+  "LIST",
+  "CREATE",
 ]);
 
 interface DescKeyword {
@@ -96,6 +147,32 @@ export function tokensFromSlug(slug: string, toolkitSlug: string): string[] {
   return rest.split("_").filter(Boolean);
 }
 
+/**
+ * Mask SEND/POST tokens that are really nouns (#16/D27), so later tiers can
+ * find the real verb instead: a SEND/POST that follows a NOUN_PRECEDING_VERBS
+ * token anywhere earlier in the slug is masked (GMAIL_PATCH_SEND_AS -> PATCH
+ * wins). SEND specifically is also masked whenever the slug contains UPLOAD,
+ * regardless of position: NOTION_SEND_FILE_UPLOAD "sends" bytes to a file
+ * upload object created by an earlier call and deletable/replaceable
+ * afterward — it finishes a create/upload flow rather than delivering a
+ * message externally, so it's routed to the updateHint+id-param compensable
+ * rule (tier 3b) instead of the SEND verb. This is deliberately narrow (SEND
+ * only, paired with UPLOAD only) rather than a blanket "*_UPLOAD" rule, since
+ * NOTION_SEND_FILE_UPLOAD is the only tool in the fixture shaped like this;
+ * see the matching test in rules.test.ts.
+ */
+function maskNounSendPost(tokens: string[]): string[] {
+  let sawPrecedingVerb = false;
+  const hasUpload = tokens.includes("UPLOAD");
+  return tokens.map((t) => {
+    if (NOUN_PRECEDING_VERBS.has(t)) sawPrecedingVerb = true;
+    if ((t === "SEND" || t === "POST") && (sawPrecedingVerb || (t === "SEND" && hasUpload))) {
+      return `${t}#noun`;
+    }
+    return t;
+  });
+}
+
 /** True when tokens contain the two-token verb EMPTY_TRASH anywhere. */
 function hasEmptyTrash(tokens: string[]): boolean {
   for (let i = 0; i + 1 < tokens.length; i += 1) {
@@ -118,12 +195,13 @@ function clamp01(n: number): number {
 
 /**
  * Classify one tool. Precedence: readOnlyHint -> reversible; then an
- * irreversible verb (incl. conditional DELETE/PURGE/EMPTY_TRASH); then a
+ * irreversible verb (incl. conditional DELETE/PURGE/EMPTY_TRASH); then
+ * REMOVE/REVOKE (conditional) and ABORT/CANCEL (conditional, #16/D27); then a
  * compensable verb (or update+id-param); then a read verb; else unknown.
  */
 export function classifyTool(tool: SnapshotTool): ClassifierResult {
   const hints = deriveHints(tool.tags);
-  const tokens = tokensFromSlug(tool.slug, tool.toolkit.slug);
+  const tokens = maskNounSendPost(tokensFromSlug(tool.slug, tool.toolkit.slug));
   const description = tool.description;
 
   // 1. readOnlyHint always wins: no external effect, regardless of verb.
@@ -177,6 +255,45 @@ export function classifyTool(tool: SnapshotTool): ClassifierResult {
       confidence = clamp01(confidence + 0.05);
     }
     return { class: "irreversible", confidence, reasons };
+  }
+
+  // 2c. REMOVE/REVOKE: compensable by default (an add/grant inverse exists),
+  // unless the description states the removal is permanent/irreversible.
+  for (const t of tokens) {
+    if (REMOVE_REVOKE_VERBS.has(t)) {
+      const irreversibleHit = findDescKeyword(description, IRREVERSIBLE_KEYWORDS);
+      if (irreversibleHit) {
+        return {
+          class: "irreversible",
+          confidence: 0.85,
+          reasons: [`verb:${t}`, `desc:"${irreversibleHit}"`],
+        };
+      }
+      return { class: "compensable", confidence: 0.75, reasons: [`verb:${t}`] };
+    }
+  }
+
+  // 2d. ABORT/CANCEL: irreversible only when the description shows the
+  // stopped operation was already in flight and can't be resumed; otherwise
+  // compensable (nothing external happened yet).
+  for (const t of tokens) {
+    if (ABORT_CANCEL_VERBS.has(t)) {
+      const irreversibleHit = findDescKeyword(description, IRREVERSIBLE_KEYWORDS);
+      const inflightHit = irreversibleHit ? null : findDescKeyword(description, INFLIGHT_KEYWORDS);
+      const hit = irreversibleHit ?? inflightHit;
+      if (hit) {
+        return {
+          class: "irreversible",
+          confidence: 0.8,
+          reasons: [`verb:${t}`, `desc:"${hit}"`],
+        };
+      }
+      return {
+        class: "compensable",
+        confidence: 0.6,
+        reasons: [`verb:${t}`, "desc:no-inflight-signal"],
+      };
+    }
   }
 
   // 3. Compensable verbs: an inverse API exists.
