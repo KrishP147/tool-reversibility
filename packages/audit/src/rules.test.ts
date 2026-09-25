@@ -339,6 +339,177 @@ describe("classifyTool: synthetic edge cases", () => {
   });
 });
 
+describe("classifyTool: issue #16 — missing verbs resolve fixture unknowns (D27)", () => {
+  const cases: [slug: string, expected: ReversibilityClass, why: string][] = [
+    [
+      "GITHUB_ABORT_REPOSITORY_MIGRATION",
+      "irreversible",
+      "ABORT, description says queued/in progress",
+    ],
+    ["GITHUB_REMOVE_TEAM_MEMBERSHIP", "irreversible", "REMOVE, description says irreversible"],
+    ["GOOGLECALENDAR_ACL_WATCH", "compensable", "WATCH verb"],
+    ["GOOGLECALENDAR_EVENTS_WATCH", "compensable", "WATCH verb"],
+    ["GOOGLECALENDAR_SETTINGS_WATCH", "compensable", "WATCH verb"],
+    ["NOTION_DUPLICATE_PAGE", "compensable", "DUPLICATE verb"],
+    ["SLACK_REVOKE_FILE_PUBLIC_SHARING", "irreversible", "REVOKE, description says irreversible"],
+    ["SLACK_SET_USER_PRESENCE", "compensable", "SET verb"],
+    ["SLACK_UNARCHIVE_CHANNEL", "compensable", "UNARCHIVE verb"],
+    ["GMAIL_PATCH_SEND_AS", "compensable", "PATCH is the verb; SEND is a noun (send-as alias)"],
+    [
+      "NOTION_SEND_FILE_UPLOAD",
+      "compensable",
+      "SEND+UPLOAD -> updateHint+id-param, not a send verb",
+    ],
+  ];
+
+  // Side effect of adding WATCH to COMPENSABLE_VERBS: this tool was previously
+  // (mis)classified reversible via the LIST token (no other verb matched); WATCH
+  // now wins per the same tier-precedence that already lets DELETE beat LIST in
+  // GOOGLECALENDAR_CALENDAR_LIST_DELETE. Registering a push-notification channel
+  // is a side effect (undo it by stopping the channel), not a no-op read, so
+  // compensable is the more correct class — recorded here as a deliberate
+  // reclassification, not a regression.
+  it("GOOGLECALENDAR_CALENDAR_LIST_WATCH is compensable (WATCH), not reversible (LIST)", () => {
+    const result = classifyTool(fixture("GOOGLECALENDAR_CALENDAR_LIST_WATCH"));
+    expect(result.class).toBe("compensable");
+    expect(result.reasons).toContain("verb:WATCH");
+  });
+
+  it.each(cases)("%s -> %s (%s)", (slug, expected) => {
+    const result = classifyTool(fixture(slug));
+    expect(result.class).toBe(expected);
+    expect(result.class).not.toBe("unknown");
+    expectValid(result);
+  });
+
+  it("GITHUB_ABORT_REPOSITORY_MIGRATION cites the ABORT verb and the in-flight description evidence", () => {
+    const result = classifyTool(fixture("GITHUB_ABORT_REPOSITORY_MIGRATION"));
+    expect(result.reasons).toContain("verb:ABORT");
+    expect(result.reasons.some((r) => r.startsWith('desc:"'))).toBe(true);
+  });
+
+  it("GITHUB_REMOVE_TEAM_MEMBERSHIP cites the REMOVE verb and the irreversible description evidence", () => {
+    const result = classifyTool(fixture("GITHUB_REMOVE_TEAM_MEMBERSHIP"));
+    expect(result.reasons).toContain("verb:REMOVE");
+    expect(result.reasons).toContain('desc:"irreversible"');
+  });
+
+  it("NOTION_SEND_FILE_UPLOAD is compensable via updateHint+id-param, not a masked SEND verb", () => {
+    const result = classifyTool(fixture("NOTION_SEND_FILE_UPLOAD"));
+    expect(result.reasons).toContain("hint:updateHint");
+    expect(result.reasons).toContain("schema:id-param");
+    expect(result.reasons.some((r) => r.startsWith("verb:SEND"))).toBe(false);
+  });
+
+  it("GMAIL_PATCH_SEND_AS's reason names PATCH, not SEND, as the verb", () => {
+    const result = classifyTool(fixture("GMAIL_PATCH_SEND_AS"));
+    expect(result.reasons).toContain("verb:PATCH");
+    expect(result.reasons.some((r) => r.startsWith("verb:SEND"))).toBe(false);
+  });
+});
+
+describe("classifyTool: issue #16 — REMOVE/REVOKE default compensable, override on keyword (D27)", () => {
+  it.each([
+    ["TESTKIT_REMOVE_MEMBER", "Removes a member from a project.", "compensable"],
+    [
+      "TESTKIT_REMOVE_MEMBER_PERM",
+      "Removes a member from a project permanently; they cannot be restored.",
+      "irreversible",
+    ],
+    ["TESTKIT_REVOKE_TOKEN", "Revokes an access token.", "compensable"],
+    [
+      "TESTKIT_REVOKE_TOKEN_PERM",
+      "Revokes an access token; this action cannot be undone.",
+      "irreversible",
+    ],
+  ] as const)("%s -> %s", (slug, description, expected) => {
+    const tool = synthTool({ slug, toolkitSlug: "testkit", description });
+    const result = classifyTool(tool);
+    expect(result.class).toBe(expected);
+    expectValid(result);
+  });
+});
+
+describe("classifyTool: issue #16 — WATCH/DUPLICATE/SET/UNARCHIVE are flat compensable (D27)", () => {
+  it.each(["WATCH", "DUPLICATE", "SET", "UNARCHIVE"] as const)("%s verb -> compensable", (verb) => {
+    const tool = synthTool({ slug: `TESTKIT_${verb}_THING`, toolkitSlug: "testkit" });
+    const result = classifyTool(tool);
+    expect(result.class).toBe("compensable");
+    expect(result.reasons).toContain(`verb:${verb}`);
+  });
+});
+
+describe("classifyTool: issue #16 — ABORT/CANCEL depend on in-flight description (D27)", () => {
+  it.each([
+    [
+      "TESTKIT_ABORT_JOB",
+      "Aborts a job that is already running and cannot be resumed.",
+      "irreversible",
+    ],
+    ["TESTKIT_ABORT_REQUEST", "Aborts a pending request before it starts.", "compensable"],
+    [
+      "TESTKIT_CANCEL_PAYOUT",
+      "Cancels a payout that is already in progress and cannot be resumed.",
+      "irreversible",
+    ],
+    [
+      "TESTKIT_CANCEL_SUBSCRIPTION",
+      "Cancels a subscription that has not started yet.",
+      "compensable",
+    ],
+  ] as const)("%s -> %s", (slug, description, expected) => {
+    const tool = synthTool({ slug, toolkitSlug: "testkit", description });
+    const result = classifyTool(tool);
+    expect(result.class).toBe(expected);
+    expectValid(result);
+  });
+
+  it("a compensable ABORT/CANCEL names the no-inflight-signal reason", () => {
+    const result = classifyTool(
+      synthTool({
+        slug: "TESTKIT_CANCEL_SUBSCRIPTION",
+        toolkitSlug: "testkit",
+        description: "Cancels a subscription that has not started yet.",
+      }),
+    );
+    expect(result.reasons).toContain("desc:no-inflight-signal");
+  });
+});
+
+describe("classifyTool: issue #16 — noun-as-verb masking for SEND/POST (D27)", () => {
+  it.each([
+    ["TESTKIT_GET_SEND_STATUS", "reversible", "verb:GET"],
+    ["TESTKIT_LIST_SEND_LOG", "reversible", "verb:LIST"],
+    ["TESTKIT_CREATE_SEND_NOTICE", "compensable", "verb:CREATE"],
+    ["TESTKIT_UPDATE_POST_STATUS", "compensable", "verb:UPDATE"],
+    ["TESTKIT_PATCH_POST_SETTINGS", "compensable", "verb:PATCH"],
+  ] as const)("%s -> %s (%s), SEND/POST is masked as a noun", (slug, expected, reason) => {
+    const tool = synthTool({ slug, toolkitSlug: "testkit" });
+    const result = classifyTool(tool);
+    expect(result.class).toBe(expected);
+    expect(result.reasons).toContain(reason);
+    expect(result.reasons.some((r) => r.startsWith("verb:SEND") || r.startsWith("verb:POST"))).toBe(
+      false,
+    );
+  });
+
+  it("SEND/POST still fires as a verb when it isn't preceded by a qualifying token", () => {
+    const result = classifyTool(
+      synthTool({ slug: "TESTKIT_BULK_POST_UPDATE", toolkitSlug: "testkit" }),
+    );
+    expect(result.class).toBe("irreversible");
+    expect(result.reasons).toContain("verb:POST");
+  });
+
+  it("the UPLOAD-paired SEND mask is scoped to SEND only, not POST", () => {
+    const result = classifyTool(
+      synthTool({ slug: "TESTKIT_POST_FILE_UPLOAD", toolkitSlug: "testkit" }),
+    );
+    expect(result.class).toBe("irreversible");
+    expect(result.reasons).toContain("verb:POST");
+  });
+});
+
 describe("classifyTool: every trimmed fixture tool (125 across 5 toolkits)", () => {
   it("loaded all 125 tools from the 5-toolkit trimmed fixture", () => {
     expect(ALL_TOOLS.length).toBe(125);
