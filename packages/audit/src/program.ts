@@ -13,6 +13,7 @@ export interface ParsedArgs {
   offline: boolean;
   dryRun: boolean;
   refresh: boolean;
+  out: string | null;
 }
 
 function isCommand(value: string): value is Command {
@@ -31,6 +32,7 @@ export function parseArgs(argv: string[]): ParsedArgs {
     offline: false,
     dryRun: false,
     refresh: false,
+    out: null,
   };
 
   // `pnpm <script> -- <args>` (and `npm run` before it) forwards the literal
@@ -53,6 +55,12 @@ export function parseArgs(argv: string[]): ParsedArgs {
       result.dryRun = true;
     } else if (arg === "--refresh") {
       result.refresh = true;
+    } else if (arg === "--out") {
+      const value = rest[i + 1];
+      if (value) {
+        result.out = value;
+        i += 1;
+      }
     } else if (arg === "--toolkits") {
       const value = rest[i + 1];
       if (value) {
@@ -87,22 +95,33 @@ export function helpText(): string {
     "  --offline           Use the committed trimmed fixture, no network",
     "  --dry-run           Print a cost estimate and exit before spending",
     "  --refresh           Ignore cached snapshots/results",
+    "  --out <dir>         fetch: output dir (default fixtures/catalog/<YYYY-MM-DD>)",
     "  -h, --help          Show this help",
   ].join("\n");
 }
 
+export interface CommandResult {
+  output: string;
+  exitCode: number;
+}
+
 /**
  * Build a description of the CLI's registered commands. This is the "program"
- * that cli.ts drives; kept pure/testable and separate from process I/O.
+ * that cli.ts drives; kept testable and separate from process I/O. Real
+ * command implementations are injected via `handlers`.
  */
 export interface ProgramCommand {
   name: Command;
-  run: (args: ParsedArgs) => string;
+  run: (args: ParsedArgs) => Promise<CommandResult>;
 }
 
-export function buildProgram(): ProgramCommand[] {
+export type Handlers = Partial<Record<Command, (args: ParsedArgs) => Promise<CommandResult>>>;
+
+export function buildProgram(handlers: Handlers = {}): ProgramCommand[] {
   return COMMANDS.map((name) => ({
     name,
-    run: (_args: ParsedArgs) => `${name}: not implemented`,
+    run:
+      handlers[name] ??
+      (async (_args: ParsedArgs) => ({ output: `${name}: not implemented`, exitCode: 0 })),
   }));
 }
