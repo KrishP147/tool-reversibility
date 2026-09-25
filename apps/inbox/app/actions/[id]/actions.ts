@@ -3,6 +3,8 @@
 import { type AuditDecision, recordDecision } from "../../../lib/audit";
 import { getPendingAction } from "../../../lib/pending";
 
+const DECISIONS: readonly AuditDecision[] = ["approve", "reject", "edit"];
+
 export interface DecideActionResult {
   payloadHash: string;
 }
@@ -22,12 +24,17 @@ export async function decideOnAction(
   if (!action) {
     throw new Error(`Unknown pending action: ${id}`);
   }
+  if (!DECISIONS.includes(decision)) {
+    throw new Error(`Unknown decision: ${String(decision)}`);
+  }
 
   const entry = recordDecision({
     actionId: action.id,
     slug: action.slug,
     decision,
-    payload,
+    // Only "edit" may change the payload; approve/reject hash the fixture's
+    // own payload so a client can't log a hash for something else.
+    payload: decision === "edit" ? payload : action.payload,
   });
 
   return { payloadHash: entry.payloadHash };
