@@ -120,7 +120,7 @@ a stub and shows a banner saying so. Details: [apps/inbox/README.md](apps/inbox/
   judgement from each tool's name, description and schema. The report shows how often the rules
   and the LLM disagree ([[report:agreement.rate]] agreement) and scores the rules against a
   hand-labelled spot-check set, labelled blind and pending Krish's review:
-  74 tools, "irreversible" precision 0.667, recall 0.8 [report 2026-09-24, commit ace084d].
+  74 tools, "irreversible" precision 0.667, recall 0.8 [report 2026-09-24, commit a9d50c0].
   See [reports/REPORT.md](reports/REPORT.md).
 - **The tier is derived, not Composio's.** Neither the SDK nor the REST tool objects expose the
   Enhanced Controls tier, so it is derived from the hints (plan.md D22). The real mapping may
