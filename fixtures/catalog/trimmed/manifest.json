@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "sdk": {
+    "package": "@composio/core",
+    "version": "0.21.0"
+  },
+  "date": "2026-09-24",
+  "generatedAt": "2026-09-25T01:55:02.169Z",
+  "command": "pnpm audit:cli fetch --toolkits gmail,slack,github,googlecalendar,notion --out fixtures/catalog/trimmed --max-tools 25 --refresh",
+  "counts": {
+    "toolkits": 5,
+    "tools": 125,
+    "fullTools": 1233,
+    "deprecatedTools": 9,
+    "restFallbacks": 0
+  },
+  "failures": [],
+  "toolkits": {
+    "github": {
+      "tools": 25,
+      "fullTools": 896,
+      "deprecated": 3,
+      "metaToolsCount": 874,
+      "source": "sdk"
+    },
+    "gmail": {
+      "tools": 25,
+      "fullTools": 62,
+      "deprecated": 1,
+      "metaToolsCount": 60,
+      "source": "sdk"
+    },
+    "googlecalendar": {
+      "tools": 25,
+      "fullTools": 50,
+      "deprecated": 1,
+      "metaToolsCount": 47,
+      "source": "sdk"
+    },
+    "notion": {
+      "tools": 25,
+      "fullTools": 57,
+      "deprecated": 2,
+      "metaToolsCount": 54,
+      "source": "sdk"
+    },
+    "slack": {
+      "tools": 25,
+      "fullTools": 168,
+      "deprecated": 2,
+      "metaToolsCount": 159,
+      "source": "sdk"
+    }
+  }
+}

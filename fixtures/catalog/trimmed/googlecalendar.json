@@ -1,0 +1,2145 @@
+{
+  "schemaVersion": 1,
+  "toolkit": {
+    "slug": "googlecalendar",
+    "name": "Google Calendar",
+    "toolsCount": 47,
+    "categories": [
+      "scheduling-&-booking"
+    ],
+    "isLocalToolkit": false
+  },
+  "source": "sdk",
+  "fetchedAt": "2026-09-25T01:55:00.317Z",
+  "toolCount": 25,
+  "fullToolCount": 50,
+  "tools": [
+    {
+      "slug": "GOOGLECALENDAR_ACL_DELETE",
+      "name": "Delete ACL Rule",
+      "description": "Deletes an access control rule from a Google Calendar. Use when you need to remove sharing permissions for a user, group, or domain.",
+      "tags": [
+        "important",
+        "destructiveHint",
+        "idempotentHint",
+        "openWorldHint",
+        "access_control"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "rule_id": {
+            "type": "string",
+            "description": "ACL rule identifier.",
+            "title": "Rule Id",
+            "examples": [
+              "user:test@example.com",
+              "group:team@example.com",
+              "default"
+            ]
+          },
+          "calendar_id": {
+            "type": "string",
+            "description": "Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the \"primary\" keyword.",
+            "title": "Calendar Id",
+            "examples": [
+              "primary",
+              "user@example.com"
+            ]
+          }
+        },
+        "required": [
+          "calendar_id",
+          "rule_id"
+        ],
+        "title": "AclDeleteRequest"
+      },
+      "toolkit": {
+        "slug": "googlecalendar",
+        "name": "googlecalendar"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar",
+        "https://www.googleapis.com/auth/calendar.acls"
+      ]
+    },
+    {
+      "slug": "GOOGLECALENDAR_ACL_GET",
+      "name": "Get ACL Rule",
+      "description": "Retrieves a specific access control rule for a calendar. Use when you need to check permissions for a specific user, group, or domain.",
+      "tags": [
+        "important",
+        "readOnlyHint",
+        "openWorldHint",
+        "access_control"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "rule_id": {
+            "type": "string",
+            "description": "ACL rule identifier. Format: 'scope_type:scope_value' or 'default'. Valid scope types: 'user' (email), 'group' (group email), 'domain' (domain name), 'default' (public access). Examples: 'user:john@example.com', 'group:team@example.com', 'domain:example.com', 'default'. Note: 'me' is NOT valid; use actual email/domain. The rule must exist - use GOOGLECALENDAR_LIST_ACL_RULES to find valid IDs.",
+            "title": "Rule Id",
+            "examples": [
+              "user:email@domain.com",
+              "group:group@domain.com",
+              "domain:example.com",
+              "default"
+            ]
+          },
+          "calendar_id": {
+            "type": "string",
+            "description": "Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the \"primary\" keyword.",
+            "title": "Calendar Id",
+            "examples": [
+              "primary"
+            ]
+          }
+        },
+        "required": [
+          "calendar_id",
+          "rule_id"
+        ],
+        "title": "AclGetRequest"
+      },
+      "toolkit": {
+        "slug": "googlecalendar",
+        "name": "googlecalendar"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar",
+        "https://www.googleapis.com/auth/calendar.readonly",
+        "https://www.googleapis.com/auth/calendar.acls",
+        "https://www.googleapis.com/auth/calendar.acls.readonly"
+      ]
+    },
+    {
+      "slug": "GOOGLECALENDAR_ACL_INSERT",
+      "name": "Create ACL Rule",
+      "description": "Creates an access control rule for a calendar. Use when you need to grant sharing permissions to a user, group, or domain.",
+      "tags": [
+        "important",
+        "openWorldHint",
+        "access_control",
+        "createHint"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "description": "The role assigned to the scope. Possible values: \"none\" - Provides no access; \"freeBusyReader\" - Provides read access to free/busy information; \"reader\" - Provides read access to the calendar; \"writer\" - Provides read and write access to the calendar; \"owner\" - Provides ownership of the calendar.",
+            "title": "Role",
+            "enum": [
+              "none",
+              "freeBusyReader",
+              "reader",
+              "writer",
+              "owner"
+            ],
+            "examples": [
+              "reader",
+              "writer",
+              "owner"
+            ]
+          },
+          "scope": {
+            "type": "object",
+            "description": "The extent to which calendar access is granted by this ACL rule. Specifies who gets the access (user, group, domain, or default).",
+            "title": "Scope",
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "The type of the scope. Possible values: \"default\" - The public scope (any user); \"user\" - Limits the scope to a single user; \"group\" - Limits the scope to a group; \"domain\" - Limits the scope to a domain.",
+                "title": "Type",
+                "enum": [
+                  "default",
+                  "user",
+                  "group",
+                  "domain"
+                ],
+                "examples": [
+                  "user",
+                  "group",
+                  "domain",
+                  "default"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "description": "The email address of a user or group, or the name of a domain, depending on the scope type. Omitted for type 'default'. For type 'user' or 'group', must be a valid email address (e.g., 'user@example.com'). For type 'domain', must be a domain name (e.g., 'example.com'). The value 'me' is NOT a valid email - use the actual email address of the user.",
+                "title": "Value",
+                "examples": [
+                  "user@example.com",
+                  "group@example.com",
+                  "example.com"
+                ]
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "additionalProperties": false
+          },
+          "calendar_id": {
+            "type": "string",
+            "description": "Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the \"primary\" keyword.",
+            "title": "Calendar Id",
+            "examples": [
+              "primary",
+              "user@example.com"
+            ]
+          },
+          "send_notifications": {
+            "type": "boolean",
+            "description": "Whether to send notifications about the calendar sharing change. Optional. The default is true.",
+            "title": "Send Notifications",
+            "examples": [
+              true,
+              false
+            ]
+          }
+        },
+        "required": [
+          "calendar_id",
+          "role",
+          "scope"
+        ],
+        "title": "AclInsertRequest"
+      },
+      "toolkit": {
+        "slug": "googlecalendar",
+        "name": "googlecalendar"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar",
+        "https://www.googleapis.com/auth/calendar.acls"
+      ]
+    },
+    {
+      "slug": "GOOGLECALENDAR_ACL_LIST",
+      "name": "List ACL Rules",
+      "description": "Retrieves the list of access control rules (ACLs) for a specified calendar, providing the necessary 'rule_id' values required for updating specific ACL rules.",
+      "tags": [
+        "readOnlyHint",
+        "idempotentHint",
+        "openWorldHint",
+        "Access Control"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "pageToken": {
+            "type": "string",
+            "description": "Token specifying which result page to return. Optional.",
+            "title": "Page Token",
+            "examples": [
+              " nextPageToken_value"
+            ]
+          },
+          "syncToken": {
+            "type": "string",
+            "description": "Token obtained from the nextSyncToken field returned on the last page of a previous list operation. It makes the result of this list operation contain only entries that have changed since then. Optional. The default is to retrieve all entries.",
+            "title": "Sync Token",
+            "examples": [
+              "nextSyncToken_value"
+            ]
+          },
+          "calendarId": {
+            "type": "string",
+            "description": "Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the \"primary\" keyword.",
+            "title": "Calendar Id",
+            "examples": [
+              "primary"
+            ]
+          },
+          "maxResults": {
+            "type": "integer",
+            "description": "Maximum number of entries returned on one result page. Optional. The default is 100.",
+            "title": "Max Results",
+            "examples": [
+              10
+            ]
+          },
+          "showDeleted": {
+            "type": "boolean",
+            "description": "Whether to include deleted ACLs in the result. Optional. The default is False.",
+            "title": "Show Deleted",
+            "examples": [
+              false
+            ]
+          }
+        },
+        "required": [
+          "calendarId"
+        ],
+        "title": "AclListRequest"
+      },
+      "toolkit": {
+        "slug": "googlecalendar",
+        "name": "googlecalendar"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar.acls.readonly",
+        "https://www.googleapis.com/auth/calendar.acls",
+        "https://www.googleapis.com/auth/calendar"
+      ]
+    },
+    {
+      "slug": "GOOGLECALENDAR_ACL_UPDATE",
+      "name": "Update ACL Rule",
+      "description": "Updates an access control rule for the specified calendar.",
+      "tags": [
+        "updateHint",
+        "idempotentHint",
+        "openWorldHint",
+        "Access Control"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "description": "The role assigned to the scope. Possible values are: \n- \"none\" - Provides no access. \n- \"freeBusyReader\" - Provides read access to free/busy information. \n- \"reader\" - Provides read access to the calendar. Private events will appear to users with reader access, but event details will be hidden. \n- \"writer\" - Provides read and write access to the calendar. Private events will appear to users with writer access, and event details will be visible. \n- \"owner\" - Provides ownership of the calendar. This role has all of the permissions of the writer role with the additional ability to see and manipulate ACLs.",
+            "title": "Role",
+            "examples": [
+              "reader"
+            ]
+          },
+          "rule_id": {
+            "type": "string",
+            "description": "ACL rule identifier.",
+            "title": "Rule Id",
+            "examples": [
+              "user:test.user@example.com"
+            ]
+          },
+          "calendar_id": {
+            "type": "string",
+            "description": "Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the \"primary\" keyword.",
+            "title": "Calendar Id",
+            "examples": [
+              "primary"
+            ]
+          },
+          "send_notifications": {
+            "type": "boolean",
+            "description": "Whether to send notifications about the calendar sharing change. Note that there are no notifications on access removal. Optional. The default is True.",
+            "title": "Send Notifications",
+            "default": true
+          }
+        },
+        "required": [
+          "calendar_id",
+          "rule_id",
+          "role"
+        ],
+        "title": "AclUpdateRequest"
+      },
+      "toolkit": {
+        "slug": "googlecalendar",
+        "name": "googlecalendar"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar",
+        "https://www.googleapis.com/auth/calendar.acls"
+      ]
+    },
+    {
+      "slug": "GOOGLECALENDAR_ACL_WATCH",
+      "name": "Watch ACL Changes",
+      "description": "Tool to watch for changes to ACL resources. Use when you need to set up real-time notifications for access control list modifications on a calendar.",
+      "tags": [
+        "openWorldHint",
+        "notifications_and_channels",
+        "createHint"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "A UUID or similar unique string that identifies this channel.",
+            "title": "Id",
+            "examples": [
+              "01234567-89ab-cdef-0123456789ab"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of delivery mechanism used for this channel. Valid values are \"web_hook\" or \"webhook\".",
+            "title": "Type",
+            "default": "web_hook",
+            "examples": [
+              "web_hook"
+            ]
+          },
+          "token": {
+            "type": "string",
+            "description": "An arbitrary string delivered to the target address with each notification delivered over this channel. Optional.",
+            "title": "Token",
+            "examples": [
+              "target=myApp-myAclChannelDest"
+            ]
+          },
+          "params": {
+            "type": "object",
+            "description": "Additional parameters controlling delivery channel behavior. Optional.",
+            "title": "AclWatchRequestParams",
+            "properties": {
+              "ttl": {
+                "type": "string",
+                "description": "Time-to-live in seconds for the notification channel. Default is 604800 seconds (one week).",
+                "title": "Ttl",
+                "examples": [
+                  "3600"
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "address": {
+            "type": "string",
+            "description": "The address where notifications are delivered for this channel.",
+            "title": "Address",
+            "examples": [
+              "https://example.com/notifications"
+            ]
+          },
+          "calendarId": {
+            "type": "string",
+            "description": "Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the \"primary\" keyword.",
+            "title": "Calendar Id",
+            "examples": [
+              "primary"
+            ]
+          }
+        },
+        "required": [
+          "calendarId",
+          "id",
+          "address"
+        ],
+        "title": "AclWatchRequest"
+      },
+      "toolkit": {
+        "slug": "googlecalendar",
+        "name": "googlecalendar"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar",
+        "https://www.googleapis.com/auth/calendar.acls",
+        "https://www.googleapis.com/auth/calendar.acls.readonly"
+      ]
+    },
+    {
+      "slug": "GOOGLECALENDAR_CALENDARS_DELETE",
+      "name": "Delete Calendar",
+      "description": "Deletes a secondary calendar that you own or have delete permissions on. Deletion is permanent and irreversible — verify the correct calendar_id before calling. You cannot delete your primary calendar or calendars you only have read/write access to. Use calendarList.list to find calendars with owner accessRole. For primary calendars, use calendars.clear instead. Parallel calls may trigger userRateLimitExceeded; sequence bulk deletions.",
+      "tags": [
+        "destructiveHint",
+        "idempotentHint",
+        "openWorldHint",
+        "important",
+        "Calendars Management"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "calendar_id": {
+            "type": "string",
+            "description": "Calendar identifier for a secondary calendar you own or have delete permissions on. Use calendarList.list to find deletable calendar IDs (look for accessRole \"owner\"). Primary calendars cannot be deleted; use the Clear Calendar action instead.",
+            "title": "Calendar Id",
+            "examples": [
+              "example_calendar_id@group.calendar.google.com"
+            ]
+          }
+        },
+        "required": [
+          "calendar_id"
+        ],
+        "title": "CalendarsDeleteRequest"
+      },
+      "toolkit": {
+        "slug": "googlecalendar",
+        "name": "googlecalendar"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar",
+        "https://www.googleapis.com/auth/calendar.app.created",
+        "https://www.googleapis.com/auth/calendar.calendars"
+      ]
+    },
+    {
+      "slug": "GOOGLECALENDAR_CALENDAR_LIST_DELETE",
+      "name": "Remove Calendar from List",
+      "description": "Tool to remove a calendar from the user's calendar list. Use when you need to unsubscribe from or hide a calendar from the user's list.",
+      "tags": [
+        "important",
+        "destructiveHint",
+        "idempotentHint",
+        "openWorldHint",
+        "calendar_list"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "calendar_id": {
+            "type": "string",
+            "description": "Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the 'primary' keyword.",
+            "title": "Calendar Id",
+            "examples": [
+              "primary",
+              "example_calendar_id@group.calendar.google.com"
+            ]
+          }
+        },
+        "required": [
+          "calendar_id"
+        ],
+        "title": "CalendarListDeleteRequest"
+      },
+      "toolkit": {
+        "slug": "googlecalendar",
+        "name": "googlecalendar"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar",
+        "https://www.googleapis.com/auth/calendar.app.created",
+        "https://www.googleapis.com/auth/calendar.calendarlist"
+      ]
+    },
+    {
+      "slug": "GOOGLECALENDAR_CALENDAR_LIST_PATCH",
+      "name": "Patch Calendar List Entry",
+      "description": "Updates an existing calendar on the user's calendar list using patch semantics. This method allows partial updates, modifying only the specified fields.",
+      "tags": [
+        "important",
+        "updateHint",
+        "idempotentHint",
+        "openWorldHint",
+        "calendar_list"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "hidden": {
+            "type": "boolean",
+            "description": "Whether calendar is hidden.",
+            "title": "Hidden",
+            "examples": [
+              true,
+              false
+            ]
+          },
+          "colorId": {
+            "type": "string",
+            "description": "ID for calendar color from colors endpoint.",
+            "title": "Color Id",
+            "examples": [
+              "6",
+              "17"
+            ]
+          },
+          "selected": {
+            "type": "boolean",
+            "description": "Whether calendar content shows in UI.",
+            "title": "Selected",
+            "examples": [
+              true,
+              false
+            ]
+          },
+          "calendar_id": {
+            "type": "string",
+            "description": "Calendar identifier. To retrieve calendar IDs call the calendarList.list method. Use \"primary\" keyword for the currently logged in user's primary calendar.",
+            "title": "Calendar Id",
+            "examples": [
+              "primary",
+              "examplecalendar@group.calendar.google.com",
+              "c_abc123def456@group.calendar.google.com"
+            ]
+          },
+          "colorRgbFormat": {
+            "type": "boolean",
+            "description": "Whether to use RGB for foreground/background colors.",
+            "title": "Color Rgb Format",
+            "examples": [
+              true,
+              false
+            ]
+          },
+          "backgroundColor": {
+            "type": "string",
+            "description": "Hex color for calendar background.",
+            "title": "Background Color",
+            "examples": [
+              "#0088aa"
+            ]
+          },
+          "foregroundColor": {
+            "type": "string",
+            "description": "Hex color for calendar foreground.",
+            "title": "Foreground Color",
+            "examples": [
+              "#ffffff"
+            ]
+          },
+          "summaryOverride": {
+            "type": "string",
+            "description": "User-set summary for the calendar.",
+            "title": "Summary Override",
+            "examples": [
+              "My Work Calendar"
+            ]
+          },
+          "defaultReminders": {
+            "type": "array",
+            "description": "List of default reminders.",
+            "title": "Default Reminders",
+            "items": {
+              "type": "object",
+              "title": "Reminder",
+              "properties": {
+                "method": {
+                  "type": "string",
+                  "description": "Method for the reminder (e.g., email, popup).",
+                  "title": "Method"
+                },
+                "minutes": {
+                  "type": "integer",
+                  "description": "Minutes before event for reminder.",
+                  "title": "Minutes"
+                }
+              },
+              "required": [
+                "method",
+                "minutes"
+              ]
+            }
+          },
+          "notificationSettings": {
+            "type": "object",
+            "description": "Notification settings for the calendar.",
+            "title": "NotificationSettings",
+            "properties": {
+              "notifications": {
+                "type": "array",
+                "description": "List of notifications.",
+                "title": "Notifications",
+                "items": {
+                  "type": "object",
+                  "title": "Notification",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "description": "Type of notification (e.g., eventCreation).",
+                      "title": "Type"
+                    },
+                    "method": {
+                      "type": "string",
+                      "description": "Method for the notification (e.g., email).",
+                      "title": "Method"
+                    }
+                  },
+                  "required": [
+                    "method",
+                    "type"
+                  ]
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "calendar_id"
+        ],
+        "title": "CalendarListPatchRequest"
+      },
+      "toolkit": {
+        "slug": "googlecalendar",
+        "name": "googlecalendar"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar",
+        "https://www.googleapis.com/auth/calendar.app.created",
+        "https://www.googleapis.com/auth/calendar.calendarlist"
+      ]
+    },
+    {
+      "slug": "GOOGLECALENDAR_CALENDAR_LIST_WATCH",
+      "name": "Watch Calendar List",
+      "description": "Watch for changes to CalendarList resources using push notifications. Use this to receive real-time updates when calendar list entries are modified.",
+      "tags": [
+        "openWorldHint",
+        "notifications_and_channels",
+        "createHint"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "A UUID or similar unique string that identifies this channel. Maximum 64 characters.",
+            "title": "Id",
+            "examples": [
+              "01234567-89ab-cdef-0123456789ab"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of delivery mechanism used for this channel. Must be \"web_hook\" or \"webhook\".",
+            "title": "Type",
+            "examples": [
+              "web_hook"
+            ]
+          },
+          "token": {
+            "type": "string",
+            "description": "An arbitrary string delivered to the target address with each notification. Maximum 256 characters. Used for channel verification and message routing.",
+            "title": "Token",
+            "examples": [
+              "verification-token-123"
+            ]
+          },
+          "params": {
+            "type": "object",
+            "description": "Additional parameters controlling delivery channel behavior.",
+            "title": "CalendarListWatchRequestParams",
+            "properties": {
+              "ttl": {
+                "type": "string",
+                "description": "Time-to-live in seconds for the notification channel. Default is 604800 seconds (7 days).",
+                "title": "Ttl",
+                "examples": [
+                  "3600"
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "address": {
+            "type": "string",
+            "description": "The HTTPS URL where notifications are delivered for this channel. Must have a valid SSL certificate.",
+            "title": "Address",
+            "examples": [
+              "https://example.com/webhook"
+            ]
+          },
+          "expiration": {
+            "type": "integer",
+            "description": "Unix timestamp in milliseconds indicating when the API should stop sending notifications.",
+            "title": "Expiration",
+            "examples": [
+              1735689600000
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "address"
+        ],
+        "title": "CalendarListWatchRequest"
+      },
+      "toolkit": {
+        "slug": "googlecalendar",
+        "name": "googlecalendar"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar",
+        "https://www.googleapis.com/auth/calendar.readonly",
+        "https://www.googleapis.com/auth/calendar.calendarlist",
+        "https://www.googleapis.com/auth/calendar.calendarlist.readonly"
+      ]
+    },
+    {
+      "slug": "GOOGLECALENDAR_CLEAR_CALENDAR",
+      "name": "Clear Calendar",
+      "description": "Clears a primary calendar by deleting all events from it. The calendar itself is preserved; only its events are removed. Primary calendars cannot be deleted entirely.",
+      "tags": [
+        "destructiveHint",
+        "idempotentHint",
+        "openWorldHint",
+        "Calendars Management",
+        "updateHint"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "calendar_id": {
+            "type": "string",
+            "description": "Calendar identifier. To retrieve calendar IDs call the `calendarList.list` method. If you want to access the primary calendar of the currently logged in user, use the \"`primary`\" keyword.",
+            "title": "Calendar Id",
+            "examples": [
+              "primary"
+            ]
+          }
+        },
+        "required": [
+          "calendar_id"
+        ],
+        "title": "ClearCalendarRequest"
+      },
+      "toolkit": {
+        "slug": "googlecalendar",
+        "name": "googlecalendar"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar",
+        "https://www.googleapis.com/auth/calendar.calendars"
+      ]
+    },
+    {
+      "slug": "GOOGLECALENDAR_CREATE_CALENDAR",
+      "name": "Create a new calendar",
+      "description": "Creates a new secondary Google Calendar with the specified title and optional settings. Use this action when you need to create a new calendar for organizing events separately from the primary calendar. The authenticated user becomes the owner of the newly created calendar. Optional parameters include description, location, and timezone.",
+      "tags": [
+        "createHint",
+        "openWorldHint",
+        "important",
+        "Calendars Management"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "description": "Title of the calendar. This is the name that will be displayed in Google Calendar.",
+            "title": "Summary",
+            "minLength": 1,
+            "examples": [
+              "Team Events",
+              "Project Deadlines",
+              "Marketing Calendar"
+            ]
+          },
+          "location": {
+            "type": "string",
+            "description": "Geographic location of the calendar as free-form text.",
+            "title": "Location",
+            "examples": [
+              "San Francisco, CA",
+              "New York Office"
+            ]
+          },
+          "timezone": {
+            "type": "string",
+            "description": "The time zone of the calendar, specified as an IANA Time Zone Database name (e.g., 'America/New_York', 'Europe/London', 'Asia/Tokyo'). If not specified, defaults to UTC.",
+            "title": "Timezone",
+            "examples": [
+              "America/New_York",
+              "Europe/London",
+              "Asia/Tokyo"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the calendar. Provides additional context about the calendar's purpose.",
+            "title": "Description",
+            "examples": [
+              "Calendar for tracking team events and meetings"
+            ]
+          }
+        },
+        "required": [
+          "summary"
+        ],
+        "title": "CreateCalendarRequest"
+      },
+      "toolkit": {
+        "slug": "googlecalendar",
+        "name": "googlecalendar"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar",
+        "https://www.googleapis.com/auth/calendar.app.created",
+        "https://www.googleapis.com/auth/calendar.calendars"
+      ]
+    },
+    {
+      "slug": "GOOGLECALENDAR_CREATE_EVENT",
+      "name": "Create Event",
+      "description": "Creates an event in a selected calendar using start_datetime and either end_datetime or duration fields. send_updates defaults to \"all\", which emails all attendees; choose \"externalOnly\" or \"none\" to control notifications. The organizer is added as an attendee unless exclude_organizer is true, and a Google Meet link is requested by default. No conflict checking is performed; use GOOGLECALENDAR_FREE_BUSY_QUERY first when conflicts matter. Returns the created event under response_data.",
+      "tags": [
+        "openWorldHint",
+        "important",
+        "Events Management",
+        "createHint"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "description": "Summary (title) of the event.",
+            "title": "Summary"
+          },
+          "location": {
+            "type": "string",
+            "description": "Geographic location of the event as free-form text.",
+            "title": "Location"
+          },
+          "timezone": {
+            "type": "string",
+            "description": "IANA timezone name from the timezone database (e.g., 'America/New_York', 'Europe/London', 'Asia/Jerusalem', 'UTC'). Required if datetime is naive. For recurring events, start and end must include a timeZone. If not provided, UTC is used. If datetime includes timezone info (Z or offset), this field is optional and defaults to UTC. IMPORTANT: Must be a valid IANA timezone identifier. Values like 'EST', 'PST', 'ISRAEL TIME', or other abbreviations are NOT valid IANA timezone names.",
+            "title": "Timezone"
+          },
+          "attendees": {
+            "type": "array",
+            "description": "List of attendees. Each attendee can be either: (1) A string email address (e.g., 'user@example.com'), or (2) An object with 'email' (required), 'optional' (boolean, default false), 'displayName' (string), 'comment' (string), 'additionalGuests' (integer), and 'resource' (boolean). To mark an attendee as optional (not required), use object format: {'email': 'user@example.com', 'optional': true}. IMPORTANT: Only valid email addresses are accepted. Plain names cannot be used.",
+            "title": "Attendees",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              ]
+            }
+          },
+          "eventType": {
+            "type": "string",
+            "description": "Type of the event, immutable post-creation. 'workingLocation' (REQUIRES Google Workspace Enterprise). Note: 'fromGmail' events cannot be created via API.",
+            "title": "Event Type",
+            "default": "default",
+            "enum": [
+              "birthday",
+              "default",
+              "focusTime",
+              "outOfOffice",
+              "workingLocation"
+            ]
+          },
+          "recurrence": {
+            "type": "array",
+            "description": "List of RRULE, EXRULE, RDATE, EXDATE lines for recurring events. Supported frequencies: DAILY, WEEKLY, MONTHLY, YEARLY. For recurring events, start.timeZone and end.timeZone must be present. UNTIL values follow RFC 5545: date-only (YYYYMMDD) for all-day events, or UTC datetime with Z suffix (YYYYMMDDTHHMMSSZ) for timed events. UNTIL values with time but missing Z suffix are auto-corrected. Provide an empty list to remove recurrence so the event becomes non-recurring.",
+            "title": "Recurrence",
+            "items": {
+              "type": "string"
+            }
+          },
+          "visibility": {
+            "type": "string",
+            "description": "Event visibility: 'default', 'public', 'private', or 'confidential'.",
+            "title": "Visibility",
+            "default": "default",
+            "enum": [
+              "default",
+              "public",
+              "private",
+              "confidential"
+            ]
+          },
+          "calendar_id": {
+            "type": "string",
+            "description": "Calendar identifier. Use 'primary' (recommended) for the user's main calendar. Alternatively, use a calendar ID from the user's accessible calendar list. Calendar IDs look like email addresses (e.g., 'xyz@group.calendar.google.com' for shared calendars). Important: Arbitrary email addresses will NOT work - the calendar must exist in the user's calendar list with appropriate access permissions. Use GOOGLECALENDAR_LIST_CALENDARS to retrieve valid calendar IDs.",
+            "title": "Calendar Id",
+            "default": "primary",
+            "examples": [
+              "primary",
+              "abcdefghijklmnopqrstuvwxyz@group.calendar.google.com"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the event. Can contain HTML. Optional. Must be omitted for 'birthday' event type.",
+            "title": "Description"
+          },
+          "end_datetime": {
+            "type": "string",
+            "description": "Event end time in ISO 8601 format: YYYY-MM-DDTHH:MM:SS. When provided, this parameter takes precedence over event_duration_hour and event_duration_minutes. If not provided, the end time is calculated using start_datetime + duration. Must be after start_datetime. Fractional seconds and timezone info will be automatically stripped if provided. Examples: '2025-01-16T14:30:00', '2025-01-16T14:30'.",
+            "title": "End Datetime",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}(:\\d{2})?(\\.\\d+)?(Z|[+-]\\d{1,2}(:?\\d{2})?)?$"
+          },
+          "send_updates": {
+            "type": "string",
+            "description": "Options for who should receive notifications about event changes.",
+            "title": "SendUpdates",
+            "enum": [
+              "all",
+              "externalOnly",
+              "none"
+            ]
+          },
+          "transparency": {
+            "type": "string",
+            "description": "'opaque' (busy) or 'transparent' (available).",
+            "title": "Transparency",
+            "default": "opaque",
+            "enum": [
+              "opaque",
+              "transparent"
+            ]
+          },
+          "start_datetime": {
+            "type": "string",
+            "description": "REQUIRED. Event start time in ISO 8601 format: YYYY-MM-DDTHH:MM:SS. IMPORTANT: Natural language expressions like 'tomorrow', 'next Monday', '2pm tomorrow' are NOT supported and will be rejected. You must provide the exact date and time in ISO format. Fractional seconds (e.g., .000) and timezone info (Z, +, -) will be automatically stripped if provided. Examples: '2025-01-16T13:00:00', '2025-01-16T13:00'.",
+            "title": "Start Datetime",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}(:\\d{2})?(\\.\\d+)?(Z|[+-]\\d{1,2}(:?\\d{2})?)?$"
+          },
+          "guestsCanModify": {
+            "type": "boolean",
+            "description": "If True, guests can modify the event.",
+            "title": "Guests Can Modify"
+          },
+          "exclude_organizer": {
+            "type": "boolean",
+            "description": "If True, the organizer will NOT be added as an attendee. Default is False (organizer is included).",
+            "title": "Exclude Organizer",
+            "default": false
+          },
+          "birthdayProperties": {
+            "type": "object",
+            "description": "Properties for birthday events.",
+            "title": "BirthdayProperties",
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Type of birthday event: 'birthday', 'anniversary', or 'other'. Defaults to 'birthday'.",
+                "title": "Type",
+                "default": "birthday",
+                "enum": [
+                  "birthday",
+                  "anniversary",
+                  "other"
+                ]
+              },
+              "contact": {
+                "type": "string",
+                "description": "Contact ID in format 'people/c12345' from Google People API. REQUIRED when type is 'anniversary' or 'other'. MUST BE OMITTED when type is 'birthday' (the API forbids contact field for type='birthday').",
+                "title": "Contact"
+              },
+              "customTypeName": {
+                "type": "string",
+                "description": "Custom type name when type is 'other'. Requires valid contact field.",
+                "title": "Custom Type Name"
+              }
+            },
+            "additionalProperties": false
+          },
+          "create_meeting_room": {
+            "type": "boolean",
+            "description": "Defaults to True. When True, for CREATE operations creates a Google Meet link; for UPDATE operations preserves existing conference data if present, or adds a new Meet link if none exists. Google Workspace accounts will successfully receive a Meet link. Personal Gmail accounts and other unsupported accounts will gracefully fallback to creating an event without a Meet link when conference creation fails. Set to False to skip Meet link operations (won't create new or modify existing conference data). The fallback ensures event creation succeeds even when conference features are unavailable due to account limitations.",
+            "title": "Create Meeting Room",
+            "default": true
+          },
+          "event_duration_hour": {
+            "type": "integer",
+            "description": "Number of hours for the event duration. Supports multi-day events (e.g., 240 hours = 10 days). For durations under 1 hour, use event_duration_minutes instead. Ignored if end_datetime is provided.",
+            "title": "Event Duration Hour",
+            "default": 0,
+            "minimum": 0
+          },
+          "extended_properties": {
+            "type": "object",
+            "description": "Extended properties of the event for storing custom metadata. Contains 'private' (visible only on this calendar) and/or 'shared' (visible to all attendees) dictionaries mapping string keys to string values. Example: {'private': {'key1': 'value1'}, 'shared': {'key2': 'value2'}}",
+            "title": "Extended Properties",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          "focusTimeProperties": {
+            "type": "object",
+            "description": "Properties for focusTime events. REQUIRES Google Workspace Enterprise account with Focus Time feature enabled.",
+            "title": "FocusTimeProperties",
+            "properties": {
+              "chatStatus": {
+                "type": "string",
+                "description": "Chat status during focus time: 'active' or 'doNotDisturb'.",
+                "title": "ChatStatus",
+                "enum": [
+                  "active",
+                  "doNotDisturb"
+                ]
+              },
+              "declineMessage": {
+                "type": "string",
+                "description": "Message to include in declined meeting invitations. Only used when autoDeclineMode is set.",
+                "title": "Decline Message"
+              },
+              "autoDeclineMode": {
+                "type": "string",
+                "description": "Auto decline mode: 'declineNone' (no invitations declined), 'declineAllConflictingInvitations' (all conflicting invitations declined), or 'declineOnlyNewConflictingInvitations' (only new conflicting invitations declined).",
+                "title": "AutoDeclineMode",
+                "enum": [
+                  "declineNone",
+                  "declineAllConflictingInvitations",
+                  "declineOnlyNewConflictingInvitations"
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "guestsCanInviteOthers": {
+            "type": "boolean",
+            "description": "Whether attendees other than the organizer can invite others to the event.",
+            "title": "Guests Can Invite Others"
+          },
+          "outOfOfficeProperties": {
+            "type": "object",
+            "description": "Properties for outOfOffice events.",
+            "title": "OutOfOfficeProperties",
+            "properties": {
+              "declineMessage": {
+                "type": "string",
+                "description": "Message to include in declined meeting invitations. Only used when autoDeclineMode is set.",
+                "title": "Decline Message"
+              },
+              "autoDeclineMode": {
+                "type": "string",
+                "description": "Auto decline mode: 'declineNone' (no invitations declined), 'declineAllConflictingInvitations' (all conflicting invitations declined), or 'declineOnlyNewConflictingInvitations' (only new conflicting invitations declined). RECURRING EVENT RESTRICTION: For recurring out-of-office events, ONLY 'declineOnlyNewConflictingInvitations' is allowed. Cannot use 'declineAllConflictingInvitations' for recurring OOO (Google Calendar prevents retroactively declining existing meetings). REQUIRES Google Workspace (paid business subscription, e.g., Business Starter at $6/user/month). Personal Gmail accounts cannot use this feature.",
+                "title": "AutoDeclineMode",
+                "enum": [
+                  "declineNone",
+                  "declineAllConflictingInvitations",
+                  "declineOnlyNewConflictingInvitations"
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "event_duration_minutes": {
+            "type": "integer",
+            "description": "Duration in minutes (0-59 ONLY). NEVER use 60+ minutes - use event_duration_hour=1 instead. Maximum value is 59. Combined duration (hours + minutes) must be greater than 0. Ignored if end_datetime is provided.",
+            "title": "Event Duration Minutes",
+            "default": 30,
+            "minimum": 0,
+            "maximum": 59
+          },
+          "guestsCanSeeOtherGuests": {
+            "type": "boolean",
+            "description": "Whether attendees other than the organizer can see who the event's attendees are.",
+            "title": "Guests Can See Other Guests"
+          },
+          "workingLocationProperties": {
+            "type": "object",
+            "description": "Properties for workingLocation events. REQUIRES Google Workspace Enterprise.\n\nConstraints discovered from testing:\n- Must set transparency='transparent' and visibility='public'\n- Description must be omitted\n- Depending on 'type', include one of 'homeOffice', 'officeLocation', or 'customLocation'",
+            "title": "WorkingLocationProperties",
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Type of working location ('homeOffice' | 'officeLocation' | 'customLocation').",
+                "title": "Type",
+                "enum": [
+                  "homeOffice",
+                  "officeLocation",
+                  "customLocation"
+                ]
+              },
+              "homeOffice": {
+                "type": "object",
+                "description": "Empty object marker for home office working location.\n\nThis is used to indicate the user is working from home.\nGoogle Calendar API accepts an empty object for this field.",
+                "title": "WorkingLocationHomeOffice",
+                "properties": {},
+                "additionalProperties": false
+              },
+              "customLocation": {
+                "type": "object",
+                "description": "Custom working location with a display label.",
+                "title": "WorkingLocationCustom",
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "description": "Label for a custom working location (e.g., 'Client site').",
+                    "title": "Label"
+                  }
+                },
+                "required": [
+                  "label"
+                ],
+                "additionalProperties": false
+              },
+              "officeLocation": {
+                "type": "object",
+                "description": "Office-based working location details.",
+                "title": "WorkingLocationOffice",
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "description": "Office name displayed in Calendar clients (e.g., building name).",
+                    "title": "Label"
+                  },
+                  "deskId": {
+                    "type": "string",
+                    "description": "Optional desk identifier.",
+                    "title": "Desk Id"
+                  },
+                  "floorId": {
+                    "type": "string",
+                    "description": "Optional floor identifier.",
+                    "title": "Floor Id"
+                  },
+                  "buildingId": {
+                    "type": "string",
+                    "description": "Optional building identifier from org Resources.",
+                    "title": "Building Id"
+                  },
+                  "floorSectionId": {
+                    "type": "string",
+                    "description": "Optional floor section identifier.",
+                    "title": "Floor Section Id"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "start_datetime"
+        ],
+        "title": "CreateEventRequest"
+      },
+      "toolkit": {
+        "slug": "googlecalendar",
+        "name": "googlecalendar"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar",
+        "https://www.googleapis.com/auth/calendar.app.created",
+        "https://www.googleapis.com/auth/calendar.events",
+        "https://www.googleapis.com/auth/calendar.events.owned",
+        "https://www.googleapis.com/auth/calendar.calendars",
+        "https://www.googleapis.com/auth/calendar.calendars.readonly",
+        "https://www.googleapis.com/auth/calendar.readonly"
+      ]
+    },
+    {
+      "slug": "GOOGLECALENDAR_EVENTS_GET",
+      "name": "Get Event",
+      "description": "Retrieves a SINGLE event by its unique event_id (REQUIRED). This action does NOT list or search events - it fetches ONE specific event when you already know its ID. If you want to list events within a time range, search for events, or filter by criteria like time_min/time_max, use GOOGLECALENDAR_EVENTS_LIST instead.",
+      "tags": [
+        "important",
+        "readOnlyHint",
+        "openWorldHint",
+        "events"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "description": "REQUIRED. The unique identifier of the specific event to retrieve. You must already know this ID (e.g., from a previous EVENTS_LIST call or event creation response). This action fetches ONE event by ID - it cannot list or search events. To find events by time range or search criteria, use GOOGLECALENDAR_EVENTS_LIST instead.",
+            "title": "Event Id",
+            "examples": [
+              "0a9160c4c367855d09a84f8d4350bda2"
+            ]
+          },
+          "time_zone": {
+            "type": "string",
+            "description": "Time zone used in the response. If not specified, the calendar's time zone is used.",
+            "title": "Time Zone",
+            "examples": [
+              "America/New_York",
+              "Europe/London",
+              "Asia/Tokyo"
+            ]
+          },
+          "calendar_id": {
+            "type": "string",
+            "description": "Identifier of the Google Calendar (e.g., email address, specific ID, or 'primary' for the authenticated user's main calendar) from which to retrieve the event.",
+            "title": "Calendar Id",
+            "default": "primary",
+            "examples": [
+              "primary",
+              "user@example.com",
+              "c_classroomb9676db5@group.calendar.google.com"
+            ]
+          },
+          "max_attendees": {
+            "type": "integer",
+            "description": "Maximum number of attendees to include in the response. If there are more than the specified number, only the participant is returned.",
+            "title": "Max Attendees",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "event_id"
+        ],
+        "title": "EventsGetRequest"
+      },
+      "toolkit": {
+        "slug": "googlecalendar",
+        "name": "googlecalendar"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar",
+        "https://www.googleapis.com/auth/calendar.readonly",
+        "https://www.googleapis.com/auth/calendar.events",
+        "https://www.googleapis.com/auth/calendar.events.readonly",
+        "https://www.googleapis.com/auth/calendar.app.created",
+        "https://www.googleapis.com/auth/calendar.events.freebusy",
+        "https://www.googleapis.com/auth/calendar.events.owned",
+        "https://www.googleapis.com/auth/calendar.events.owned.readonly",
+        "https://www.googleapis.com/auth/calendar.events.public.readonly"
+      ]
+    },
+    {
+      "slug": "GOOGLECALENDAR_EVENTS_INSTANCES",
+      "name": "Get Event Instances",
+      "description": "Returns instances of the specified recurring event. Use timeMin/timeMax to constrain the window; omitting bounds can return large result sets and is quota-heavy. On high-volume calls, 403 rateLimitExceeded or 429 too_many_requests may occur; apply exponential backoff (1s, 2s, 4s) before retrying.",
+      "tags": [
+        "readOnlyHint",
+        "idempotentHint",
+        "openWorldHint",
+        "important",
+        "Instances and Queries"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "description": "REQUIRED. The ID of the recurring event whose instances you want to retrieve. You must first use GOOGLECALENDAR_FIND_EVENT or GOOGLECALENDAR_EVENTS_LIST to find recurring events and get their IDs. This action only works with recurring events that have a recurrence rule.",
+            "title": "Event Id",
+            "examples": [
+              "a1b2c3d4e5f6g7h8i9j0k1l2m3"
+            ]
+          },
+          "timeMax": {
+            "type": "string",
+            "description": "Upper bound (exclusive) for an event's start time to filter by. Optional. The default is not to filter by start time. Must be an RFC3339 timestamp with mandatory time zone offset.",
+            "title": "Time Max",
+            "examples": [
+              "2024-07-31T23:59:59Z"
+            ]
+          },
+          "timeMin": {
+            "type": "string",
+            "description": "Lower bound (inclusive) for an event's end time to filter by. Optional. The default is not to filter by end time. Must be an RFC3339 timestamp with mandatory time zone offset.",
+            "title": "Time Min",
+            "examples": [
+              "2024-07-01T00:00:00Z"
+            ]
+          },
+          "timeZone": {
+            "type": "string",
+            "description": "Time zone used in the response. Optional. The default is the time zone of the calendar.",
+            "title": "Time Zone",
+            "examples": [
+              "America/Los_Angeles",
+              "Europe/London"
+            ]
+          },
+          "pageToken": {
+            "type": "string",
+            "description": "Token specifying which result page to return. Optional.",
+            "title": "Page Token"
+          },
+          "calendarId": {
+            "type": "string",
+            "description": "Calendar identifier. To retrieve calendar IDs call the `calendarList.list` method. If you want to access the primary calendar of the currently logged in user, use the \"primary\" keyword.",
+            "title": "Calendar Id",
+            "examples": [
+              "primary",
+              "example.calendar.id@group.calendar.google.com"
+            ]
+          },
+          "maxResults": {
+            "type": "integer",
+            "description": "Maximum number of events returned on one result page. By default the value is 250 events. The page size can never be larger than 2500 events. Optional.",
+            "title": "Max Results",
+            "minimum": 1,
+            "maximum": 2500,
+            "examples": [
+              100,
+              250
+            ]
+          },
+          "showDeleted": {
+            "type": "boolean",
+            "description": "Whether to include deleted events (with status equals \"cancelled\") in the result. Cancelled instances of recurring events will still be included if `singleEvents` is False. Optional. The default is False.",
+            "title": "Show Deleted",
+            "examples": [
+              true,
+              false
+            ]
+          },
+          "maxAttendees": {
+            "type": "integer",
+            "description": "The maximum number of attendees to include in the response. If there are more than the specified number of attendees, only the participant is returned. Optional.",
+            "title": "Max Attendees",
+            "examples": [
+              5,
+              10
+            ]
+          },
+          "originalStart": {
+            "type": "string",
+            "description": "The original start time of the instance in the result. Optional.",
+            "title": "Original Start",
+            "examples": [
+              "2024-07-15T10:00:00Z"
+            ]
+          }
+        },
+        "required": [
+          "calendarId",
+          "eventId"
+        ],
+        "title": "EventsInstancesRequest"
+      },
+      "toolkit": {
+        "slug": "googlecalendar",
+        "name": "googlecalendar"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar.events.public.readonly",
+        "https://www.googleapis.com/auth/calendar.events.owned.readonly",
+        "https://www.googleapis.com/auth/calendar.events.readonly",
+        "https://www.googleapis.com/auth/calendar.readonly",
+        "https://www.googleapis.com/auth/calendar.events.freebusy",
+        "https://www.googleapis.com/auth/calendar.events.owned",
+        "https://www.googleapis.com/auth/calendar.app.created",
+        "https://www.googleapis.com/auth/calendar.events",
+        "https://www.googleapis.com/auth/calendar"
+      ]
+    },
+    {
+      "slug": "GOOGLECALENDAR_EVENTS_LIST_ALL_CALENDARS",
+      "name": "List Events from All Calendars",
+      "description": "Return a unified event list across all calendars in the user's calendar list for a given time range. Use when you need a single view of all events across multiple calendars. An inverted or incorrect time range silently returns empty results rather than an error. An empty `items` list means no events matched the filters—adjust `time_min`, `time_max`, or `q` before concluding no events exist.",
+      "tags": [
+        "important",
+        "readOnlyHint",
+        "openWorldHint",
+        "Events Management"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "q": {
+            "type": "string",
+            "description": "Free text search terms to find events that match these terms in any field, except for extended properties. Optional.",
+            "title": "Q"
+          },
+          "time_max": {
+            "type": "string",
+            "description": "Upper bound (exclusive) for an event's start time to filter by. Must be an RFC3339 timestamp with mandatory time zone offset (e.g., 2011-06-03T10:00:00-07:00 or 2011-06-03T10:00:00Z). If timezone offset is missing, UTC (Z) will be automatically appended. Required.",
+            "title": "Time Max"
+          },
+          "time_min": {
+            "type": "string",
+            "description": "Lower bound (inclusive) for an event's end time to filter by. Must be an RFC3339 timestamp with mandatory time zone offset (e.g., 2011-06-03T10:00:00-07:00 or 2011-06-03T10:00:00Z). If timezone offset is missing, UTC (Z) will be automatically appended. Required.",
+            "title": "Time Min"
+          },
+          "event_types": {
+            "type": "array",
+            "description": "Event types to return. Optional.",
+            "title": "Event Types",
+            "items": {
+              "type": "string",
+              "description": "Valid event types for Google Calendar API.",
+              "title": "EventType",
+              "enum": [
+                "birthday",
+                "default",
+                "focusTime",
+                "fromGmail",
+                "outOfOffice",
+                "workingLocation"
+              ]
+            }
+          },
+          "calendar_ids": {
+            "type": "array",
+            "description": "Optional list of specific calendar IDs to query. If not provided, all calendars from the user's calendar list will be queried.",
+            "title": "Calendar Ids",
+            "items": {
+              "type": "string"
+            }
+          },
+          "show_deleted": {
+            "type": "boolean",
+            "description": "Whether to include deleted events (with status equals 'cancelled') in the result. Optional. The default is False.",
+            "title": "Show Deleted",
+            "default": false
+          },
+          "single_events": {
+            "type": "boolean",
+            "description": "Whether to expand recurring events into instances and only return single one-off events and instances of recurring events. Optional. The default is True.",
+            "title": "Single Events",
+            "default": true
+          },
+          "response_detail": {
+            "type": "string",
+            "description": "Level of detail in the response. 'minimal' (default) returns only the compact summary_view, omitting the large events array to reduce token usage. 'full' returns both summary_view and the full detailed events array.",
+            "title": "Response Detail",
+            "default": "minimal",
+            "enum": [
+              "minimal",
+              "full"
+            ]
+          },
+          "max_results_per_calendar": {
+            "type": "integer",
+            "description": "Maximum number of events returned per calendar. Optional. If not provided, defaults to the API's default (250). Results may be paginated; follow `nextPageToken` in the response until absent to retrieve the complete event list.",
+            "title": "Max Results Per Calendar"
+          }
+        },
+        "required": [
+          "time_min",
+          "time_max"
+        ],
+        "title": "EventsListAllCalendarsRequest"
+      },
+      "toolkit": {
+        "slug": "googlecalendar",
+        "name": "googlecalendar"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar",
+        "https://www.googleapis.com/auth/calendar.readonly",
+        "https://www.googleapis.com/auth/calendar.calendarlist",
+        "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
+        "https://www.googleapis.com/auth/calendar.events",
+        "https://www.googleapis.com/auth/calendar.events.readonly",
+        "https://www.googleapis.com/auth/calendar.events.owned",
+        "https://www.googleapis.com/auth/calendar.events.owned.readonly",
+        "https://www.googleapis.com/auth/calendar.events.public.readonly",
+        "https://www.googleapis.com/auth/calendar.events.freebusy",
+        "https://www.googleapis.com/auth/calendar.app.created"
+      ]
+    },
+    {
+      "slug": "GOOGLECALENDAR_EVENTS_WATCH",
+      "name": "Watch Events",
+      "description": "Watch for changes to Events resources. Watch channels expire; persist the channel `id` per `calendarId` to re-establish watches after expiration or restarts.",
+      "tags": [
+        "openWorldHint",
+        "idempotentHint",
+        "Notifications and Watching",
+        "createHint"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "A UUID or similar unique string that identifies this channel.",
+            "title": "Id",
+            "examples": [
+              "01234567-89ab-cdef-0123456789ab"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of delivery mechanism used for this channel.",
+            "title": "Type",
+            "default": "web_hook",
+            "examples": [
+              "web_hook"
+            ]
+          },
+          "token": {
+            "type": "string",
+            "description": "An arbitrary string delivered to the target address with each notification delivered over this channel. Optional.",
+            "title": "Token",
+            "examples": [
+              "target=myApp-myCalendarChannelDest"
+            ]
+          },
+          "params": {
+            "type": "object",
+            "description": "Additional parameters controlling delivery channel behavior. Optional.",
+            "title": "EventsWatchRequestParams",
+            "properties": {
+              "ttl": {
+                "type": "string",
+                "description": "Time To Live for the notification channel.",
+                "title": "Ttl"
+              }
+            },
+            "additionalProperties": false
+          },
+          "address": {
+            "type": "string",
+            "description": "The address where notifications are delivered for this channel. Must be a publicly accessible HTTPS URL; http:// or localhost URLs will not receive notifications.",
+            "title": "Address",
+            "examples": [
+              "https://example.com/notifications"
+            ]
+          },
+          "payload": {
+            "type": "boolean",
+            "description": "A Boolean value to indicate whether payload is wanted. Optional.",
+            "title": "Payload"
+          },
+          "calendarId": {
+            "type": "string",
+            "description": "Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the \"primary\" keyword.",
+            "title": "Calendar Id",
+            "examples": [
+              "primary"
+            ]
+          }
+        },
+        "required": [
+          "calendarId",
+          "id",
+          "address"
+        ],
+        "title": "EventsWatchRequest"
+      },
+      "toolkit": {
+        "slug": "googlecalendar",
+        "name": "googlecalendar"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar",
+        "https://www.googleapis.com/auth/calendar.app.created",
+        "https://www.googleapis.com/auth/calendar.events",
+        "https://www.googleapis.com/auth/calendar.events.freebusy",
+        "https://www.googleapis.com/auth/calendar.events.owned",
+        "https://www.googleapis.com/auth/calendar.events.owned.readonly",
+        "https://www.googleapis.com/auth/calendar.events.public.readonly",
+        "https://www.googleapis.com/auth/calendar.events.readonly",
+        "https://www.googleapis.com/auth/calendar.readonly"
+      ]
+    },
+    {
+      "slug": "GOOGLECALENDAR_FREE_BUSY_QUERY",
+      "name": "Query Calendar Availability",
+      "description": "Queries raw busy intervals for one or more calendars or groups over an exact time range. Returns per-calendar and per-group availability and errors, without event titles or details. Use GOOGLECALENDAR_FIND_FREE_SLOTS when you want default time bounds and computed free intervals; use GOOGLECALENDAR_EVENTS_LIST when you need event records.",
+      "tags": [
+        "readOnlyHint",
+        "idempotentHint",
+        "openWorldHint",
+        "important",
+        "Instances and Queries"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "description": "List of calendars and/or groups to query. Accepts either strings (e.g., ['primary', 'user@example.com']) or objects with an 'id' field (e.g., [{'id': 'primary'}]). String values are automatically converted to the proper format. Only calendars with at least freeBusyReader-level access are queried; omitting shared/secondary calendars can hide real conflicts. Batch all attendees into one call to avoid 403 rateLimitExceeded or 429 tooManyRequests errors.",
+            "title": "Items",
+            "items": {
+              "type": "object",
+              "title": "FreeBusyQueryItem",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The identifier of a calendar or a group.",
+                  "title": "Id"
+                }
+              },
+              "required": [
+                "id"
+              ]
+            }
+          },
+          "timeMax": {
+            "type": "string",
+            "description": "The end of the interval for the query formatted as per RFC3339. Exclusive bound; must be greater than timeMin. Keep the timeMin–timeMax window within ~90 days; larger spans may return empty or degraded results.",
+            "title": "Time Max",
+            "format": "date-time"
+          },
+          "timeMin": {
+            "type": "string",
+            "description": "The start of the interval for the query formatted as per RFC3339. Must be strictly less than timeMax. For full-day windows, use local 00:00 in the target timezone to avoid DST/off-by-one errors.",
+            "title": "Time Min",
+            "format": "date-time"
+          },
+          "timeZone": {
+            "type": "string",
+            "description": "Time zone used in the response. Optional. The default is UTC. Defaults to UTC, which skews working-hours analysis for users in other timezones; always supply a valid IANA timezone (e.g., 'America/New_York').",
+            "title": "Time Zone"
+          },
+          "groupExpansionMax": {
+            "type": "integer",
+            "description": "Maximal number of calendar identifiers to be provided for a single group. Optional. An error is returned for a group with more members than this value. Maximum value is 100.",
+            "title": "Group Expansion Max"
+          },
+          "calendarExpansionMax": {
+            "type": "integer",
+            "description": "Maximal number of calendars for which FreeBusy information is to be provided. Optional. Maximum value is 50.",
+            "title": "Calendar Expansion Max"
+          }
+        },
+        "required": [
+          "timeMin",
+          "timeMax",
+          "items"
+        ],
+        "title": "FreeBusyQueryRequest"
+      },
+      "toolkit": {
+        "slug": "googlecalendar",
+        "name": "googlecalendar"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar",
+        "https://www.googleapis.com/auth/calendar.readonly",
+        "https://www.googleapis.com/auth/calendar.freebusy",
+        "https://www.googleapis.com/auth/calendar.events.freebusy"
+      ]
+    },
+    {
+      "slug": "GOOGLECALENDAR_GET_CALENDAR_PROFILE",
+      "name": "Get Calendar Profile (Deprecated)",
+      "description": "DEPRECATED: Use CalendarListGet instead. Tool to retrieve the authenticated user's primary calendar profile. Use when you need to get information about the user's main calendar, including timezone, settings, and preferences.",
+      "tags": [
+        "important",
+        "readOnlyHint",
+        "openWorldHint",
+        "profile",
+        "deprecated"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {},
+        "title": "GetCalendarProfileRequest"
+      },
+      "toolkit": {
+        "slug": "googlecalendar",
+        "name": "googlecalendar"
+      },
+      "version": "20260915_00",
+      "isDeprecated": true,
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar.readonly",
+        "https://www.googleapis.com/auth/calendar",
+        "https://www.googleapis.com/auth/calendar.app.created",
+        "https://www.googleapis.com/auth/calendar.calendarlist",
+        "https://www.googleapis.com/auth/calendar.calendarlist.readonly"
+      ]
+    },
+    {
+      "slug": "GOOGLECALENDAR_GET_CURRENT_USER",
+      "name": "Get Current Google Calendar User",
+      "description": "Identifies the Google user connected to Calendar from the primary calendar resource. Returns the account identifier, email when available, display name, timezone, and primary calendar ID. This is Calendar identity metadata, not a full Google Account or People profile.",
+      "tags": [
+        "readOnlyHint",
+        "idempotentHint",
+        "openWorldHint",
+        "profile"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {},
+        "title": "GetCurrentUserRequest"
+      },
+      "toolkit": {
+        "slug": "googlecalendar",
+        "name": "googlecalendar"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar",
+        "https://www.googleapis.com/auth/calendar.readonly",
+        "https://www.googleapis.com/auth/calendar.calendars",
+        "https://www.googleapis.com/auth/calendar.calendars.readonly"
+      ]
+    },
+    {
+      "slug": "GOOGLECALENDAR_LIST_CALENDARS",
+      "name": "List Google Calendars",
+      "description": "Lists calendars accessible through the connected user's CalendarList, returning IDs and user-specific metadata such as access role, color, visibility, selection, and reminders. Hidden calendars are omitted unless show_hidden is true; min_access_role and show_deleted provide additional filtering. Continue with page_token until next_page_token is absent; for incremental synchronization, pass next_sync_token back as sync_token. Use returned IDs, not display names, with event actions, and use GOOGLECALENDAR_GET_CALENDAR for canonical metadata about one known calendar.",
+      "tags": [
+        "readOnlyHint",
+        "idempotentHint",
+        "openWorldHint"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "page_token": {
+            "type": "string",
+            "description": "Token for the page of results to return, from a previous response.",
+            "title": "Page Token",
+            "examples": [
+              " nextPageToken123"
+            ]
+          },
+          "sync_token": {
+            "type": "string",
+            "description": "Sync token from a previous list request to get only changed entries; showDeleted, showHidden, and pageToken are ignored if provided. Also ignores minAccessRole. An HTTP 410 Gone response means the token has expired; perform a full resync by omitting sync_token.",
+            "title": "Sync Token",
+            "examples": [
+              "syncToken123"
+            ]
+          },
+          "max_results": {
+            "type": "integer",
+            "description": "Maximum calendars to return on one page. Google defaults to 100 and allows at most 250. Follow next_page_token until absent to enumerate every accessible calendar.",
+            "title": "Max Results",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 250,
+            "examples": [
+              25,
+              100
+            ]
+          },
+          "show_hidden": {
+            "type": "boolean",
+            "description": "Include calendars not typically shown in the UI.",
+            "title": "Show Hidden",
+            "default": false,
+            "examples": [
+              true,
+              false
+            ]
+          },
+          "show_deleted": {
+            "type": "boolean",
+            "description": "Include deleted calendars in the result.",
+            "title": "Show Deleted",
+            "default": false,
+            "examples": [
+              true,
+              false
+            ]
+          },
+          "min_access_role": {
+            "type": "string",
+            "description": "Minimum access role for returned calendars: 'freeBusyReader', 'reader', 'writerWithoutPrivateAccess', 'writer', or 'owner'. freeBusyReader calendars expose only free/busy slots. Omit this filter to include every accessible role.",
+            "title": "Min Access Role",
+            "enum": [
+              "freeBusyReader",
+              "reader",
+              "writerWithoutPrivateAccess",
+              "writer",
+              "owner"
+            ],
+            "examples": [
+              "reader",
+              "owner"
+            ]
+          }
+        },
+        "title": "ListCalendarsRequest"
+      },
+      "toolkit": {
+        "slug": "googlecalendar",
+        "name": "googlecalendar"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar",
+        "https://www.googleapis.com/auth/calendar.readonly",
+        "https://www.googleapis.com/auth/calendar.calendarlist",
+        "https://www.googleapis.com/auth/calendar.calendarlist.readonly"
+      ]
+    },
+    {
+      "slug": "GOOGLECALENDAR_PATCH_CALENDAR",
+      "name": "Patch Calendar",
+      "description": "Partially updates (PATCHes) an existing Google Calendar, modifying only the fields provided. At least one of summary, description, location, or timezone must be provided. Empty strings for `description` or `location` clear them.",
+      "tags": [
+        "updateHint",
+        "idempotentHint",
+        "openWorldHint",
+        "important",
+        "Calendars Management"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "description": "New title for the calendar; cannot be an empty string when provided. At least one of summary, description, location, or timezone must be provided.",
+            "title": "Summary",
+            "examples": [
+              "Team Meetings",
+              "Project Alpha Milestones"
+            ]
+          },
+          "location": {
+            "type": "string",
+            "description": "New geographic location of the calendar (e.g., 'Paris, France').",
+            "title": "Location",
+            "examples": [
+              "Paris, France",
+              "London"
+            ]
+          },
+          "timezone": {
+            "type": "string",
+            "description": "New IANA Time Zone Database name for the calendar (e.g., 'Europe/Zurich', 'America/New_York'). Calendars duplicated via GOOGLECALENDAR_DUPLICATE_CALENDAR may default to UTC; set the correct timezone explicitly after duplication.",
+            "title": "Timezone",
+            "examples": [
+              "Europe/Zurich",
+              "America/New_York",
+              "Asia/Tokyo"
+            ]
+          },
+          "calendar_id": {
+            "type": "string",
+            "description": "The unique identifier of the Google Calendar to update. Use 'primary' for the main calendar, or a calendar's unique ID (typically in email format like 'abc123@group.calendar.google.com'). IMPORTANT: This is NOT the calendar's display name/title - use GOOGLECALENDAR_LIST_CALENDARS to find the 'id' field for a calendar.",
+            "title": "Calendar Id",
+            "examples": [
+              "primary",
+              "c_abc123def456@group.calendar.google.com",
+              "user@example.com"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "description": "New description for the calendar.",
+            "title": "Description"
+          }
+        },
+        "required": [
+          "calendar_id"
+        ],
+        "title": "PatchCalendarRequest"
+      },
+      "toolkit": {
+        "slug": "googlecalendar",
+        "name": "googlecalendar"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar",
+        "https://www.googleapis.com/auth/calendar.app.created",
+        "https://www.googleapis.com/auth/calendar.calendars"
+      ]
+    },
+    {
+      "slug": "GOOGLECALENDAR_QUICK_ADD",
+      "name": "Quick Add Event",
+      "description": "Parses natural language text to quickly create a basic Google Calendar event with its title, date, and time, suitable for simple scheduling; does not support direct attendee addition or recurring events, and `calendar_id` must be valid if not 'primary'.",
+      "tags": [
+        "openWorldHint",
+        "Quick Operations",
+        "createHint"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Natural language input describing the event; Google Calendar parses this for event details like title, date, and time.",
+            "title": "Text",
+            "default": "",
+            "examples": [
+              "Appointment at Somewhere on June 3rd 10am-10:25am",
+              "Dentist appointment tomorrow at 2pm for 45 minutes"
+            ]
+          },
+          "calendar_id": {
+            "type": "string",
+            "description": "Identifier of the calendar for the event. Use 'primary' for the main calendar, or provide a specific calendar ID (e.g., email address).",
+            "title": "Calendar Id",
+            "default": "primary",
+            "examples": [
+              "primary",
+              "user@example.com",
+              "xxxxxxxxxxxxxxxxx@group.calendar.google.com"
+            ]
+          },
+          "send_updates": {
+            "type": "string",
+            "description": "Controls whether email notifications about the event creation are sent to attendees.",
+            "title": "Send Updates",
+            "default": "none",
+            "enum": [
+              "all",
+              "externalOnly",
+              "none"
+            ]
+          }
+        },
+        "title": "QuickAddRequest"
+      },
+      "toolkit": {
+        "slug": "googlecalendar",
+        "name": "googlecalendar"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar",
+        "https://www.googleapis.com/auth/calendar.events",
+        "https://www.googleapis.com/auth/calendar.events.owned",
+        "https://www.googleapis.com/auth/calendar.app.created"
+      ]
+    },
+    {
+      "slug": "GOOGLECALENDAR_SETTINGS_GET",
+      "name": "Get Calendar Setting",
+      "description": "Tool to return a single user setting for the authenticated user. Use when you need to retrieve a specific calendar setting value.",
+      "tags": [
+        "readOnlyHint",
+        "openWorldHint",
+        "configuration"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "setting": {
+            "type": "string",
+            "description": "The identifier of the user setting to retrieve. Valid values include: autoAddHangouts, dateFieldOrder, defaultEventLength, format24HourTime, hideInvitations, hideWeekends, locale, remindOnRespondedEventsOnly, showDeclinedEvents, timezone, useKeyboardShortcuts, weekStart",
+            "title": "Setting",
+            "examples": [
+              "timezone",
+              "format24HourTime",
+              "weekStart",
+              "locale",
+              "dateFieldOrder"
+            ]
+          }
+        },
+        "required": [
+          "setting"
+        ],
+        "title": "SettingsGetRequest"
+      },
+      "toolkit": {
+        "slug": "googlecalendar",
+        "name": "googlecalendar"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar.settings.readonly",
+        "https://www.googleapis.com/auth/calendar.readonly",
+        "https://www.googleapis.com/auth/calendar"
+      ]
+    },
+    {
+      "slug": "GOOGLECALENDAR_SETTINGS_WATCH",
+      "name": "Watch Settings",
+      "description": "Watch for changes to Settings resources.",
+      "tags": [
+        "openWorldHint",
+        "idempotentHint",
+        "Notifications and Watching",
+        "createHint"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "A UUID or similar unique string that identifies this channel.",
+            "title": "Id",
+            "examples": [
+              "channel-ID-1"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of delivery mechanism used for this channel. Must be \"web_hook\".",
+            "title": "Type",
+            "const": "web_hook",
+            "examples": [
+              "web_hook"
+            ]
+          },
+          "token": {
+            "type": "string",
+            "description": "An arbitrary string delivered to the target address with each notification delivered over this channel.",
+            "title": "Token",
+            "examples": [
+              "token-string"
+            ]
+          },
+          "params": {
+            "type": "object",
+            "description": "Additional parameters controlling delivery channel behavior.",
+            "title": "SettingsWatchRequestParams",
+            "properties": {
+              "ttl": {
+                "type": "string",
+                "description": "The time-to-live in seconds for the notification channel. Default is 604800 seconds.",
+                "title": "Ttl",
+                "examples": [
+                  "3600"
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "address": {
+            "type": "string",
+            "description": "The address where notifications are delivered for this channel.",
+            "title": "Address",
+            "examples": [
+              "https://example.com/notifications"
+            ]
+          },
+          "expiration": {
+            "type": "integer",
+            "description": "Unix timestamp in milliseconds specifying when the API should stop sending notifications for this channel.",
+            "title": "Expiration",
+            "examples": [
+              1426325213000
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "address"
+        ],
+        "title": "SettingsWatchRequest"
+      },
+      "toolkit": {
+        "slug": "googlecalendar",
+        "name": "googlecalendar"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar.settings.readonly",
+        "https://www.googleapis.com/auth/calendar.readonly",
+        "https://www.googleapis.com/auth/calendar"
+      ]
+    }
+  ]
+}
