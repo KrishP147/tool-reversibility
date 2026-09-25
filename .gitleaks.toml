@@ -1,0 +1,11 @@
+# gitleaks config: extend the default rules, allowlist known non-secrets.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Cache files store sha256 cache keys under a \"key\" field (not credentials); catalog snapshots are public metadata."
+paths = [
+  '''fixtures/llm-cache/.*\.json''',
+  '''fixtures/llm-recorded/.*''',
+  '''fixtures/catalog/.*\.json''',
+]
