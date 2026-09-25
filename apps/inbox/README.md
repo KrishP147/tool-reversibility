@@ -30,8 +30,9 @@ inbox reads:
 must either conform to the `Report`/`ToolReport` shape in `lib/report.ts`, or that file gets
 updated to match — whichever lands second reconciles with the other.
 
-Live mode (`INBOX_MODE=live`, a real Composio session) is issue #7's job and is out of scope
-here.
+Live mode (`INBOX_MODE=live`, a real Composio session) is issue #7's job; see
+[Live mode](#live-mode) below and the root README's "Run on Replit" section for how its secrets
+are set on a deployment.
 
 ## Audit log
 
