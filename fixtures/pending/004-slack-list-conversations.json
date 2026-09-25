@@ -1,0 +1,13 @@
+{
+  "id": "004-slack-list-conversations",
+  "slug": "SLACK_LIST_CONVERSATIONS",
+  "toolkit": "slack",
+  "kind": "list",
+  "payload": {
+    "types": "public_channel,private_channel",
+    "limit": 50
+  },
+  "illustrative": true,
+  "note": "Illustrative fixture, not a real Composio catalog entry (fixtures/catalog/ lands with issue #2). Slug/shape modeled on Slack's conversations-list action.",
+  "createdAt": "2026-09-24T09:15:00.000Z"
+}

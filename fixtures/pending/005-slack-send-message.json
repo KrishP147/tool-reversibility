@@ -1,0 +1,13 @@
+{
+  "id": "005-slack-send-message",
+  "slug": "SLACK_SEND_MESSAGE",
+  "toolkit": "slack",
+  "kind": "send",
+  "payload": {
+    "channel": "#eng-alerts",
+    "text": "Deploy of api@2.14.0 finished successfully."
+  },
+  "illustrative": true,
+  "note": "Illustrative fixture, not a real Composio catalog entry (fixtures/catalog/ lands with issue #2). Slug/shape modeled on Slack's post-message action.",
+  "createdAt": "2026-09-24T09:20:00.000Z"
+}
