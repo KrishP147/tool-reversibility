@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { createRequire } from "node:module";
 import { Composio } from "@composio/core";
 
 /** One page of a cursor-paginated REST listing. */
@@ -80,7 +80,7 @@ export function createComposioCatalogClient(apiKey: string): CatalogClient {
  */
 export function composioSdkVersion(): string {
   try {
-    let dir = path.dirname(fileURLToPath(import.meta.resolve("@composio/core")));
+    let dir = path.dirname(createRequire(import.meta.url).resolve("@composio/core"));
     for (let i = 0; i < 6; i += 1) {
       const file = path.join(dir, "package.json");
       if (existsSync(file)) {

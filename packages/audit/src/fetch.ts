@@ -153,6 +153,7 @@ export interface FetchOptions {
   concurrency?: number;
   sdkToolLimit?: number;
   restPageSize?: number;
+  toolkitPageSize?: number;
   /** Keep at most this many tools per toolkit (trimmed fixture); full count still recorded. */
   maxTools?: number;
   retry?: RetryOptions;
@@ -173,9 +174,10 @@ export interface FetchResult {
 async function listAllToolkits(
   client: CatalogClient,
   retry: RetryOptions,
+  pageSize: number,
 ): Promise<ToolkitSummary[]> {
   const items = await drainPages((cursor) =>
-    withRetry(() => client.listToolkits({ cursor, limit: TOOLKIT_PAGE_SIZE }), retry),
+    withRetry(() => client.listToolkits({ cursor, limit: pageSize }), retry),
   );
   const bySlug = new Map<string, ToolkitSummary>();
   for (const item of items) {
@@ -246,7 +248,11 @@ export async function runFetch(opts: FetchOptions): Promise<FetchResult> {
       }
     }
   } else {
-    summaries = await listAllToolkits(opts.client, retry);
+    summaries = await listAllToolkits(
+      opts.client,
+      retry,
+      opts.toolkitPageSize ?? TOOLKIT_PAGE_SIZE,
+    );
   }
   log(`toolkits: ${summaries.length} (concurrency ${concurrency})`);
 
