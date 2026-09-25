@@ -1,0 +1,1771 @@
+{
+  "schemaVersion": 1,
+  "toolkit": {
+    "slug": "slack",
+    "name": "Slack",
+    "toolsCount": 159,
+    "categories": [
+      "team-chat",
+      "team-collaboration"
+    ],
+    "isLocalToolkit": false
+  },
+  "source": "sdk",
+  "fetchedAt": "2026-09-25T01:54:59.732Z",
+  "toolCount": 25,
+  "fullToolCount": 168,
+  "tools": [
+    {
+      "slug": "SLACK_ADD_CALL_PARTICIPANTS",
+      "name": "Add call participants",
+      "description": "Registers new participants added to a Slack call.",
+      "tags": [
+        "calls",
+        "openWorldHint",
+        "updateHint"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the call returned by the add method.",
+            "title": "Id",
+            "examples": [
+              "R0123456789"
+            ]
+          },
+          "users": {
+            "type": "string",
+            "description": "The list of users to add as participants in the call. users is a JSON array (formatted as a string) containing information for each user. Each element must include a `slack_id`. For example: `[{\"slack_id\": \"U1H77\"}]` or `[{\"slack_id\": \"U1H77\"}, {\"slack_id\": \"U2ABC123\"}]`.",
+            "title": "Users",
+            "examples": [
+              "[{\"slack_id\": \"U1H77\"}]",
+              "[{\"slack_id\": \"U2ABC123\"}]",
+              "[{\"slack_id\": \"U1H77\"}, {\"slack_id\": \"U2ABC123\"}]"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "users"
+        ],
+        "title": "AddCallParticipantsRequest",
+        "description": "Request schema for `AddCallParticipants`"
+      },
+      "toolkit": {
+        "slug": "slack",
+        "name": "slack"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "calls:write"
+      ]
+    },
+    {
+      "slug": "SLACK_ARCHIVE_CONVERSATION",
+      "name": "Archive a Slack conversation",
+      "description": "Archives a Slack conversation by its ID, rendering it read-only and hidden while retaining history, ideal for cleaning up inactive channels; be aware that some channels (like #general or certain DMs) cannot be archived and this may impact connected integrations.",
+      "tags": [
+        "conversations",
+        "idempotentHint",
+        "openWorldHint",
+        "updateHint"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "channel": {
+            "type": "string",
+            "description": "ID of the Slack conversation to archive. This ID uniquely identifies a channel (e.g., public, private).",
+            "title": "Channel",
+            "examples": [
+              "C1234567890"
+            ]
+          }
+        },
+        "title": "ArchiveConversationRequest",
+        "description": "Request schema for `ArchiveConversation`"
+      },
+      "toolkit": {
+        "slug": "slack",
+        "name": "slack"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "channels:write",
+        "groups:write",
+        "im:write",
+        "mpim:write"
+      ]
+    },
+    {
+      "slug": "SLACK_ASSISTANT_SEARCH_CONTEXT",
+      "name": "Real-time search",
+      "description": "Search Slack messages, files, channels, and users via Real-time Search API. For queries referencing entities by name (users/channels/files), first resolve with content_types (users/channels/files) to get exact ID. If multiple matches, ask user to clarify before proceeding (e.g. ask for user email).",
+      "tags": [
+        "important",
+        "openWorldHint",
+        "readOnlyHint",
+        "idempotentHint",
+        "search"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "sort": {
+            "type": "string",
+            "description": "Sort results by 'score' (relevance) or 'timestamp' (chronological). Defaults to score.",
+            "title": "Sort",
+            "examples": [
+              "score",
+              "timestamp"
+            ]
+          },
+          "after": {
+            "type": "integer",
+            "description": "Unix timestamp. Only return results from after this date.",
+            "title": "After",
+            "examples": [
+              1704153600
+            ]
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Maximum number of results per page. Max 20. Defaults to 20.",
+            "title": "Limit",
+            "examples": [
+              5,
+              10,
+              20
+            ]
+          },
+          "query": {
+            "type": "string",
+            "description": "Search query. Supports both keyword search and natural language questions. Natural language queries (starting with what/where/how or ending with ?) trigger semantic search if available on the workspace. Supports OR operator for multiple terms: \"deployment issues with kubernetes OR docker OR terraform\".",
+            "title": "Query",
+            "examples": [
+              "What is project gizmo?",
+              "deployment issues with kubernetes OR docker OR terraform",
+              "outage OR downtime OR performance issues",
+              "quarterly report"
+            ]
+          },
+          "before": {
+            "type": "integer",
+            "description": "Unix timestamp. Only return results from before this date.",
+            "title": "Before",
+            "examples": [
+              1704240000
+            ]
+          },
+          "cursor": {
+            "type": "string",
+            "description": "Pagination cursor from a previous response's next_cursor field.",
+            "title": "Cursor",
+            "examples": [
+              "dXNlcjpVMEc5V0ZYTlo="
+            ]
+          },
+          "sort_dir": {
+            "type": "string",
+            "description": "Sort direction: 'asc' (ascending) or 'desc' (descending). Defaults to desc.",
+            "title": "Sort Dir",
+            "examples": [
+              "asc",
+              "desc"
+            ]
+          },
+          "highlight": {
+            "type": "boolean",
+            "description": "Highlight matching search terms in the results.",
+            "title": "Highlight",
+            "examples": [
+              true,
+              false
+            ]
+          },
+          "modifiers": {
+            "type": "string",
+            "description": "Additional search modifiers in 'modifier:value' format. E.g., 'has:pin before:yesterday is:thread'.",
+            "title": "Modifiers",
+            "examples": [
+              "has:pin",
+              "has:link is:thread",
+              "before:yesterday"
+            ]
+          },
+          "action_token": {
+            "type": "string",
+            "description": "Action token from a Slack event payload. Required when using a bot token. Not needed for user tokens.",
+            "title": "Action Token"
+          },
+          "include_bots": {
+            "type": "boolean",
+            "description": "Include bot messages in search results.",
+            "title": "Include Bots",
+            "examples": [
+              true,
+              false
+            ]
+          },
+          "term_clauses": {
+            "type": "array",
+            "description": "List of search term clauses for conjunctive matching. Results must match every clause specified. Each clause is a string with one or more search terms.",
+            "title": "Term Clauses",
+            "items": {
+              "type": "string"
+            },
+            "examples": [
+              [
+                "kubernetes",
+                "deployment error"
+              ],
+              [
+                "budget",
+                "Q3"
+              ]
+            ]
+          },
+          "channel_types": {
+            "type": "string",
+            "description": "Comma-separated channel types to include: public_channel, private_channel, mpim, im. Defaults to all channel types.",
+            "title": "Channel Types",
+            "default": "public_channel,private_channel,mpim,im",
+            "examples": [
+              "im",
+              "private_channel,mpim",
+              "public_channel,private_channel,mpim,im"
+            ]
+          },
+          "content_types": {
+            "type": "string",
+            "description": "Comma-separated content types to search: messages, files, channels, users. Defaults to messages.",
+            "title": "Content Types",
+            "examples": [
+              "messages",
+              "messages,files",
+              "messages,files,channels,users"
+            ]
+          },
+          "context_channel_id": {
+            "type": "string",
+            "description": "Provide channel context for the search. Note: this parameter provides a contextual hint but may not strictly filter results to only this channel. To reliably restrict results to a specific channel, use the 'modifiers' parameter with 'in:channel_name' instead.",
+            "title": "Context Channel Id",
+            "examples": [
+              "C1234567890"
+            ]
+          },
+          "include_deleted_users": {
+            "type": "boolean",
+            "description": "Include deleted users in search results. Defaults to false.",
+            "title": "Include Deleted Users",
+            "examples": [
+              true,
+              false
+            ]
+          },
+          "include_message_blocks": {
+            "type": "boolean",
+            "description": "Return message blocks in the response.",
+            "title": "Include Message Blocks",
+            "examples": [
+              true,
+              false
+            ]
+          },
+          "disable_semantic_search": {
+            "type": "boolean",
+            "description": "When true, forces keyword-only search even if the workspace has AI/semantic search available. Use this when SLACK_ASSISTANT_SEARCH_INFO returns is_ai_search_enabled=false, or when you explicitly want keyword matching.",
+            "title": "Disable Semantic Search",
+            "examples": [
+              true,
+              false
+            ]
+          },
+          "include_context_messages": {
+            "type": "boolean",
+            "description": "Include surrounding messages before and after each result for conversational context.",
+            "title": "Include Context Messages",
+            "examples": [
+              true,
+              false
+            ]
+          },
+          "include_archived_channels": {
+            "type": "boolean",
+            "description": "Include results from archived channels.",
+            "title": "Include Archived Channels",
+            "examples": [
+              true,
+              false
+            ]
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "AssistantSearchContextRequest",
+        "description": "Request schema for `AssistantSearchContext`"
+      },
+      "toolkit": {
+        "slug": "slack",
+        "name": "slack"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "search:read.public",
+        "search:read.files",
+        "search:read.users",
+        "search:read.private",
+        "search:read.im",
+        "search:read.mpim"
+      ]
+    },
+    {
+      "slug": "SLACK_CHAT_POST_MESSAGE",
+      "name": "Send message",
+      "description": "(DEPRECATED: use `SLACK_SEND_MESSAGE`) Posts a message to a Slack channel, DM, or private group; requires at least one content field (`markdown_text`, `text`, `blocks`, or `attachments`) — omitting all causes a `no_text` error. Fails with `not_in_channel`, `channel_not_found`, or `channel_is_archived` if the bot lacks access. Body limit ~4000 characters. Rate-limited at ~1 req/sec (HTTP 429, honor `Retry-After`). Not idempotent — duplicate calls post duplicate messages.",
+      "tags": [
+        "chat",
+        "important",
+        "openWorldHint",
+        "createHint"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "DEPRECATED: This sends raw text only, use markdown_text field. Primary textual content. Recommended fallback if using `blocks` or `attachments`. Supports mrkdwn unless `mrkdwn` is `false`.",
+            "title": "Text",
+            "examples": [
+              "Hello from your friendly bot!",
+              "Reminder: Team meeting at 3 PM today."
+            ]
+          },
+          "parse": {
+            "type": "string",
+            "description": "Message text parsing behavior. Set to 'full' to parse as user-typed (auto-links @mentions, #channels). Omit for default behavior (no special parsing).",
+            "title": "Parse",
+            "const": "full",
+            "examples": [
+              "full"
+            ]
+          },
+          "blocks": {
+            "description": "DEPRECATED: Use `markdown_text` field instead. Block Kit layout blocks for rich/interactive messages. Accepts either a URL-encoded JSON string or a list of block dictionaries. See Slack API Block Kit docs for structure.",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            ],
+            "title": "Blocks",
+            "examples": [
+              "%5B%7B%22type%22%3A%20%22section%22%2C%20%22text%22%3A%20%7B%22type%22%3A%20%22mrkdwn%22%2C%20%22text%22%3A%20%22Hello%2C%20world%21%22%7D%7D%5D",
+              [
+                {
+                  "text": {
+                    "text": "Hello, world!",
+                    "type": "mrkdwn"
+                  },
+                  "type": "section"
+                }
+              ]
+            ]
+          },
+          "mrkdwn": {
+            "type": "boolean",
+            "description": "Controls Slack mrkdwn formatting for the top-level `text` field ONLY. Set to `false` to disable formatting (text appears as-is with literal asterisks, underscores, etc.). Default `true` enables mrkdwn formatting (*bold*, _italic_, etc.). NOTE: This parameter has NO effect on `blocks` or `markdown_text` - block content always uses its own formatting rules.",
+            "title": "Mrkdwn"
+          },
+          "channel": {
+            "type": "string",
+            "description": "ID or name of the channel, private group, or IM channel to send the message to. Can be specified as either 'channel' or 'channel_id'. Do NOT include the '#' prefix (e.g., use 'general' not '#general') - any leading '#' will be automatically stripped. For DMs, use the channel ID returned by SLACK_OPEN_DM (starts with 'D'); usernames, emails, and user IDs are not valid DM targets. IMPORTANT: org-wide (Enterprise Grid) tokens cannot resolve channel names — Slack returns `team_not_found`. Pass the channel ID (e.g., 'C0ABC12345') instead; use SLACK_LIST_ALL_CHANNELS to find IDs.",
+            "title": "Channel",
+            "examples": [
+              "C1234567890",
+              "general"
+            ]
+          },
+          "thread_ts": {
+            "type": "string",
+            "description": "Timestamp (`ts`) of an existing message to make this a threaded reply. Use `ts` of the parent message, not another reply. Example: '1476746824.000004'.",
+            "title": "Thread Ts",
+            "examples": [
+              "1618033790.001500"
+            ]
+          },
+          "link_names": {
+            "type": "boolean",
+            "description": "Automatically hyperlink channel names (e.g., #channel) and usernames (e.g., @user) in message text. Defaults to `false` for bot messages.",
+            "title": "Link Names"
+          },
+          "attachments": {
+            "type": "string",
+            "description": "This is Slack's legacy 'secondary attachments' field for adding rich formatting elements like colored sidebars, structured fields, and author info to messages. Pass as a JSON string array. NOT for file/image uploads. To send a message with attachments of files or images, use the 'SLACK_UPLOAD_OR_CREATE_A_FILE_IN_SLACK' instead.",
+            "title": "Attachments",
+            "examples": [
+              "[{\"fallback\": \"Summary text\", \"color\": \"#36a64f\", \"title\": \"Title\", \"text\": \"Attachment content\", \"fields\": [{\"title\": \"Field\", \"value\": \"Value\", \"short\": true}]}]"
+            ]
+          },
+          "unfurl_links": {
+            "type": "boolean",
+            "description": "Enable unfurling of text-based URLs. Defaults `false` for bots, `true` if `as_user` is `true`.",
+            "title": "Unfurl Links"
+          },
+          "unfurl_media": {
+            "type": "boolean",
+            "description": "Enable media previews (images, videos) from URLs. Set to `true` (default) to show media previews, `false` to hide them.",
+            "title": "Unfurl Media"
+          },
+          "markdown_text": {
+            "type": "string",
+            "description": "PREFERRED: Write your message in markdown for nicely formatted display. Supports: headers (# ## ###), bold (**text** or __text__), italic (*text* or _text_), strikethrough (~~text~~), inline code (`code`), code blocks (```), links ([text](url)), block quotes (>), lists (- item, 1. item), dividers (--- or ***), context blocks (:::context with images), and section buttons (:::section-button). IMPORTANT: Use \\n for line breaks (e.g., 'Line 1\\nLine 2'), not actual newlines. USER MENTIONS: To tag users, use their user ID with <@USER_ID> format (e.g., <@U1234567890>), not username. NOTE: Slack enforces a 50-block limit per message. Very long messages with extensive formatting may exceed this limit. If your message is very long, consider splitting it into multiple shorter messages or using simpler formatting.",
+            "title": "Markdown Text",
+            "examples": [
+              "# Status Update\n\nSystem is **running smoothly** with *excellent* performance.\n\n```bash\nkubectl get pods\n```\n\n> All services operational ✅",
+              "## Daily Report\n\n- **Deployments**: 5 successful\n- *Issues*: 0 critical\n- ~~Maintenance~~: **Completed**\n\n---\n\n**Next**: Monitor for 24h"
+            ]
+          },
+          "reply_broadcast": {
+            "type": "boolean",
+            "description": "If `true` for a threaded reply, also posts to main channel. Defaults to `false`.",
+            "title": "Reply Broadcast"
+          }
+        },
+        "required": [
+          "channel"
+        ],
+        "title": "SendMessageRequest",
+        "description": "Request schema for `SendMessage`"
+      },
+      "toolkit": {
+        "slug": "slack",
+        "name": "slack"
+      },
+      "version": "20260915_00",
+      "isDeprecated": true,
+      "scopes": [
+        "chat:write"
+      ]
+    },
+    {
+      "slug": "SLACK_CREATE_A_REMINDER",
+      "name": "Create a reminder",
+      "description": "Creates a Slack reminder with specified text and time; time accepts Unix timestamps, seconds from now, or natural language (e.g., 'in 15 minutes', 'every Thursday at 2pm').",
+      "tags": [
+        "important",
+        "openWorldHint",
+        "reminders",
+        "createHint"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "The textual content of the reminder message.",
+            "title": "Text",
+            "examples": [
+              "Submit weekly report",
+              "Follow up with Jane Doe"
+            ]
+          },
+          "time": {
+            "type": "string",
+            "description": "Specifies when the reminder should occur. This can be a Unix timestamp (integer, up to five years from now), the number of seconds until the reminder (integer, if within 24 hours, e.g., '300' for 5 minutes), or a natural language description (string, e.g., \"in 15 minutes,\" or \"every Thursday at 2pm\", \"daily\"). For recurring reminders, express the recurrence in this field using natural language (e.g., 'every day at 9am', 'every Monday at 10am'). Natural language is parsed relative to the user's workspace timezone; use Unix timestamps when target timezone is uncertain.",
+            "title": "Time",
+            "examples": [
+              "1735689600",
+              "900",
+              "in 20 minutes",
+              "every Monday at 10am",
+              "every day at 9am"
+            ]
+          },
+          "user": {
+            "type": "string",
+            "description": "The ID of the user who will receive the reminder (e.g., 'U012AB3CD4E'). If not specified, the reminder will be sent to the user who created it. NOTE: Setting reminders for other users is no longer supported for user tokens - only bot tokens can set reminders for other users.",
+            "title": "User",
+            "examples": [
+              "U012AB3CD4E",
+              "W1234567890"
+            ]
+          },
+          "team_id": {
+            "type": "string",
+            "description": "ID of the Slack workspace (team) to operate on, e.g. T0123456789. Use only with org-level Enterprise Grid tokens when you need to target a specific workspace; omit for single-workspace tokens.",
+            "title": "Team Id",
+            "examples": [
+              "T1234567890"
+            ]
+          }
+        },
+        "required": [
+          "text",
+          "time"
+        ],
+        "title": "CreateAReminderRequest",
+        "description": "Request schema for creating a new reminder in Slack."
+      },
+      "toolkit": {
+        "slug": "slack",
+        "name": "slack"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "reminders:write"
+      ]
+    },
+    {
+      "slug": "SLACK_CREATE_USER_GROUP",
+      "name": "Create a Slack user group",
+      "description": "Creates a new User Group (often referred to as a subteam) in a Slack workspace.",
+      "tags": [
+        "openWorldHint",
+        "usergroups",
+        "createHint"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Unique name for the User Group. Must be unique among all User Groups in the workspace.",
+            "title": "Name",
+            "examples": [
+              "Customer Support",
+              "Core Engineering",
+              "Project Phoenix Leads"
+            ]
+          },
+          "handle": {
+            "type": "string",
+            "description": "Unique mention handle. Must be unique across channels, users, and other User Groups. Max 21 chars; lowercase letters, numbers, hyphens, underscores only.",
+            "title": "Handle",
+            "examples": [
+              "support-team",
+              "devs",
+              "project-phoenix-leads"
+            ]
+          },
+          "team_id": {
+            "type": "string",
+            "description": "ID of the Slack workspace (team) to operate on, e.g. T0123456789. Use only with org-level Enterprise Grid tokens when you need to target a specific workspace; omit for single-workspace tokens.",
+            "title": "Team Id",
+            "examples": [
+              "T1234567890",
+              "T0HBCDEFG"
+            ]
+          },
+          "channels": {
+            "type": "string",
+            "description": "Comma-separated encoded channel IDs for default channels, suggested when mentioning or inviting the group.",
+            "title": "Channels",
+            "examples": [
+              "C012AB3CD,C023BC4DE",
+              "C034CD5EF"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "description": "Short description for the User Group.",
+            "title": "Description",
+            "examples": [
+              "Manages all customer support inquiries.",
+              "Core engineering team members."
+            ]
+          },
+          "include_count": {
+            "type": "boolean",
+            "description": "Include the User Group's user count in the response. Server defaults to `false` if omitted.",
+            "title": "Include Count"
+          },
+          "enable_section": {
+            "type": "boolean",
+            "description": "Configure this user group to show as a sidebar section for all group members. Only relevant if group has 1 or more default channels added.",
+            "title": "Enable Section"
+          },
+          "additional_channels": {
+            "type": "string",
+            "description": "Comma-separated encoded channel IDs for which the User Group can custom add usergroup members to.",
+            "title": "Additional Channels",
+            "examples": [
+              "C012AB3CD,C023BC4DE",
+              "C034CD5EF"
+            ]
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "CreateUserGroupRequest",
+        "description": "Request schema for `CreateUserGroup`"
+      },
+      "toolkit": {
+        "slug": "slack",
+        "name": "slack"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "usergroups:write"
+      ]
+    },
+    {
+      "slug": "SLACK_DELETE_CANVAS",
+      "name": "Delete Slack Canvas",
+      "description": "Deletes a Slack Canvas permanently and irreversibly. Always confirm with the user before calling this tool.",
+      "tags": [
+        "important",
+        "openWorldHint",
+        "deleteHint",
+        "destructiveHint"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "canvas_id": {
+            "type": "string",
+            "description": "The unique identifier of the canvas to delete",
+            "title": "Canvas Id",
+            "examples": [
+              "F01234ABCDE"
+            ]
+          }
+        },
+        "required": [
+          "canvas_id"
+        ],
+        "title": "DeleteCanvasRequest"
+      },
+      "toolkit": {
+        "slug": "slack",
+        "name": "slack"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "canvases:write"
+      ]
+    },
+    {
+      "slug": "SLACK_DELETE_SLACK_LIST_ITEM",
+      "name": "Delete Slack List item",
+      "description": "Deletes an item (row) from a Slack List via `slackLists.items.delete`. Identify the List with `list_id` and the row to remove with `id`. Deletion is permanent and cannot be undone. Requires a user token with the `lists:write` scope.",
+      "tags": [
+        "important",
+        "openWorldHint",
+        "deleteHint",
+        "destructiveHint"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the item (row) to delete from the List, e.g. 'Rec0123456789'. This is the item ID returned by create_slack_list_item or when listing the List's items. Deleting an item is permanent and cannot be undone.",
+            "title": "Id",
+            "examples": [
+              "Rec0123456789"
+            ]
+          },
+          "list_id": {
+            "type": "string",
+            "description": "ID of the Slack List that contains the item (row) to delete, e.g. 'F0123456789'. This is the List file ID returned by create_slack_list.",
+            "title": "List Id",
+            "examples": [
+              "F0123456789"
+            ]
+          }
+        },
+        "required": [
+          "list_id",
+          "id"
+        ],
+        "title": "DeleteSlackListItemRequest",
+        "description": "Request schema for `DeleteSlackListItem` (slackLists.items.delete)."
+      },
+      "toolkit": {
+        "slug": "slack",
+        "name": "slack"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "lists:write"
+      ]
+    },
+    {
+      "slug": "SLACK_FETCH_CONVERSATION_HISTORY",
+      "name": "Fetch conversation history",
+      "description": "Fetches a chronological list of messages and events from a specified Slack conversation, accessible by the authenticated user/bot, with options for pagination and time range filtering. IMPORTANT LIMITATION: This action only returns messages from the main channel timeline. Threaded replies are NOT returned by this endpoint. To retrieve threaded replies, use the SLACK_FETCH_MESSAGE_THREAD_FROM_A_CONVERSATION action (conversations.replies API) instead. The oldest/latest timestamp filters work reliably for filtering the main channel timeline, but cannot be used to retrieve individual threaded replies - even if you know the exact reply timestamp, setting oldest=latest to that timestamp will return an empty messages array. To get threaded replies: 1. Use this action to get parent messages (which include thread_ts, reply_count, latest_reply fields) 2. Use SLACK_FETCH_MESSAGE_THREAD_FROM_A_CONVERSATION with the parent's thread_ts to fetch all replies in that thread",
+      "tags": [
+        "conversations",
+        "important",
+        "openWorldHint",
+        "readOnlyHint",
+        "idempotentHint"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "description": "Maximum number of messages to request in this single Slack API call (1-1000). Defaults to 100. Slack may return fewer than requested, especially for non-Marketplace apps where Slack can cap each page at 15 messages. This action does not internally paginate; use response_metadata.next_cursor in the cursor parameter of a follow-up call to fetch more messages.",
+            "title": "Limit",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 1000,
+            "examples": [
+              "100",
+              "200"
+            ]
+          },
+          "cursor": {
+            "type": "string",
+            "description": "Pagination cursor from `response_metadata.next_cursor` of a previous response. Omit this for the first page; pass the returned cursor in a follow-up call to fetch the next page.",
+            "title": "Cursor",
+            "examples": [
+              "dXNlcjpVMDYxTkZUVDA="
+            ]
+          },
+          "latest": {
+            "type": "string",
+            "description": "End of the time range of messages to include in results. Accepts a Unix timestamp or a Slack timestamp (e.g., '1234567890.000000'). NOTE: This filter only applies to main channel messages, not threaded replies. Use SLACK_FETCH_MESSAGE_THREAD_FROM_A_CONVERSATION to retrieve replies.",
+            "title": "Latest",
+            "examples": [
+              "1609459200.000000"
+            ]
+          },
+          "oldest": {
+            "type": "string",
+            "description": "Start of the time range of messages to include in results. Accepts a Unix timestamp or a Slack timestamp (e.g., '1234567890.000000'). NOTE: This filter only applies to main channel messages, not threaded replies. Use SLACK_FETCH_MESSAGE_THREAD_FROM_A_CONVERSATION to retrieve replies.",
+            "title": "Oldest",
+            "examples": [
+              "1609372800.000000"
+            ]
+          },
+          "channel": {
+            "type": "string",
+            "description": "The ID of the public channel, private channel, direct message, or multi-person direct message to fetch history from.",
+            "title": "Channel",
+            "examples": [
+              "C1234567890",
+              "G0123456789",
+              "D0123456789"
+            ]
+          },
+          "inclusive": {
+            "type": "boolean",
+            "description": "When true, includes messages at the exact 'oldest' or 'latest' boundary timestamps in results. When false (default), excludes boundary messages. Only applies when 'oldest' or 'latest' is specified.",
+            "title": "Inclusive",
+            "examples": [
+              true,
+              false
+            ]
+          },
+          "include_all_metadata": {
+            "type": "boolean",
+            "description": "Return all metadata associated with messages in the conversation history. When true, includes additional metadata fields that may be present on messages.",
+            "title": "Include All Metadata",
+            "examples": [
+              true
+            ]
+          }
+        },
+        "required": [
+          "channel"
+        ],
+        "title": "FetchConversationHistoryRequest",
+        "description": "Request schema for fetching conversation history from Slack."
+      },
+      "toolkit": {
+        "slug": "slack",
+        "name": "slack"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "channels:history",
+        "groups:history",
+        "im:history",
+        "mpim:history"
+      ]
+    },
+    {
+      "slug": "SLACK_GET_APP_PERMISSION_SCOPES",
+      "name": "Get app permission scopes",
+      "description": "DEPRECATED: Use SLACK_TEST_AUTH instead. Preflight a Slack token by calling auth.test and returning the token's currently granted OAuth scopes (from response headers) to detect missing permissions before attempting admin actions. Use when you need to verify token capabilities or check for specific scopes before making API calls that require elevated permissions.",
+      "tags": [
+        "openWorldHint",
+        "readOnlyHint",
+        "idempotentHint",
+        "auth",
+        "deprecated"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "required_scopes": {
+            "type": "array",
+            "description": "Optional list of OAuth scopes to check against the token's granted scopes. If provided, the action will compute and return missing_scopes.",
+            "title": "Required Scopes",
+            "items": {
+              "type": "string"
+            },
+            "examples": [
+              [
+                "admin.users:write",
+                "channels:read"
+              ],
+              [
+                "chat:write",
+                "users:read"
+              ]
+            ]
+          }
+        },
+        "title": "GetAppPermissionScopesRequest",
+        "description": "Request schema for `GetAppPermissionScopes`"
+      },
+      "toolkit": {
+        "slug": "slack",
+        "name": "slack"
+      },
+      "version": "20260915_00",
+      "isDeprecated": true,
+      "scopes": []
+    },
+    {
+      "slug": "SLACK_GET_CALL_INFO",
+      "name": "Retrieve call information",
+      "description": "Retrieves a point-in-time snapshot of a specific Slack call's information.",
+      "tags": [
+        "calls",
+        "openWorldHint",
+        "readOnlyHint",
+        "idempotentHint"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the Slack call for which to retrieve information. This ID is typically returned when a call is initiated (e.g., by the `calls.add` method).",
+            "title": "Id",
+            "examples": [
+              "R1234567890"
+            ]
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "GetCallInfoRequest",
+        "description": "Request model for retrieving information about a specific Slack call."
+      },
+      "toolkit": {
+        "slug": "slack",
+        "name": "slack"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "calls:read"
+      ]
+    },
+    {
+      "slug": "SLACK_GET_WORKSPACE_CONNECTIONS_FOR_CHANNEL",
+      "name": "Get workspace connections for channel",
+      "description": "Tool to get all workspaces a channel is connected to within an Enterprise org. Use when you need to determine which workspaces have access to a specific public or private channel in an Enterprise Grid organization.",
+      "tags": [
+        "openWorldHint",
+        "readOnlyHint",
+        "idempotentHint",
+        "admin.conversations"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "description": "Maximum number of items to return per page. Must be between 1 and 1000 inclusive. If omitted, API defaults to a reasonable limit.",
+            "title": "Limit",
+            "minimum": 1,
+            "maximum": 1000,
+            "examples": [
+              100,
+              500,
+              1000
+            ]
+          },
+          "cursor": {
+            "type": "string",
+            "description": "Pagination cursor from `next_cursor` in the previous response. Set this to paginate through results. Omit for the first page.",
+            "title": "Cursor",
+            "examples": [
+              "dXNlcjpVMDYxTkZUVDI=",
+              "bmV4dF90czoxNTEyMDg1ODYxMDAwNTQ5"
+            ]
+          },
+          "channel_id": {
+            "type": "string",
+            "description": "The channel ID to determine connected workspaces within the organization for. Must be a valid Slack channel ID (e.g., C0ACHDEQ3JP).",
+            "title": "Channel Id",
+            "examples": [
+              "C0ACHDEQ3JP",
+              "C1234567890"
+            ]
+          }
+        },
+        "required": [
+          "channel_id"
+        ],
+        "title": "GetWorkspaceConnectionsForChannelRequest",
+        "description": "Request model for getting all workspaces connected to a channel within an Enterprise org."
+      },
+      "toolkit": {
+        "slug": "slack",
+        "name": "slack"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "admin.conversations:read"
+      ]
+    },
+    {
+      "slug": "SLACK_INVITE_USERS_TO_A_SLACK_CHANNEL",
+      "name": "Invite users to a Slack channel",
+      "description": "Invites users to an existing Slack channel using their valid Slack User IDs. Response is always HTTP 200; inspect `ok`, `error`, and `errors` fields to confirm users were added.",
+      "tags": [
+        "conversations",
+        "openWorldHint",
+        "updateHint"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "force": {
+            "type": "boolean",
+            "description": "When set to true and multiple user IDs are provided, continue inviting the valid ones while disregarding invalid IDs. Default is false.",
+            "title": "Force",
+            "examples": [
+              true,
+              false
+            ]
+          },
+          "users": {
+            "type": "string",
+            "description": "Comma-separated string of valid Slack User IDs to invite. Up to 1000 user IDs can be included.",
+            "title": "Users",
+            "examples": [
+              "U1234567890,U2345678901,U3456789012"
+            ]
+          },
+          "channel": {
+            "type": "string",
+            "description": "ID of the public or private Slack channel to invite users to; must be an existing channel. Typically starts with 'C' (public) or 'G' (private/group). Bot must already be a member of private channels to invite others. Archived channels will cause failure.",
+            "title": "Channel",
+            "examples": [
+              "C1234567890",
+              "G0987654321"
+            ]
+          }
+        },
+        "title": "InviteUsersToASlackChannelRequest",
+        "description": "Request schema for `InviteUsersToASlackChannel`"
+      },
+      "toolkit": {
+        "slug": "slack",
+        "name": "slack"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "channels:write",
+        "channels:write.invites",
+        "groups:write",
+        "groups:write.invites",
+        "im:write",
+        "mpim:write"
+      ]
+    },
+    {
+      "slug": "SLACK_LIST_ADMIN_APPS_APPROVED",
+      "name": "List approved apps",
+      "description": "Tool to list approved apps for an Enterprise Grid organization or workspace. Use when you need to retrieve the list of apps that have been approved for installation by workspace admins. Requires admin.apps:read scope and a user token from an org owner/admin context.",
+      "tags": [
+        "openWorldHint",
+        "readOnlyHint",
+        "idempotentHint",
+        "admin.apps"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "description": "The maximum number of items to return. Must be between 1 and 1000 (inclusive).",
+            "title": "Limit",
+            "minimum": 1,
+            "maximum": 1000,
+            "examples": [
+              100,
+              500,
+              1000
+            ]
+          },
+          "cursor": {
+            "type": "string",
+            "description": "Pagination cursor for retrieving the next page. Set to `next_cursor` returned by the previous call to list items in the next page.",
+            "title": "Cursor",
+            "examples": [
+              "dXNlcjpVMDYxTkZUVDA="
+            ]
+          },
+          "team_id": {
+            "type": "string",
+            "description": "The workspace/team ID to list approved apps for. Required when using an org-level token.",
+            "title": "Team Id",
+            "examples": [
+              "T0984H91R2N",
+              "T1234567890"
+            ]
+          },
+          "certified": {
+            "type": "boolean",
+            "description": "Filter results to certified apps only. When false, certified apps are excluded from results. Defaults to false if not specified.",
+            "title": "Certified",
+            "examples": [
+              true,
+              false
+            ]
+          },
+          "enterprise_id": {
+            "type": "string",
+            "description": "The Enterprise Grid organization ID to list approved apps for.",
+            "title": "Enterprise Id",
+            "examples": [
+              "E1234567890",
+              "E0984H91R2N"
+            ]
+          }
+        },
+        "title": "ListAdminAppsApprovedRequest",
+        "description": "Request schema for listing approved apps for an org or workspace."
+      },
+      "toolkit": {
+        "slug": "slack",
+        "name": "slack"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "admin.apps:read"
+      ]
+    },
+    {
+      "slug": "SLACK_LIST_ALL_USERS",
+      "name": "List all users",
+      "description": "Retrieves a paginated list of all users with profile details, status, and team memberships in a Slack workspace; data may not be real-time. Filter response fields `is_bot`, `is_app_user`, and `deleted` to build human-only rosters. Profile fields like `email` and `phone` may be absent depending on OAuth scopes and workspace privacy settings. Guest/restricted accounts may be omitted based on scopes—do not treat results as a complete directory. High-frequency calls risk HTTP 429; honor the `Retry-After` header and throttle to ~1–2 requests/second. Use stable user IDs rather than display names for mapping. Prefer SLACK_FIND_USERS for targeted lookups; cache results to avoid full-workspace fetches.",
+      "tags": [
+        "important",
+        "openWorldHint",
+        "readOnlyHint",
+        "idempotentHint",
+        "users"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "description": "Maximum number of items to return per page; fewer may be returned if the end of the list is reached. Recommended to set a value (e.g., 100) as Slack may error for large workspaces if omitted.",
+            "title": "Limit",
+            "default": 1,
+            "examples": [
+              "20",
+              "100",
+              "200"
+            ]
+          },
+          "cursor": {
+            "type": "string",
+            "description": "Pagination cursor for fetching subsequent pages. Set to `next_cursor` from a previous response's `response_metadata`. Omit for the first page. Paginate until `next_cursor` is empty—stopping early silently undercounts users. Page size is capped at ~200 users.",
+            "title": "Cursor",
+            "examples": [
+              "dXNlcjpVMDYxREk0STM=",
+              "dXNlcjpVMDYxREk0STQ="
+            ]
+          },
+          "team_id": {
+            "type": "string",
+            "description": "ID of the Slack workspace (team) to operate on, e.g. T0123456789. Use only with org-level Enterprise Grid tokens when you need to target a specific workspace; omit for single-workspace tokens.",
+            "title": "Team Id",
+            "examples": [
+              "T0984H91R2N",
+              "T1234567890"
+            ]
+          },
+          "include_locale": {
+            "type": "boolean",
+            "description": "Include the `locale` field for each user. Defaults to `false`.",
+            "title": "Include Locale",
+            "examples": [
+              "true",
+              "false"
+            ]
+          }
+        },
+        "title": "ListAllUsersRequest",
+        "description": "Request schema for `ListAllUsers`."
+      },
+      "toolkit": {
+        "slug": "slack",
+        "name": "slack"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "users:read",
+        "users:read.email"
+      ]
+    },
+    {
+      "slug": "SLACK_LIST_IDP_GROUPS_LINKED_TO_CHANNEL",
+      "name": "List IDP groups linked to channel",
+      "description": "Lists IDP groups that have restricted access to a private Slack channel. Use when you need to see which identity provider groups can access a specific channel.",
+      "tags": [
+        "openWorldHint",
+        "readOnlyHint",
+        "admin.conversations"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "team_id": {
+            "type": "string",
+            "description": "The workspace where the channel exists. Required for channels tied to one workspace, optional for channels shared across an organization.",
+            "title": "Team Id",
+            "examples": [
+              "T0984H91R2N",
+              "T1234567890"
+            ]
+          },
+          "channel_id": {
+            "type": "string",
+            "description": "The channel ID to list IDP groups for. This is the unique identifier for the private channel.",
+            "title": "Channel Id",
+            "examples": [
+              "C0ABHF7RSLR",
+              "C1234567890"
+            ]
+          }
+        },
+        "required": [
+          "channel_id"
+        ],
+        "title": "ListIdpGroupsLinkedToChannelRequest",
+        "description": "Request schema for listing IDP groups linked to a Slack channel."
+      },
+      "toolkit": {
+        "slug": "slack",
+        "name": "slack"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "admin.conversations:read"
+      ]
+    },
+    {
+      "slug": "SLACK_LIST_USER_GROUPS",
+      "name": "List user groups",
+      "description": "Lists user groups in a Slack workspace, including user-created and default groups; results for large workspaces may be paginated.",
+      "tags": [
+        "openWorldHint",
+        "readOnlyHint",
+        "usergroups"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "team_id": {
+            "type": "string",
+            "description": "ID of the Slack workspace (team) to operate on, e.g. T0123456789. Use only with org-level Enterprise Grid tokens when you need to target a specific workspace; omit for single-workspace tokens.",
+            "title": "Team Id",
+            "examples": [
+              "T1234567890"
+            ]
+          },
+          "include_count": {
+            "type": "boolean",
+            "description": "Include the number of users in each user group. Defaults to false.",
+            "title": "Include Count",
+            "examples": [
+              "true",
+              "false"
+            ]
+          },
+          "include_users": {
+            "type": "boolean",
+            "description": "Include the list of user IDs for each user group. Defaults to false.",
+            "title": "Include Users",
+            "examples": [
+              "true",
+              "false"
+            ]
+          },
+          "include_disabled": {
+            "type": "boolean",
+            "description": "Include disabled user groups in the results. Defaults to false.",
+            "title": "Include Disabled",
+            "examples": [
+              "true",
+              "false"
+            ]
+          }
+        },
+        "title": "ListUserGroupsRequest",
+        "description": "Request model for listing user groups in a Slack team, providing options to customize the retrieved information."
+      },
+      "toolkit": {
+        "slug": "slack",
+        "name": "slack"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "usergroups:read"
+      ]
+    },
+    {
+      "slug": "SLACK_READ_AUDIT_LOGS",
+      "name": "Read Audit Logs",
+      "description": "Read Slack Enterprise Grid Audit Logs (logins, admin changes, app installs, channel/privacy changes, etc.) with server-side filters and pagination. Requires Enterprise Grid organization with auditlogs:read scope and a user token (xoxp-...) from an owner/admin context.",
+      "tags": [
+        "important",
+        "openWorldHint",
+        "readOnlyHint",
+        "audit"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "actor": {
+            "type": "string",
+            "description": "User ID of the actor who performed the actions. Filters results to only show actions by this user.",
+            "title": "Actor",
+            "examples": [
+              "U1234567890",
+              "W012A3BCD"
+            ]
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Maximum number of audit log entries to return (max 9999). Fewer entries may be returned if there aren't enough matching results.",
+            "title": "Limit",
+            "examples": [
+              100,
+              500,
+              1000
+            ]
+          },
+          "action": {
+            "type": "string",
+            "description": "Comma-separated list of action types to filter by (max 30). Examples: 'user_login', 'user_logout', 'channel_created', 'app_installed'. See Slack's Audit Logs API documentation for full list.",
+            "title": "Action",
+            "examples": [
+              "user_login",
+              "user_logout,user_login",
+              "channel_created,channel_deleted",
+              "app_installed,app_approved"
+            ]
+          },
+          "cursor": {
+            "type": "string",
+            "description": "Pagination cursor from response_metadata.next_cursor of a previous response. Use to fetch the next page of results.",
+            "title": "Cursor",
+            "examples": [
+              "dXNlcjpVMDYxTkZUVDA="
+            ]
+          },
+          "entity": {
+            "type": "string",
+            "description": "Entity ID that was affected by the actions. Filters results to only show actions affecting this entity.",
+            "title": "Entity",
+            "examples": [
+              "E1234567890",
+              "C1234567890"
+            ]
+          },
+          "latest": {
+            "type": "integer",
+            "description": "Unix timestamp (inclusive) of the latest audit log entry to include. Use for time-range filtering.",
+            "title": "Latest",
+            "examples": [
+              1609545600,
+              1641081600
+            ]
+          },
+          "oldest": {
+            "type": "integer",
+            "description": "Unix timestamp (inclusive) of the oldest audit log entry to include. Use for time-range filtering.",
+            "title": "Oldest",
+            "examples": [
+              1609459200,
+              1640995200
+            ]
+          }
+        },
+        "title": "ReadAuditLogsRequest",
+        "description": "Request schema for retrieving Slack Enterprise Audit Logs."
+      },
+      "toolkit": {
+        "slug": "slack",
+        "name": "slack"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "auditlogs:read"
+      ]
+    },
+    {
+      "slug": "SLACK_RESET_USER_SESSIONS",
+      "name": "Reset user sessions",
+      "description": "Tool to wipe all valid sessions on all devices for a given user. Use when you need to force a user to re-authenticate due to security concerns or account changes.",
+      "tags": [
+        "openWorldHint",
+        "destructiveHint",
+        "admin.users.session",
+        "updateHint"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "description": "The ID of the user to wipe sessions for (e.g., U1234567890).",
+            "title": "User Id",
+            "examples": [
+              "U1234567890",
+              "U0984HGKCG2"
+            ]
+          },
+          "web_only": {
+            "type": "boolean",
+            "description": "Only expire web sessions. Defaults to false if not specified.",
+            "title": "Web Only"
+          },
+          "mobile_only": {
+            "type": "boolean",
+            "description": "Only expire mobile sessions. Defaults to false if not specified.",
+            "title": "Mobile Only"
+          }
+        },
+        "required": [
+          "user_id"
+        ],
+        "title": "ResetUserSessionsRequest",
+        "description": "Request model for resetting user sessions on all devices."
+      },
+      "toolkit": {
+        "slug": "slack",
+        "name": "slack"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "admin.users:write"
+      ]
+    },
+    {
+      "slug": "SLACK_REVOKE_FILE_PUBLIC_SHARING",
+      "name": "Revoke a file's public url",
+      "description": "Revokes a Slack file's public URL, making it private; this is a no-op if not already public and is irreversible.",
+      "tags": [
+        "destructiveHint",
+        "files",
+        "idempotentHint",
+        "openWorldHint",
+        "updateHint"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "The ID of the file for which to revoke the public URL. This unique identifier typically starts with 'F'.",
+            "title": "File",
+            "examples": [
+              "F123ABC456"
+            ]
+          }
+        },
+        "required": [
+          "file"
+        ],
+        "title": "RevokeFilePublicSharingRequest",
+        "description": "Request schema for `RevokeFilePublicSharing`"
+      },
+      "toolkit": {
+        "slug": "slack",
+        "name": "slack"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "files:write"
+      ]
+    },
+    {
+      "slug": "SLACK_SEND_EPHEMERAL_MESSAGE",
+      "name": "Send ephemeral message",
+      "description": "Sends an ephemeral message visible only to the specified `user` in a channel; other channel members cannot see it. Both the bot and the target user must be members of the specified channel.",
+      "tags": [
+        "chat",
+        "openWorldHint",
+        "createHint"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "The message text to display. Required unless 'blocks' or 'attachments' is provided. When using blocks, this serves as fallback text for notifications. Supports markdown formatting.",
+            "title": "Text",
+            "examples": [
+              "Hello world",
+              "Check out this *important* update!"
+            ]
+          },
+          "user": {
+            "type": "string",
+            "description": "User ID of the user to send the ephemeral message to.",
+            "title": "User",
+            "examples": [
+              "U0BPQUNTA"
+            ]
+          },
+          "parse": {
+            "type": "string",
+            "description": "Controls text parsing behavior. Use 'full' to enable automatic linking of @mentions, #channels, and URLs. Use 'none' to disable special parsing (URLs will still be clickable). Defaults to 'none'.",
+            "title": "Parse",
+            "examples": [
+              "full",
+              "none"
+            ]
+          },
+          "blocks": {
+            "type": "string",
+            "description": "A JSON-based array of structured blocks, presented as a URL-encoded string.",
+            "title": "Blocks",
+            "examples": [
+              "[{\"type\": \"section\", \"text\": {\"type\": \"plain_text\", \"text\": \"Hello world\"}}]"
+            ]
+          },
+          "as_user": {
+            "type": "boolean",
+            "description": "Legacy parameter for authenticated user authorship. Defaults to true without chat:write:bot scope, false otherwise. Setting to true requires chat:write:user scope for the authenticated user to author the message.",
+            "title": "As User",
+            "examples": [
+              true,
+              false
+            ]
+          },
+          "channel": {
+            "type": "string",
+            "description": "Channel, private group, or DM channel to send message to. Can be an encoded ID, or a name. **IMPORTANT:** org-wide (Enterprise Grid) tokens cannot resolve channel names — Slack returns `team_not_found`. Pass the channel ID (e.g., `C0ABC12345`) instead; use SLACK_LIST_ALL_CHANNELS to find IDs.",
+            "title": "Channel",
+            "examples": [
+              "C1234567890"
+            ]
+          },
+          "icon_url": {
+            "type": "string",
+            "description": "URL to an image to use as the icon for this message. Must be used in conjunction with as_user set to false, otherwise ignored. See authorship below.",
+            "title": "Icon Url",
+            "examples": [
+              "http://lorempixel.com/48/48"
+            ]
+          },
+          "username": {
+            "type": "string",
+            "description": "Set your bot's user name. Must be used in conjunction with as_user set to false, otherwise ignored. See authorship below.",
+            "title": "Username",
+            "examples": [
+              "My Bot"
+            ]
+          },
+          "thread_ts": {
+            "type": "string",
+            "description": "Provide another message's ts value to make this message a reply. Avoid using a reply's ts value; use its parent instead.",
+            "title": "Thread Ts",
+            "examples": [
+              "1234567890.123456"
+            ]
+          },
+          "icon_emoji": {
+            "type": "string",
+            "description": "Emoji to use as the icon for this message. Overrides icon_url. Must be used in conjunction with as_user set to false, otherwise ignored. See authorship below.",
+            "title": "Icon Emoji",
+            "examples": [
+              ":chart_with_upwards_trend:"
+            ]
+          },
+          "link_names": {
+            "type": "boolean",
+            "description": "Find and link channel names and usernames.",
+            "title": "Link Names",
+            "examples": [
+              true
+            ]
+          },
+          "attachments": {
+            "type": "string",
+            "description": "This is Slack's legacy 'secondary attachments' field for adding rich formatting elements like colored sidebars, structured fields, and author info. Pass as a JSON string array. NOT for file/image uploads. To send files or images, use 'SLACK_UPLOAD_OR_CREATE_A_FILE_IN_SLACK' instead.",
+            "title": "Attachments",
+            "examples": [
+              "[{\"fallback\": \"Summary\", \"color\": \"#36a64f\", \"title\": \"Title\", \"text\": \"Content\"}]"
+            ]
+          },
+          "markdown_text": {
+            "type": "string",
+            "description": "PREFERRED: Write your ephemeral message in markdown for nicely formatted display. Supports: headers (# ## ###), bold (**text** or __text__), italic (*text* or _text_), strikethrough (~~text~~), inline code (`code`), code blocks (```), links ([text](url)), block quotes (>), lists (- item, 1. item), dividers (--- or ***). IMPORTANT: Use \\n for line breaks (e.g., 'Line 1\\nLine 2'), not actual newlines. Incompatible with blocks or text parameters. Maximum 12,000 characters.",
+            "title": "Markdown Text",
+            "examples": [
+              "# Ephemeral Notice\n\nThis message is **only visible to you**.\n\n```\nStatus: Active\n```",
+              "## Private Update\n\n- Task 1: *Complete*\n- Task 2: **In Progress**\n\n---\n\n_This is confidential_"
+            ]
+          }
+        },
+        "required": [
+          "channel",
+          "user"
+        ],
+        "title": "SendEphemeralMessageRequest",
+        "description": "Request schema for `SendEphemeralMessage`"
+      },
+      "toolkit": {
+        "slug": "slack",
+        "name": "slack"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "chat:write"
+      ]
+    },
+    {
+      "slug": "SLACK_SET_CONVERSATION_PREFS",
+      "name": "Set conversation preferences",
+      "description": "Sets the posting permissions for a public or private channel in Slack. Use this to control who can post messages, start threads, use @channel/@here mentions, and initiate huddles in a specific channel.",
+      "tags": [
+        "openWorldHint",
+        "updateHint",
+        "admin.conversations"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "prefs": {
+            "type": "string",
+            "description": "The prefs for this channel in a stringified JSON format. Example: '{\"who_can_post\":\"type:admin\"}' to restrict posting to admins only, or '{\"who_can_post\":{\"type\":[\"admin\",\"ra\"]}}' to allow admins and regular users. The prefs object can include: who_can_post (defines who can post messages), can_thread (defines who can respond in threads), can_huddle (boolean), enable_at_channel (object with 'enabled' boolean), enable_at_here (object with 'enabled' boolean).",
+            "title": "Prefs",
+            "examples": [
+              "{\"who_can_post\":\"type:admin\"}",
+              "{\"who_can_post\":{\"type\":[\"admin\",\"ra\"]}}",
+              "{\"can_huddle\":false,\"enable_at_channel\":{\"enabled\":false}}"
+            ]
+          },
+          "channel_id": {
+            "type": "string",
+            "description": "The channel to set the prefs for.",
+            "title": "Channel Id",
+            "examples": [
+              "C0984HA4318",
+              "C1234567890"
+            ]
+          }
+        },
+        "required": [
+          "channel_id",
+          "prefs"
+        ],
+        "title": "SetConversationPrefsRequest",
+        "description": "Request schema for `SetConversationPrefs`"
+      },
+      "toolkit": {
+        "slug": "slack",
+        "name": "slack"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "admin.conversations:write"
+      ]
+    },
+    {
+      "slug": "SLACK_SET_USER_PRESENCE",
+      "name": "Set user presence",
+      "description": "Manually sets a user's Slack presence, overriding automatic detection; this setting persists across connections but can be overridden by user actions or Slack's auto-away (e.g., after 10 mins of inactivity).",
+      "tags": [
+        "updateHint",
+        "openWorldHint",
+        "users"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "presence": {
+            "type": "string",
+            "description": "The presence state to set for the user.",
+            "title": "Presence",
+            "enum": [
+              "auto",
+              "away"
+            ],
+            "examples": [
+              "auto",
+              "away"
+            ]
+          }
+        },
+        "required": [
+          "presence"
+        ],
+        "title": "SetUserPresenceRequest",
+        "description": "Request schema for SetUserPresence, allowing manual setting of a user's presence."
+      },
+      "toolkit": {
+        "slug": "slack",
+        "name": "slack"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "users:write"
+      ]
+    },
+    {
+      "slug": "SLACK_UNARCHIVE_CHANNEL",
+      "name": "Unarchive channel",
+      "description": "Reverses conversation archival.",
+      "tags": [
+        "conversations",
+        "openWorldHint",
+        "updateHint"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "channel": {
+            "type": "string",
+            "description": "ID of conversation to unarchive",
+            "title": "Channel",
+            "examples": [
+              "C1234567890"
+            ]
+          }
+        },
+        "required": [
+          "channel"
+        ],
+        "title": "UnarchiveChannelRequest",
+        "description": "Request schema for `UnarchiveChannel`"
+      },
+      "toolkit": {
+        "slug": "slack",
+        "name": "slack"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "channels:write",
+        "groups:write",
+        "im:write",
+        "mpim:write"
+      ]
+    },
+    {
+      "slug": "SLACK_UPDATE_CALL_INFO",
+      "name": "Update call information",
+      "description": "Updates the title, join URL, or desktop app join URL for an existing Slack call identified by its ID.",
+      "tags": [
+        "calls",
+        "openWorldHint",
+        "updateHint"
+      ],
+      "inputParameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the call to update, obtained when a call is created (e.g., via `calls.add` Slack API method).",
+            "title": "Id",
+            "examples": [
+              "R0123ABCDEF",
+              "R9876ZYXWVU"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "description": "New title for the call.",
+            "title": "Title",
+            "examples": [
+              "Project Alpha Review",
+              "Q3 Planning Session"
+            ]
+          },
+          "join_url": {
+            "type": "string",
+            "description": "New URL for clients to join the call.",
+            "title": "Join Url",
+            "examples": [
+              "https://example.com/join/meeting/12345",
+              "https://another-service.com/call/abc987"
+            ]
+          },
+          "desktop_app_join_url": {
+            "type": "string",
+            "description": "URL to directly launch the third-party call application from Slack clients.",
+            "title": "Desktop App Join Url",
+            "examples": [
+              "your-app-protocol://join?call_id=12345",
+              "slack://call?id=abcdefg"
+            ]
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "UpdateCallInfoRequest",
+        "description": "Request schema for `UpdateCallInfo`"
+      },
+      "toolkit": {
+        "slug": "slack",
+        "name": "slack"
+      },
+      "version": "20260915_00",
+      "isDeprecated": false,
+      "scopes": [
+        "calls:write"
+      ]
+    }
+  ]
+}
