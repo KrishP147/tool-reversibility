@@ -1,0 +1,599 @@
+{
+  "schemaVersion": 1,
+  "snapshot": "fixtures/catalog/2026-09-24",
+  "method": "Blind: slugs chosen and labelled from slug, description and input schema only, before either classifier was run on them; tags/hints not consulted. Taxonomy per plan D1; unknown = the effect cannot be determined from metadata (depends on runtime input). No deprecated tools.",
+  "labels": [
+    {
+      "slug": "GMAIL_SEND_EMAIL",
+      "toolkit": "gmail",
+      "label": "irreversible",
+      "rationale": "Delivers an email to external recipients; a delivered message cannot be recalled.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GMAIL_REPLY_TO_THREAD",
+      "toolkit": "gmail",
+      "label": "irreversible",
+      "rationale": "Sends a reply to thread recipients; delivery cannot be undone.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GMAIL_FORWARD_MESSAGE",
+      "toolkit": "gmail",
+      "label": "irreversible",
+      "rationale": "Forwards content to new recipients; the exposure cannot be taken back.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GMAIL_SEND_DRAFT",
+      "toolkit": "gmail",
+      "label": "irreversible",
+      "rationale": "Sends an existing draft to its recipients; delivery is final.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GMAIL_BATCH_DELETE_MESSAGES",
+      "toolkit": "gmail",
+      "label": "irreversible",
+      "rationale": "Description: permanent delete bypassing Trash, no recovery.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GMAIL_DELETE_MESSAGE",
+      "toolkit": "gmail",
+      "label": "irreversible",
+      "rationale": "Permanent delete (not trash); no restore path in the API.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "OUTLOOK_SEND_EMAIL",
+      "toolkit": "outlook",
+      "label": "irreversible",
+      "rationale": "Sends email via Graph; delivered mail cannot be reliably recalled.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "OUTLOOK_ACCEPT_EVENT",
+      "toolkit": "outlook",
+      "label": "irreversible",
+      "rationale": "Records an RSVP and (send_response) notifies the organizer; the notification escapes the system.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "SLACK_SEND_MESSAGE",
+      "toolkit": "slack",
+      "label": "irreversible",
+      "rationale": "Posts a message others see and get notified about; a later delete does not unsend it.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "SLACK_INVITE_USER_TO_WORKSPACE",
+      "toolkit": "slack",
+      "label": "irreversible",
+      "rationale": "Sends an invitation email to an external address.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "SLACK_DELETE_CHANNEL",
+      "toolkit": "slack",
+      "label": "irreversible",
+      "rationale": "Description: permanently and irreversibly deletes the channel with its messages and files.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GOOGLECALENDAR_CLEAR_CALENDAR",
+      "toolkit": "googlecalendar",
+      "label": "irreversible",
+      "rationale": "Deletes every event on the primary calendar; no bulk restore documented.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GOOGLEDRIVE_EMPTY_TRASH",
+      "toolkit": "googledrive",
+      "label": "irreversible",
+      "rationale": "Description: permanently deletes all trashed files; recovery impossible.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GOOGLEDRIVE_GOOGLE_DRIVE_DELETE_FOLDER_OR_FILE_ACTION",
+      "toolkit": "googledrive",
+      "label": "irreversible",
+      "rationale": "Description: permanent, irreversible delete including nested files.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GITHUB_MERGE_A_PULL_REQUEST",
+      "toolkit": "github",
+      "label": "irreversible",
+      "rationale": "Merges into the target branch, fires CI/deploys and notifications; a revert is a new commit, not an undo.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GITHUB_DELETE_A_REPOSITORY",
+      "toolkit": "github",
+      "label": "irreversible",
+      "rationale": "Description: permanent, irreversible repository deletion.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "STRIPE_CREATE_REFUND",
+      "toolkit": "stripe",
+      "label": "irreversible",
+      "rationale": "Verb misleads: CREATE, but it moves money back to the customer; a refund cannot be reversed.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "SHOPIFY_CREATE_REFUND",
+      "toolkit": "shopify",
+      "label": "irreversible",
+      "rationale": "Verb misleads: CREATE, but it issues a monetary refund (optionally notifying the customer).",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "SALESFORCE_SEND_MASS_EMAIL",
+      "toolkit": "salesforce",
+      "label": "irreversible",
+      "rationale": "Description: sends to each recipient immediately and irreversibly.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "HUBSPOT_PERMANENTLY_DELETE_CONTACT_VIA_GDPR",
+      "toolkit": "hubspot",
+      "label": "irreversible",
+      "rationale": "GDPR permanent deletion of a contact and all associated data.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GMAIL_CREATE_LABEL",
+      "toolkit": "gmail",
+      "label": "compensable",
+      "rationale": "Creates a label; inverse is delete label.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GMAIL_ADD_LABEL_TO_EMAIL",
+      "toolkit": "gmail",
+      "label": "compensable",
+      "rationale": "Adds/removes labels; the same tool reverses it.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GMAIL_MOVE_TO_TRASH",
+      "toolkit": "gmail",
+      "label": "compensable",
+      "rationale": "Trashed messages are recoverable via untrash.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GMAIL_CREATE_EMAIL_DRAFT",
+      "toolkit": "gmail",
+      "label": "compensable",
+      "rationale": "Draft stays private until sent; inverse is delete draft.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GMAIL_PATCH_SEND_AS",
+      "toolkit": "gmail",
+      "label": "compensable",
+      "rationale": "Noun-as-verb: SEND is part of the noun (send-as alias); a settings patch is undone by patching back.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "OUTLOOK_CREATE_MAIL_FOLDER",
+      "toolkit": "outlook",
+      "label": "compensable",
+      "rationale": "Creates a folder; inverse is delete folder.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "SLACK_ADD_REACTION_TO_AN_ITEM",
+      "toolkit": "slack",
+      "label": "compensable",
+      "rationale": "Reaction can be removed with reactions.remove.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "SLACK_ARCHIVE_CONVERSATION",
+      "toolkit": "slack",
+      "label": "compensable",
+      "rationale": "Archive keeps history; the channel can be unarchived.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GOOGLESHEETS_ADD_SHEET",
+      "toolkit": "googlesheets",
+      "label": "compensable",
+      "rationale": "Adds a tab; inverse is delete sheet.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GOOGLESHEETS_VALUES_UPDATE",
+      "toolkit": "googlesheets",
+      "label": "compensable",
+      "rationale": "Overwrites cells; prior values can be written back (version history exists).",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GOOGLECALENDAR_CREATE_CALENDAR",
+      "toolkit": "googlecalendar",
+      "label": "compensable",
+      "rationale": "Creates a secondary calendar; inverse is calendars.delete.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GOOGLECALENDAR_QUICK_ADD",
+      "toolkit": "googlecalendar",
+      "label": "compensable",
+      "rationale": "Creates a basic event with no attendees; inverse is delete event.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GOOGLEDRIVE_CREATE_FOLDER",
+      "toolkit": "googledrive",
+      "label": "compensable",
+      "rationale": "Creates a folder; inverse is trash/delete.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GOOGLEDRIVE_TRASH_FILE",
+      "toolkit": "googledrive",
+      "label": "compensable",
+      "rationale": "Soft delete; recoverable via UNTRASH_FILE.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GOOGLEDRIVE_MOVE_FILE",
+      "toolkit": "googledrive",
+      "label": "compensable",
+      "rationale": "Changes parents; moving back is the inverse.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GITHUB_ADD_LABELS_TO_AN_ISSUE",
+      "toolkit": "github",
+      "label": "compensable",
+      "rationale": "Labels can be removed; auto-created labels can be deleted.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "NOTION_ARCHIVE_NOTION_PAGE",
+      "toolkit": "notion",
+      "label": "compensable",
+      "rationale": "Moves the page to trash; the same tool unarchives.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "NOTION_CREATE_NOTION_PAGE",
+      "toolkit": "notion",
+      "label": "compensable",
+      "rationale": "Creates a page; inverse is archive.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "NOTION_UPDATE_PAGE",
+      "toolkit": "notion",
+      "label": "compensable",
+      "rationale": "Property update; can be patched back.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "NOTION_DELETE_BLOCK",
+      "toolkit": "notion",
+      "label": "compensable",
+      "rationale": "DELETE verb, but the description says it archives and can be restored.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "TRELLO_ADD_CARDS",
+      "toolkit": "trello",
+      "label": "compensable",
+      "rationale": "Creates a card; inverse is archive/delete card.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GMAIL_FETCH_EMAILS",
+      "toolkit": "gmail",
+      "label": "reversible",
+      "rationale": "Read-only message list.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GMAIL_GET_PROFILE",
+      "toolkit": "gmail",
+      "label": "reversible",
+      "rationale": "Read-only profile fetch.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "OUTLOOK_LIST_MESSAGES",
+      "toolkit": "outlook",
+      "label": "reversible",
+      "rationale": "Read-only message query.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "SLACK_FIND_CHANNELS",
+      "toolkit": "slack",
+      "label": "reversible",
+      "rationale": "Read-only channel lookup.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "SLACK_FETCH_CONVERSATION_HISTORY",
+      "toolkit": "slack",
+      "label": "reversible",
+      "rationale": "Read-only history fetch.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "SLACK_API_TEST",
+      "toolkit": "slack",
+      "label": "reversible",
+      "rationale": "Connectivity/auth check; no side effects.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GOOGLESHEETS_VALUES_GET",
+      "toolkit": "googlesheets",
+      "label": "reversible",
+      "rationale": "Reads a cell range.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GOOGLESHEETS_AGGREGATE_COLUMN_DATA",
+      "toolkit": "googlesheets",
+      "label": "reversible",
+      "rationale": "Noun-as-verb: AGGREGATE computes over read data; nothing is written.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GOOGLECALENDAR_EVENTS_LIST",
+      "toolkit": "googlecalendar",
+      "label": "reversible",
+      "rationale": "Read-only event listing.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GOOGLECALENDAR_FREE_BUSY_QUERY",
+      "toolkit": "googlecalendar",
+      "label": "reversible",
+      "rationale": "Noun-as-verb: slug is a noun phrase + QUERY; read-only availability.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GOOGLEDRIVE_FIND_FILE",
+      "toolkit": "googledrive",
+      "label": "reversible",
+      "rationale": "Read-only search.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GOOGLEDRIVE_DOWNLOAD_FILE",
+      "toolkit": "googledrive",
+      "label": "reversible",
+      "rationale": "Returns file content; Drive is unchanged.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GITHUB_GET_A_REPOSITORY",
+      "toolkit": "github",
+      "label": "reversible",
+      "rationale": "Read-only repository fetch.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GITHUB_API_ROOT",
+      "toolkit": "github",
+      "label": "reversible",
+      "rationale": "Noun-only slug: returns the API URL map; no side effects.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "NOTION_SEARCH_NOTION_PAGE",
+      "toolkit": "notion",
+      "label": "reversible",
+      "rationale": "Read-only title search.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "NOTION_FETCH_DATABASE",
+      "toolkit": "notion",
+      "label": "reversible",
+      "rationale": "Reads database metadata only.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "SHOPIFY_CALCULATE_REFUND",
+      "toolkit": "shopify",
+      "label": "reversible",
+      "rationale": "Noun-as-verb: REFUND is the object; it only previews amounts, no money moves.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "SALESFORCE_RUN_SOQL_QUERY",
+      "toolkit": "salesforce",
+      "label": "reversible",
+      "rationale": "RUN verb, but SOQL is read-only.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GOOGLECALENDAR_BATCH_EVENTS",
+      "toolkit": "googlecalendar",
+      "label": "unknown",
+      "rationale": "Arbitrary mix of create/patch/delete; the class depends on the operations passed.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GITHUB_CREATE_A_WORKFLOW_DISPATCH_EVENT",
+      "toolkit": "github",
+      "label": "unknown",
+      "rationale": "Runs an arbitrary workflow; effect (deploy, publish, nothing) depends on the workflow.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "GITHUB_CREATE_A_REPOSITORY_DISPATCH_EVENT",
+      "toolkit": "github",
+      "label": "unknown",
+      "rationale": "Triggers arbitrary workflows/webhooks; effect unknowable from metadata.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "CODEINTERPRETER_EXECUTE_CODE",
+      "toolkit": "codeinterpreter",
+      "label": "unknown",
+      "rationale": "Arbitrary code; sandboxed but may make network calls.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "CODEINTERPRETER_RUN_TERMINAL_CMD",
+      "toolkit": "codeinterpreter",
+      "label": "unknown",
+      "rationale": "Arbitrary shell command; effect depends on input.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "COMPOSIO_EXECUTE_TOOL",
+      "toolkit": "composio",
+      "label": "unknown",
+      "rationale": "Meta-tool that executes any other tool by slug.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "COMPOSIO_MULTI_EXECUTE_TOOL",
+      "toolkit": "composio",
+      "label": "unknown",
+      "rationale": "Meta-tool that executes up to 50 arbitrary tools.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "LINEAR_RUN_QUERY_OR_MUTATION",
+      "toolkit": "linear",
+      "label": "unknown",
+      "rationale": "Arbitrary GraphQL query or mutation.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "CHATBOTKIT_EXECUTE_GRAPHQL_QUERY",
+      "toolkit": "chatbotkit",
+      "label": "unknown",
+      "rationale": "Arbitrary GraphQL query or mutation.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "SALESFORCE_EXECUTE_INVOCABLE_ACTION",
+      "toolkit": "salesforce",
+      "label": "unknown",
+      "rationale": "Invokes any standard/custom action or Flow by name.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "SALESFORCE_EXECUTE_GLOBAL_QUICK_ACTION",
+      "toolkit": "salesforce",
+      "label": "unknown",
+      "rationale": "Runs a named quick action; effect depends on its configuration.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "SALESFORCE_POST_COMPOSITE_GRAPH",
+      "toolkit": "salesforce",
+      "label": "unknown",
+      "rationale": "Up to 500 arbitrary REST subrequests.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "BROWSERACT_RUN_WORKFLOW",
+      "toolkit": "browseract",
+      "label": "unknown",
+      "rationale": "Runs a configured browser workflow; may or may not modify external sites.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "BUBBLE_WORKFLOW_TRIGGER_POST",
+      "toolkit": "bubble",
+      "label": "unknown",
+      "rationale": "Triggers a user-defined backend workflow.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    },
+    {
+      "slug": "CELIGO_INVOKE_IMPORT",
+      "toolkit": "celigo",
+      "label": "unknown",
+      "rationale": "Starts a configured import; effect depends on its target.",
+      "labeller": "claude-opus-5 (implementer), pending Krish review",
+      "labelledAt": "2026-09-25"
+    }
+  ]
+}

@@ -38,34 +38,34 @@ version, model id, prompt version and catalog manifest hash, plus the command th
 irreversible, [[pending live run]] ([[pending live run]]%) carry neither `destructiveHint` nor
 any tag that moves them out of the Write tier. `GMAIL_SEND_EMAIL` is one of them.
 
-| catalog                            | value                                                        |
-| ---------------------------------- | ------------------------------------------------------------ |
-| tools classified                   | [[report:totals.tools]]                                      |
-| toolkits                           | [[report:totals.toolkits]]                                   |
-| deprecated tools excluded          | [[report:totals.deprecatedExcluded]]                         |
-| rules and LLM agree                | [[report:agreement.rate]]                                    |
-| irreversible, both classifiers (M) | [[report:gap.M]]                                             |
-| of those, no `destructiveHint` (N) | [[report:gap.N]]                                             |
-| share (P)                          | [[report:gap.P]]                                             |
-| same gap, rule classifier alone    | [[report:singleGap.rules.N]] of [[report:singleGap.rules.M]] |
+| catalog                            | value                                            |
+| ---------------------------------- | ------------------------------------------------ |
+| tools classified (non-deprecated)  | 55,557 [report 2026-09-24, commit ace084d]       |
+| toolkits                           | 1,562 [report 2026-09-24, commit ace084d]        |
+| deprecated tools excluded          | 659 [report 2026-09-24, commit ace084d]          |
+| rules and LLM agree                | [[report:agreement.rate]]                        |
+| irreversible, both classifiers (M) | [[report:gap.M]]                                 |
+| of those, no `destructiveHint` (N) | [[report:gap.N]]                                 |
+| share (P)                          | [[report:gap.P]]                                 |
+| same gap, rule classifier alone    | 913 of 6,009 [report 2026-09-24, commit ace084d] |
 
 The eight Enhanced Controls apps:
 
-| toolkit         | tools                                      | irreversible (both)                               | no `destructiveHint`                     |
-| --------------- | ------------------------------------------ | ------------------------------------------------- | ---------------------------------------- |
-| Gmail           | [[report:perToolkit.gmail.tools]]          | [[report:perToolkit.gmail.irreversible]]          | [[report:perToolkit.gmail.gap]]          |
-| Outlook         | [[report:perToolkit.outlook.tools]]        | [[report:perToolkit.outlook.irreversible]]        | [[report:perToolkit.outlook.gap]]        |
-| Slack           | [[report:perToolkit.slack.tools]]          | [[report:perToolkit.slack.irreversible]]          | [[report:perToolkit.slack.gap]]          |
-| Google Sheets   | [[report:perToolkit.googlesheets.tools]]   | [[report:perToolkit.googlesheets.irreversible]]   | [[report:perToolkit.googlesheets.gap]]   |
-| Google Calendar | [[report:perToolkit.googlecalendar.tools]] | [[report:perToolkit.googlecalendar.irreversible]] | [[report:perToolkit.googlecalendar.gap]] |
-| Google Drive    | [[report:perToolkit.googledrive.tools]]    | [[report:perToolkit.googledrive.irreversible]]    | [[report:perToolkit.googledrive.gap]]    |
-| GitHub          | [[report:perToolkit.github.tools]]         | [[report:perToolkit.github.irreversible]]         | [[report:perToolkit.github.gap]]         |
-| Notion          | [[report:perToolkit.notion.tools]]         | [[report:perToolkit.notion.irreversible]]         | [[report:perToolkit.notion.gap]]         |
+| toolkit         | tools                                   | irreversible (both)                               | no `destructiveHint`                     |
+| --------------- | --------------------------------------- | ------------------------------------------------- | ---------------------------------------- |
+| Gmail           | 60 [report 2026-09-24, commit ace084d]  | [[report:perToolkit.gmail.irreversible]]          | [[report:perToolkit.gmail.gap]]          |
+| Outlook         | 287 [report 2026-09-24, commit ace084d] | [[report:perToolkit.outlook.irreversible]]        | [[report:perToolkit.outlook.gap]]        |
+| Slack           | 159 [report 2026-09-24, commit ace084d] | [[report:perToolkit.slack.irreversible]]          | [[report:perToolkit.slack.gap]]          |
+| Google Sheets   | 50 [report 2026-09-24, commit ace084d]  | [[report:perToolkit.googlesheets.irreversible]]   | [[report:perToolkit.googlesheets.gap]]   |
+| Google Calendar | 47 [report 2026-09-24, commit ace084d]  | [[report:perToolkit.googlecalendar.irreversible]] | [[report:perToolkit.googlecalendar.gap]] |
+| Google Drive    | 91 [report 2026-09-24, commit ace084d]  | [[report:perToolkit.googledrive.irreversible]]    | [[report:perToolkit.googledrive.gap]]    |
+| GitHub          | 874 [report 2026-09-24, commit ace084d] | [[report:perToolkit.github.irreversible]]         | [[report:perToolkit.github.gap]]         |
+| Notion          | 54 [report 2026-09-24, commit ace084d]  | [[report:perToolkit.notion.irreversible]]         | [[report:perToolkit.notion.gap]]         |
 
 How far to trust the classes: they are our classification, not ground truth. On a hand-labelled
-spot-check set of [[report:spotcheck.n]] tools, the rule classifier scores
-[[report:spotcheck.rules.precision]] precision and [[report:spotcheck.rules.recall]] recall on
-"irreversible", and the report lists every case where rules and the LLM disagree. The tier is
+spot-check set (labelled blind, pending review) the rule classifier scores, on "irreversible",
+0.667 precision and 0.8 recall over 74 tools [report 2026-09-24, commit ace084d], and the report
+lists every case where rules and the LLM disagree. The tier is
 **derived** from the hints (destructiveHint gives Destructive, readOnlyHint gives Read, anything
 else is Write), because neither the SDK nor the REST tool objects expose the real Enhanced
 Controls tier. ComposioHQ/composio#4327 shows that the real mapping is keyed by slug and drifts.
