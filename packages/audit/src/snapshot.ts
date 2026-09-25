@@ -152,7 +152,8 @@ export function writeManifest(dir: string, manifest: Manifest): void {
 /** Slugs always kept in a trimmed fixture (the headline example, plan §1). */
 const PINNED_SLUGS = new Set(["GMAIL_SEND_EMAIL"]);
 /** Slug verbs always kept in a trimmed fixture (issue 3 tests need them). */
-const PINNED_VERB = /_(SEND|DELETE|LIST|POST|CREATE|UPDATE|GET|MERGE|REPLY|FORWARD|ARCHIVE|INVITE)(_|$)/;
+const PINNED_VERB =
+  /_(SEND|DELETE|LIST|POST|CREATE|UPDATE|GET|MERGE|REPLY|FORWARD|ARCHIVE|INVITE)(_|$)/;
 
 /**
  * Deterministically cut `tools` (already slug-sorted) to at most `max`: up to

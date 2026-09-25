@@ -53,9 +53,7 @@ export function normalizeTool(raw: unknown, fallbackToolkit?: string): SnapshotT
   const toolkitSlug = str(tk.slug) ?? fallbackToolkit ?? "unknown";
   const deprecated = isRec(raw.deprecated) ? raw.deprecated : {};
   const isDeprecated =
-    raw.isDeprecated === true ||
-    raw.is_deprecated === true ||
-    deprecated.is_deprecated === true;
+    raw.isDeprecated === true || raw.is_deprecated === true || deprecated.is_deprecated === true;
 
   return {
     slug,
