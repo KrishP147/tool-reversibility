@@ -1,47 +1,178 @@
 # tool-reversibility
 
-Can this agent action be undone? An audit of Composio's tool catalog for reversibility (reversible / compensable / irreversible), compared against the behaviour hints Composio already ships, plus an approval-inbox demo and a proposal for an `irreversibleHint`.
+**Can this agent action be undone?**
 
-Not affiliated with Composio. Work in progress: see `skilleddocs/plan.md`.
+When an agent acts through Composio, the gate on each call is whatever Composio knows about that
+tool. Today that is a set of MCP-style behaviour hints (`readOnlyHint`, `destructiveHint`,
+`idempotentHint`, `openWorldHint`, `createHint`, `updateHint`, `important`), plus the Read / Write
+/ Destructive tier that Enhanced Controls (beta) adds. Neither says whether an action can be
+undone. Sending an email, posting to Slack or paying an invoice deletes nothing, so it isn't
+"destructive", yet none of them can be taken back.
 
-## Dev
+`tool-reversibility` pulls the whole Composio tool catalog and classifies every tool as
+**reversible / compensable / irreversible** with two classifiers (rules and an LLM, both cached),
+compares that against the hints Composio already ships, and publishes the gap. It also ships an
+approval-inbox demo of what an "ask" step looks like when reversibility is known, and a
+data-backed proposal for an `irreversibleHint` ([PROPOSAL.md](PROPOSAL.md)).
 
-pnpm workspaces monorepo: `packages/audit` (CLI) + `apps/inbox` (Next.js demo). Node >=22 (`.nvmrc`), pnpm 10.28.1
-(`packageManager` field; CI reads it via `pnpm/action-setup`).
+Not affiliated with Composio. MIT licensed.
+
+<!-- TODO(Krish): replace with the inbox demo GIF -->
+
+_Demo GIF: coming soon._
+
+## Headline
+
+> Of [[pending live run]] tools that both classifiers call irreversible, [[pending live run]]
+> ([[pending live run]]%) carry neither `destructiveHint` nor any tag that moves them out of the
+> Write tier, e.g. `GMAIL_SEND_EMAIL`.
+
+The numbers are filled in only from a stamped, reproducible run:
+[reports/REPORT.md](reports/REPORT.md) (lands with issue #5). Until the paid LLM pass has run
+live, the headline stays `[[pending live run]]`. How numbers are stamped and checked:
+[docs/stamping.md](docs/stamping.md).
+
+What is already verified, from the full catalog fetch
+[snapshot 2026-09-24, @composio/core 0.21.0](skilleddocs/plan.md): 1,562 toolkits and 56,216 tools, 659 of them deprecated.
+`GMAIL_SEND_EMAIL` is tagged `important`, `openWorldHint` and `createHint`, and has no
+`destructiveHint` [snapshot 2026-09-24, @composio/core 0.21.0](skilleddocs/plan.md).
+
+## How it works
+
+`packages/audit` is a CLI: **fetch → classify (rules, LLM) → compare → report**.
+
+- **fetch** snapshots every toolkit's tools (public catalog metadata only) into
+  `fixtures/catalog/<date>/`, with a manifest recording the SDK version, date, command and counts.
+- **hints** maps each tool's tags to the seven hint booleans and derives a Read / Write /
+  Destructive tier from them. The tier is labelled **derived**: the SDK doesn't expose the real
+  Enhanced Controls tier.
+- **rules** is a pure, table-tested classifier over the slug verb, description and schema.
+- **LLM** sends tools through the Anthropic Message Batches API with a structured-output schema
+  (prompt `prompts/classify.v1.md`), caching one result per tool so re-runs are free.
+- **compare / report** (issue #5) marks a tool as a **gap** when both classifiers call it
+  irreversible and it has no `destructiveHint`, and writes the stamped report.
+
+`apps/inbox` is a Next.js approval inbox for "ask" actions: a reversibility badge, a payload diff
+or rendered send preview, Approve / Reject / Edit, and an append-only audit log.
+
+## Reproduce
+
+Needs Node 22+ and pnpm 10 (`corepack enable`). `pnpm audit` is pnpm's own security scanner, so
+the CLI lives under `pnpm audit:cli` (same as `pnpm --filter audit start --`).
+
+```sh
+pnpm i --frozen-lockfile
+pnpm audit:cli --help
+```
+
+**1. Fetch the catalog.** Needs `COMPOSIO_API_KEY` in `.env` at the repo root (see
+`.env.example`; never logged). Free-tier catalog GETs only.
+
+```sh
+pnpm audit:cli fetch                           # all toolkits -> fixtures/catalog/<YYYY-MM-DD>/ (gitignored)
+pnpm audit:cli fetch --toolkits gmail,slack    # only these toolkits
+pnpm audit:cli fetch --refresh                 # re-fetch toolkits already on disk (default: resume)
+```
+
+**2. Estimate the LLM cost first.** No spend happens without an explicit yes on this number
+(`--dry-run` builds no client and reads no key):
+
+```sh
+pnpm audit:cli classify --llm --dry-run                                      # committed trimmed fixture
+pnpm audit:cli classify --llm --dry-run --snapshot fixtures/catalog/<date>   # the full snapshot
+```
+
+It prints the tool and request counts, estimated tokens and the Batch-priced dollar cost for
+`claude-sonnet-5` and `claude-opus-5`. Only after approving that cost:
+`pnpm audit:cli classify --llm --live --snapshot fixtures/catalog/<date>` (needs
+`ANTHROPIC_API_KEY`). Without `--live`, `classify --llm` only reads the cache.
+
+**3. Build the report.** `pnpm audit:cli report` writes `reports/REPORT.md` and
+`reports/report.json`, stamped with date, commit, SDK version, model, LLM status, prompt version,
+manifest hash and the regenerate command. **Not built yet: it lands with issue #5.**
+
+**Current CLI state** (see `packages/audit/src/program.ts`, `classifyCommand.ts`):
+
+| command            | status                                                                                                                                                 |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `fetch`            | works (resumable, backoff on 429/5xx, REST fallback where the SDK rejects a payload)                                                                   |
+| `classify --llm`   | works: `--dry-run` cost gate, cache replay, `--live` Batches submission behind the key and approval                                                    |
+| `classify --rules` | classifier built and tested (`rules.ts`, `rulesCommand.ts`); the CLI flag still prints `rules: not implemented (#3)` until it is wired in (`TODO(#3)`) |
+| `report`, `all`    | print `not implemented`; land with issue #5                                                                                                            |
+
+### Mock inbox (zero keys)
+
+```sh
+pnpm --filter inbox dev     # http://localhost:3000
+```
+
+Mock mode (`INBOX_MODE=mock`) is the default. It reads the illustrative pending actions in
+`fixtures/pending/*.json` and `reports/report.json`; until issue #5 ships a report it falls back to
+a stub and shows a banner saying so. Details: [apps/inbox/README.md](apps/inbox/README.md).
+
+## Limitations
+
+- **Our classification is not ground truth.** Reversible / compensable / irreversible is our
+  judgement from each tool's name, description and schema. The report shows how often the rules
+  and the LLM disagree ([[report:agreement.rate]] agreement) and scores the rules against a
+  hand-labelled spot-check set ([[report:spotcheck.n]] tools, precision
+  [[report:spotcheck.rules.precision]], recall [[report:spotcheck.rules.recall]]). See
+  [reports/REPORT.md](reports/REPORT.md).
+- **The tier is derived, not Composio's.** Neither the SDK nor the REST tool objects expose the
+  Enhanced Controls tier, so it is derived from the hints (plan.md D22). The real mapping may
+  differ per slug (ComposioHQ/composio#4327).
+- **Rules only until the live run.** The LLM pass costs money and waits on approval, so until it
+  runs every LLM-dependent number here is `[[pending live run]]`.
+- **The committed LLM cache is synthetic.** `fixtures/llm-cache/` for the trimmed fixture was
+  replayed from a labelled slug-verb heuristic, not model output. Every entry is stamped
+  `provenance: "recorded"`; dry runs and `--live` treat them as misses, and no reported number
+  may come from them.
+- **The trimmed fixture is a sample.** `fixtures/catalog/trimmed/` keeps a few tools per toolkit
+  for tests and CI; it is not the catalog.
+
+## Origin: Zephyr
+
+The idea comes from **Zephyr** ([github.com/KrishP147/Zephyr](https://github.com/KrishP147/Zephyr),
+Devpost: TODO(Krish)), built at Hack the North 2026, where it made the top 12 of the Warp track.
+Zephyr hand-gated `GMAIL_SEND_EMAIL` as irreversible, and its Devpost feedback asked Composio for
+exactly this flag.
+
+Zephyr was a team project. **Krish owned:**
+
+- the self-improving workflow optimizer: it critiques run history against a single-call baseline
+  and proposes a forked, reviewable graph that cannot grade itself;
+- the human-in-the-loop approval fixes: revised actions are re-authorized and may only narrow
+  scope, runs pause and resume, and a blocked completion pauses for a human;
+- the Connections page: Composio, generic MCP servers and a reviewed tool inventory;
+- the sponsor integrations (a Gemini route, a GPTZero check, Sentry), each behind a mock twin.
+
+The core runtime, the Hermes adapter, the tool registry, the browser family and the provider
+pipeline were teammates' work.
+
+## Development
+
+pnpm workspaces monorepo: `packages/audit` (CLI) and `apps/inbox` (Next.js demo). Node 22+
+(`.nvmrc`), pnpm 10.28.1 (`packageManager`; CI reads it via `pnpm/action-setup`).
 
 ```sh
 pnpm i --frozen-lockfile
 pnpm -r lint
 pnpm -r test
 pnpm -r build
-pnpm format:check   # or `pnpm format` to write
+pnpm check:stamped   # docs cite every Composio number (docs/stamping.md)
+pnpm format:check    # or `pnpm format` to write
 ```
 
-**Running the audit CLI:** `pnpm audit` is a built-in pnpm command (its own security-audit
-scanner), so it shadows a root script literally named `audit`. Use one of:
+Regenerate the committed trimmed fixture:
 
 ```sh
-pnpm --filter audit start -- --help
-pnpm audit:cli --help          # root shortcut, forwards to the same thing
-```
-
-`classify|report|all` are stubs today ("not implemented") — see `skilleddocs/plan.md` §6.
-
-**`fetch`: snapshot the Composio catalog** (free-tier catalog GETs only, no spend). Needs `COMPOSIO_API_KEY` in
-`.env` at the repo root (loaded automatically; never logged).
-
-```sh
-pnpm audit:cli fetch                           # all toolkits -> fixtures/catalog/<YYYY-MM-DD>/ (gitignored)
-pnpm audit:cli fetch --toolkits gmail,slack    # only these toolkits
-pnpm audit:cli fetch --refresh                 # re-fetch toolkits already on disk (default: resume/skip)
-# regenerate the committed trimmed fixture:
 pnpm audit:cli fetch --toolkits gmail,slack,github,googlecalendar,notion --out fixtures/catalog/trimmed --max-tools 25 --refresh
 ```
 
-One `<toolkit>.json` per toolkit plus `manifest.json` (SDK version, date, command, counts, failures). Concurrency ≤4,
-exponential backoff on 429/5xx; an interrupted run resumes where it stopped. Pagination/fallback details:
-`skilleddocs/plan.md` §10 (D17–D22). Tests use a fake client and need no key; the live test is opt-in:
-`AUDIT_LIVE=1 pnpm --filter audit test`.
+Tests use fake clients and recorded responses and need no keys. The live fetch test is opt-in:
+`AUDIT_LIVE=1 pnpm --filter audit test`. No secrets are needed to lint, test or build; CI runs
+gitleaks on every push and PR. Design record: [skilleddocs/plan.md](skilleddocs/plan.md).
 
-Mock mode is the default for `apps/inbox` (`INBOX_MODE=mock`, zero keys). No secrets are required to lint, test or
-build; CI runs gitleaks on every push/PR.
+## License
+
+MIT, see [LICENSE](LICENSE). Not affiliated with Composio.
