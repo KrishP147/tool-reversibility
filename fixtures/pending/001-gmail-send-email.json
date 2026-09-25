@@ -1,0 +1,14 @@
+{
+  "id": "001-gmail-send-email",
+  "slug": "GMAIL_SEND_EMAIL",
+  "toolkit": "gmail",
+  "kind": "send",
+  "payload": {
+    "to": "finance@example.com",
+    "subject": "Invoice #4821 approved",
+    "body": "Hi team,\n\nInvoice #4821 for $1,240.00 is approved for payment. Please process by Friday.\n\nThanks,\nAgent"
+  },
+  "illustrative": true,
+  "note": "Illustrative fixture, not a real Composio catalog entry (fixtures/catalog/ lands with issue #2). Slug/shape modeled on Gmail's send-email action.",
+  "createdAt": "2026-09-24T09:00:00.000Z"
+}
