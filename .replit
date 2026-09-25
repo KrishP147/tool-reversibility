@@ -1,0 +1,14 @@
+modules = ["nodejs-22"]
+run = "pnpm --filter inbox dev"
+
+[nix]
+channel = "stable-24_11"
+
+[deployment]
+deploymentTarget = "cloudrun"
+build = ["sh", "-c", "corepack enable && pnpm i --frozen-lockfile && pnpm --filter inbox build"]
+run = ["sh", "-c", "corepack enable && pnpm --filter inbox start"]
+
+[[ports]]
+localPort = 3000
+externalPort = 80

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "start": "next start",
+    "start": "sh -c \"next start -H 0.0.0.0 -p ${PORT:-3000}\"",
     "lint": "eslint .",
     "test": "vitest run --passWithNoTests",
     "build": "next build"
