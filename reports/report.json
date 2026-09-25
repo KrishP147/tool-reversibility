@@ -1,12 +1,12 @@
 {
   "stub": false,
   "note": "LLM status recorded: rule-classifier numbers only; every LLM-dependent number is [[pending live run]] (D31).",
-  "generatedAt": "2026-09-25T17:52:48.380Z",
+  "generatedAt": "2026-09-25T18:06:10.216Z",
   "llmStatus": "recorded",
   "stamp": {
     "date": "2026-09-24",
-    "generatedAt": "2026-09-25T17:52:48.380Z",
-    "commit": "ace084d6552ad3fa6a4f0ae57a47c186370dc3f1",
+    "generatedAt": "2026-09-25T18:06:10.216Z",
+    "commit": "a9d50c00eb877ffeb7c670fc17383f5aa78b1cb3",
     "dirty": false,
     "sdkVersion": "0.21.0",
     "model": "pending",
@@ -29,14 +29,14 @@
   "rules": {
     "byClass": {
       "reversible": 32418,
-      "compensable": 14129,
-      "irreversible": 6009,
+      "compensable": 14135,
+      "irreversible": 6003,
       "unknown": 3001
     }
   },
   "singleGap": {
     "rules": {
-      "M": 6009,
+      "M": 6003,
       "N": 913,
       "P": 15.2
     }
@@ -74,7 +74,7 @@
     },
     "github": {
       "tools": 874,
-      "rulesIrreversible": 87,
+      "rulesIrreversible": 86,
       "singleGap": 6
     },
     "notion": {
@@ -17110,7 +17110,7 @@
     {
       "slug": "GITHUB_REMOVE_TEAM_MEMBERSHIP",
       "toolkit": "github",
-      "ruleClass": "irreversible",
+      "ruleClass": "compensable",
       "llmClass": "unknown",
       "agree": false,
       "hints": {
@@ -17126,9 +17126,9 @@
       "tierSource": "derived",
       "reasons": [
         "rules: verb:REMOVE",
-        "rules: desc:\"irreversible\""
+        "rules: desc:\"restore\""
       ],
-      "ruleConfidence": 0.85
+      "ruleConfidence": 0.6
     },
     {
       "slug": "GITHUB_REMOVE_TEAM_MEMBERSHIP_FOR_A_USER",

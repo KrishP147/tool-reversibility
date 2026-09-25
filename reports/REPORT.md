@@ -3,8 +3,8 @@
 | stamp | value |
 | --- | --- |
 | date (snapshot) | 2026-09-24 |
-| generatedAt | 2026-09-25T17:52:48.380Z |
-| commit | `ace084d6552ad3fa6a4f0ae57a47c186370dc3f1` |
+| generatedAt | 2026-09-25T18:06:10.216Z |
+| commit | `a9d50c00eb877ffeb7c670fc17383f5aa78b1cb3` |
 | dirty | false |
 | @composio/core | 0.21.0 |
 | model | pending |
@@ -36,8 +36,8 @@ Only rule-classifier numbers below are real; every LLM-dependent number waits fo
 | class | rules | LLM |
 | --- | --- | --- |
 | reversible | 32,418 | [[pending live run]] |
-| compensable | 14,129 | [[pending live run]] |
-| irreversible | 6,009 | [[pending live run]] |
+| compensable | 14,135 | [[pending live run]] |
+| irreversible | 6,003 | [[pending live run]] |
 | unknown | 3,001 | [[pending live run]] |
 
 ## Rules vs LLM
@@ -46,7 +46,7 @@ Agreement rate and the 4x4 confusion matrix: [[pending live run]].
 
 ## Single-classifier gap (rules only)
 
-Of 6,009 tools the rules call irreversible, 913 (15.2%) carry no `destructiveHint`.
+Of 6,003 tools the rules call irreversible, 913 (15.2%) carry no `destructiveHint`.
 This is not the D2 headline gap, which also needs the LLM to agree.
 
 ## Enhanced Controls apps
@@ -59,7 +59,7 @@ This is not the D2 headline gap, which also needs the LLM to agree.
 | googlesheets | 50 | 3 | 0 | [[pending live run]] | [[pending live run]] |
 | googlecalendar | 47 | 4 | 0 | [[pending live run]] | [[pending live run]] |
 | googledrive | 91 | 12 | 2 | [[pending live run]] | [[pending live run]] |
-| github | 874 | 87 | 6 | [[pending live run]] | [[pending live run]] |
+| github | 874 | 86 | 6 | [[pending live run]] | [[pending live run]] |
 | notion | 54 | 2 | 0 | [[pending live run]] | [[pending live run]] |
 
 ## Spot-check
