@@ -10,6 +10,7 @@
     "build": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.128.0",
     "@composio/core": "0.21.0"
   },
   "devDependencies": {
