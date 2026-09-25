@@ -1,7 +1,8 @@
 #!/usr/bin/env node
+import { fetchCommand } from "./fetchCommand.js";
 import { buildProgram, helpText, parseArgs } from "./program.js";
 
-function main(argv: string[]): void {
+async function main(argv: string[]): Promise<void> {
   const args = parseArgs(argv);
 
   if (args.help || !args.command) {
@@ -9,7 +10,7 @@ function main(argv: string[]): void {
     return;
   }
 
-  const program = buildProgram();
+  const program = buildProgram({ fetch: (a) => fetchCommand(a) });
   const command = program.find((c) => c.name === args.command);
   if (!command) {
     console.log(helpText());
@@ -17,7 +18,12 @@ function main(argv: string[]): void {
     return;
   }
 
-  console.log(command.run(args));
+  const result = await command.run(args);
+  console.log(result.output);
+  process.exitCode = result.exitCode;
 }
 
-main(process.argv.slice(2));
+main(process.argv.slice(2)).catch((err: unknown) => {
+  console.error(err instanceof Error ? err.message : String(err));
+  process.exitCode = 1;
+});
