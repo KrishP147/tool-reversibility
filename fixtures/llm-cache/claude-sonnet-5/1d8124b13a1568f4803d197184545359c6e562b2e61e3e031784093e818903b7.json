@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "1d8124b13a1568f4803d197184545359c6e562b2e61e3e031784093e818903b7",
+  "slug": "GOOGLECALENDAR_FREE_BUSY_QUERY",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GOOGLECALENDAR_FREE_BUSY_QUERY",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb FREE maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb FREE maps to reversible."
+    ]
+  }
+}

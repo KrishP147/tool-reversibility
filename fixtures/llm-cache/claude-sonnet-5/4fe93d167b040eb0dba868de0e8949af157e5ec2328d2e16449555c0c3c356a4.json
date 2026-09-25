@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "4fe93d167b040eb0dba868de0e8949af157e5ec2328d2e16449555c0c3c356a4",
+  "slug": "GITHUB_DOWNLOAD_A_REPOSITORY_ARCHIVE_TAR",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GITHUB_DOWNLOAD_A_REPOSITORY_ARCHIVE_TAR",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb DOWNLOAD maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb DOWNLOAD maps to reversible."
+    ]
+  }
+}

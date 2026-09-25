@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "2a269072de96d5fcc7fb9a2e016615a0da230edcbf73ed02df481bd910045c5f",
+  "slug": "GOOGLECALENDAR_CALENDAR_LIST_WATCH",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GOOGLECALENDAR_CALENDAR_LIST_WATCH",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb LIST maps to reversible."
+    ]
+  }
+}

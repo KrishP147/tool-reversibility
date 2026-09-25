@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "4b7df57bbe5f4cee43ad8b46097a776a1ecbbc03624545afc4e3d54183d1bfad",
+  "slug": "SLACK_CREATE_USER_GROUP",
+  "provenance": "recorded",
+  "output": {
+    "slug": "SLACK_CREATE_USER_GROUP",
+    "class": "compensable",
+    "inverse_tool": "SLACK_DELETE_USER_GROUP",
+    "rationale": "Synthetic fixture, not model output: verb CREATE maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb CREATE maps to compensable.",
+      "inverse_tool: SLACK_DELETE_USER_GROUP"
+    ]
+  }
+}

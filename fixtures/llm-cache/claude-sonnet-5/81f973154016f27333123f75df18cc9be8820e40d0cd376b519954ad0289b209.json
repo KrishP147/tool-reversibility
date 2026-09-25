@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "81f973154016f27333123f75df18cc9be8820e40d0cd376b519954ad0289b209",
+  "slug": "GITHUB_GET_ORG_OIDC_SUBJECT_CLAIM_TEMPLATE",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GITHUB_GET_ORG_OIDC_SUBJECT_CLAIM_TEMPLATE",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb GET maps to reversible."
+    ]
+  }
+}

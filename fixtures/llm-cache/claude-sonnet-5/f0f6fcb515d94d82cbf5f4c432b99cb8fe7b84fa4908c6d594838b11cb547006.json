@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "f0f6fcb515d94d82cbf5f4c432b99cb8fe7b84fa4908c6d594838b11cb547006",
+  "slug": "GOOGLECALENDAR_SETTINGS_GET",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GOOGLECALENDAR_SETTINGS_GET",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb GET maps to reversible."
+    ]
+  }
+}

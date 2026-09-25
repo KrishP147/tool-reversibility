@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "9c521e56f3783890ed107b1f94ce3a7c2ba9d60d3ef72e9d52508bf35bc82a8c",
+  "slug": "GOOGLECALENDAR_ACL_WATCH",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GOOGLECALENDAR_ACL_WATCH",
+    "class": "unknown",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb none maps to unknown."
+  },
+  "result": {
+    "class": "unknown",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb none maps to unknown."
+    ]
+  }
+}

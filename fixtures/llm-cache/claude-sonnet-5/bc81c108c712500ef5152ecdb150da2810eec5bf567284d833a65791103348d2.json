@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "bc81c108c712500ef5152ecdb150da2810eec5bf567284d833a65791103348d2",
+  "slug": "SLACK_DELETE_SLACK_LIST_ITEM",
+  "provenance": "recorded",
+  "output": {
+    "slug": "SLACK_DELETE_SLACK_LIST_ITEM",
+    "class": "irreversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb DELETE maps to irreversible."
+  },
+  "result": {
+    "class": "irreversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb DELETE maps to irreversible."
+    ]
+  }
+}

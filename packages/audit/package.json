@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "tsx src/cli.ts",
+    "fixture:llm": "tsx src/testing/buildLlmFixture.ts",
     "lint": "eslint .",
     "test": "vitest run",
     "build": "tsc --noEmit -p tsconfig.json"

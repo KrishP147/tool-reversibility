@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "58c54e5bf29d79ecbc14bbe8e048e10bef5846065f185c99ea1bfbd724917dc5",
+  "slug": "GMAIL_ADD_LABEL_TO_EMAIL",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GMAIL_ADD_LABEL_TO_EMAIL",
+    "class": "compensable",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb ADD maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb ADD maps to compensable."
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "3e3e5461f35cac809c74634e87c1b92df6e0c1dffd12a19ad3cb9a326617c979",
+  "slug": "GITHUB_AUTH_USER_DOCKER_CONFLICT_PACKAGES_LIST",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GITHUB_AUTH_USER_DOCKER_CONFLICT_PACKAGES_LIST",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb LIST maps to reversible."
+    ]
+  }
+}

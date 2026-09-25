@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "d5d76a3d55d30a910d970d400651fca24f9c0fb72ed0d28b26b70fd144857599",
+  "slug": "GITHUB_DELETE_ENVIRONMENT_SECRET",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GITHUB_DELETE_ENVIRONMENT_SECRET",
+    "class": "irreversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb DELETE maps to irreversible."
+  },
+  "result": {
+    "class": "irreversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb DELETE maps to irreversible."
+    ]
+  }
+}

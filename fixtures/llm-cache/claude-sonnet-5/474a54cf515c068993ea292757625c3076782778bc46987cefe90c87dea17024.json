@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "474a54cf515c068993ea292757625c3076782778bc46987cefe90c87dea17024",
+  "slug": "SLACK_FETCH_CONVERSATION_HISTORY",
+  "provenance": "recorded",
+  "output": {
+    "slug": "SLACK_FETCH_CONVERSATION_HISTORY",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb FETCH maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb FETCH maps to reversible."
+    ]
+  }
+}

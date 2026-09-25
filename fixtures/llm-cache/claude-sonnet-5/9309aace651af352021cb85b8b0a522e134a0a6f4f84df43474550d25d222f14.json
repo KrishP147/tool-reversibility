@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "9309aace651af352021cb85b8b0a522e134a0a6f4f84df43474550d25d222f14",
+  "slug": "GITHUB_LIST_DISCUSSION_COMMENTS",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GITHUB_LIST_DISCUSSION_COMMENTS",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb LIST maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb LIST maps to reversible."
+    ]
+  }
+}

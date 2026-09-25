@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "2ced270aec838cc06091ddf09bbf5fd3c0b6d0206ca952187cfa1647a4453742",
+  "slug": "NOTION_GET_VIEW_QUERY_RESULTS",
+  "provenance": "recorded",
+  "output": {
+    "slug": "NOTION_GET_VIEW_QUERY_RESULTS",
+    "class": "reversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb GET maps to reversible."
+  },
+  "result": {
+    "class": "reversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb GET maps to reversible."
+    ]
+  }
+}

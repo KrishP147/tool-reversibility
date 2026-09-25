@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "290443deae4a7d323bcab07051291b96dd0f79aa5cc293bcb9e5811373f61279",
+  "slug": "NOTION_DUPLICATE_PAGE",
+  "provenance": "recorded",
+  "output": {
+    "slug": "NOTION_DUPLICATE_PAGE",
+    "class": "compensable",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb DUPLICATE maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb DUPLICATE maps to compensable."
+    ]
+  }
+}

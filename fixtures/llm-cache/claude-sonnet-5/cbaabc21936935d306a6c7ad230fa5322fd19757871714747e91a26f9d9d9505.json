@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "cbaabc21936935d306a6c7ad230fa5322fd19757871714747e91a26f9d9d9505",
+  "slug": "SLACK_SEND_EPHEMERAL_MESSAGE",
+  "provenance": "recorded",
+  "output": {
+    "slug": "SLACK_SEND_EPHEMERAL_MESSAGE",
+    "class": "irreversible",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb SEND maps to irreversible."
+  },
+  "result": {
+    "class": "irreversible",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb SEND maps to irreversible."
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "ddf271dbf6523a14f952461ac7c47f64634c5183b0423e54f21f243eb744ca29",
+  "slug": "GITHUB_CREATE_AN_AUTOLINK_REFERENCE_FOR_A_REPOSITORY",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GITHUB_CREATE_AN_AUTOLINK_REFERENCE_FOR_A_REPOSITORY",
+    "class": "compensable",
+    "inverse_tool": "GITHUB_DELETE_AN_AUTOLINK_REFERENCE_FOR_A_REPOSITORY",
+    "rationale": "Synthetic fixture, not model output: verb CREATE maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb CREATE maps to compensable.",
+      "inverse_tool: GITHUB_DELETE_AN_AUTOLINK_REFERENCE_FOR_A_REPOSITORY"
+    ]
+  }
+}

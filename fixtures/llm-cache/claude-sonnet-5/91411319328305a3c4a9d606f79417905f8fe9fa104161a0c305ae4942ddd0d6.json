@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "91411319328305a3c4a9d606f79417905f8fe9fa104161a0c305ae4942ddd0d6",
+  "slug": "GOOGLECALENDAR_ACL_UPDATE",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GOOGLECALENDAR_ACL_UPDATE",
+    "class": "compensable",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb UPDATE maps to compensable."
+  },
+  "result": {
+    "class": "compensable",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb UPDATE maps to compensable."
+    ]
+  }
+}

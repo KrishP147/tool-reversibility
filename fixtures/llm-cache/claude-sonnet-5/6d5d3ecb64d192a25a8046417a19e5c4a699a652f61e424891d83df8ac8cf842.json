@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "classify.v1",
+  "model": "claude-sonnet-5",
+  "key": "6d5d3ecb64d192a25a8046417a19e5c4a699a652f61e424891d83df8ac8cf842",
+  "slug": "GOOGLECALENDAR_EVENTS_INSTANCES",
+  "provenance": "recorded",
+  "output": {
+    "slug": "GOOGLECALENDAR_EVENTS_INSTANCES",
+    "class": "unknown",
+    "inverse_tool": null,
+    "rationale": "Synthetic fixture, not model output: verb none maps to unknown."
+  },
+  "result": {
+    "class": "unknown",
+    "confidence": 0.7,
+    "reasons": [
+      "Synthetic fixture, not model output: verb none maps to unknown."
+    ]
+  }
+}
