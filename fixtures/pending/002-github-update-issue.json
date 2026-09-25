@@ -1,0 +1,19 @@
+{
+  "id": "002-github-update-issue",
+  "slug": "GITHUB_UPDATE_ISSUE",
+  "toolkit": "github",
+  "kind": "update",
+  "before": {
+    "title": "Login button misaligned on mobile",
+    "state": "open",
+    "labels": ["bug"]
+  },
+  "payload": {
+    "title": "Login button misaligned on mobile (fixed in #118)",
+    "state": "closed",
+    "labels": ["bug", "fixed"]
+  },
+  "illustrative": true,
+  "note": "Illustrative fixture, not a real Composio catalog entry (fixtures/catalog/ lands with issue #2). Slug/shape modeled on GitHub's issue-update action.",
+  "createdAt": "2026-09-24T09:05:00.000Z"
+}

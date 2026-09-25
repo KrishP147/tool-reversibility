@@ -1,0 +1,115 @@
+{
+  "stub": true,
+  "note": "STUB report bundled with apps/inbox. These are illustrative classifications for demo fixtures only — not output from a real Composio catalog run (packages/audit, issue #5). No counts, percentages, or catalog totals here are real. Once reports/report.json exists at the repo root, the app reads that instead and this file is unused.",
+  "tools": [
+    {
+      "slug": "GMAIL_SEND_EMAIL",
+      "toolkit": "gmail",
+      "ruleClass": "irreversible",
+      "llmClass": "irreversible",
+      "agree": true,
+      "hints": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true,
+        "createHint": true,
+        "updateHint": false,
+        "important": true
+      },
+      "tier": "Write",
+      "tierSource": "derived",
+      "reasons": [
+        "SEND verb: message is delivered to an external recipient",
+        "no destructiveHint, so Enhanced Controls would not flag this by default (plan.md headline gap)"
+      ]
+    },
+    {
+      "slug": "SLACK_SEND_MESSAGE",
+      "toolkit": "slack",
+      "ruleClass": "irreversible",
+      "llmClass": "irreversible",
+      "agree": true,
+      "hints": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true,
+        "createHint": true,
+        "updateHint": false,
+        "important": false
+      },
+      "tier": "Write",
+      "tierSource": "derived",
+      "reasons": [
+        "SEND verb: message is posted to a channel other people can see",
+        "no restore path once delivered"
+      ]
+    },
+    {
+      "slug": "GITHUB_UPDATE_ISSUE",
+      "toolkit": "github",
+      "ruleClass": "compensable",
+      "llmClass": "compensable",
+      "agree": true,
+      "hints": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "createHint": false,
+        "updateHint": true,
+        "important": false
+      },
+      "tier": "Write",
+      "tierSource": "derived",
+      "reasons": [
+        "UPDATE verb with an id param",
+        "prior field values are known, so another update can restore them"
+      ],
+      "compensatingTool": "GITHUB_UPDATE_ISSUE"
+    },
+    {
+      "slug": "NOTION_DELETE_PAGE",
+      "toolkit": "notion",
+      "ruleClass": "irreversible",
+      "llmClass": "compensable",
+      "agree": false,
+      "hints": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "createHint": false,
+        "updateHint": false,
+        "important": true
+      },
+      "tier": "Destructive",
+      "tierSource": "derived",
+      "reasons": [
+        "DELETE verb with no documented restore in this fixture's tool description",
+        "rules classifier: no restore documented -> irreversible",
+        "LLM classifier: Notion pages are typically trashed, not hard-deleted -> compensable via restore-from-trash (unverified for this fixture)"
+      ]
+    },
+    {
+      "slug": "SLACK_LIST_CONVERSATIONS",
+      "toolkit": "slack",
+      "ruleClass": "reversible",
+      "llmClass": "reversible",
+      "agree": true,
+      "hints": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "createHint": false,
+        "updateHint": false,
+        "important": false
+      },
+      "tier": "Read",
+      "tierSource": "derived",
+      "reasons": ["LIST verb, readOnlyHint set, no external effect"]
+    }
+  ]
+}
