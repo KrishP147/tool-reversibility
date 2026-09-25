@@ -27,6 +27,15 @@ describe("parseArgs", () => {
     expect(result.help).toBe(false);
   });
 
+  it("parses fetch options", () => {
+    const r = parseArgs(["fetch", "--refresh", "--out", "x/y", "--max-tools", "40"]);
+    expect(r).toMatchObject({ refresh: true, out: "x/y", maxTools: 40 });
+  });
+
+  it("ignores a non-positive --max-tools", () => {
+    expect(parseArgs(["fetch", "--max-tools", "0"]).maxTools).toBeNull();
+  });
+
   it("treats --help as help regardless of command", () => {
     const result = parseArgs(["report", "--help"]);
     expect(result.help).toBe(true);
@@ -44,11 +53,16 @@ describe("helpText", () => {
 });
 
 describe("buildProgram", () => {
-  it("registers stub commands that report not implemented", () => {
+  it("registers stub commands that report not implemented", async () => {
     const program = buildProgram();
     expect(program.map((c) => c.name)).toEqual(["fetch", "classify", "report", "all"]);
     for (const command of program) {
-      expect(command.run({} as never)).toBe(`${command.name}: not implemented`);
+      expect((await command.run({} as never)).output).toBe(`${command.name}: not implemented`);
     }
+  });
+
+  it("uses injected handlers", async () => {
+    const program = buildProgram({ fetch: async () => ({ output: "ok", exitCode: 0 }) });
+    expect(await program[0]?.run({} as never)).toEqual({ output: "ok", exitCode: 0 });
   });
 });
