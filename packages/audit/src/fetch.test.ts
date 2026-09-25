@@ -197,6 +197,26 @@ describe("runFetch", () => {
     expect(readManifest().counts.restFallbacks).toBe(1);
   });
 
+  it("falls back to REST when the SDK rejects the payload (no HTTP status)", async () => {
+    const zod = Object.assign(new Error("invalid_union"), { name: "ZodError" });
+    const { client, calls } = fakeClient(catalog, { failures: { getRawTools: [zod] } });
+    const res = await runFetch(opts(client, { concurrency: 1 }));
+    expect(res.failures).toEqual([]);
+    expect(res.fallbacks).toEqual(["gmail"]);
+    expect(calls.listToolsPage).toBe(1);
+    expect(readToolkitFile(dir, "gmail")?.fallbackReason).toBe("sdk-error");
+    expect(readManifest().toolkits.gmail).toMatchObject({
+      source: "rest-cursor",
+      fallbackReason: "sdk-error",
+    });
+  });
+
+  it("handles toolkit slugs that start with an underscore", async () => {
+    const { client } = fakeClient([{ slug: "_1password", toolsCount: 1, tools: ["X_GET"] }]);
+    await runFetch(opts(client));
+    expect(readManifest().counts.toolkits).toBe(1);
+  });
+
   it("resumes: skips valid toolkit files on disk unless refresh", async () => {
     const first = fakeClient(catalog);
     await runFetch(opts(first.client));

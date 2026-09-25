@@ -7,11 +7,14 @@ export const MANIFEST_FILE = "manifest.json";
 
 /** How a toolkit's tools were obtained (D18). */
 export type ToolSource = "sdk" | "rest-cursor";
+/** Why the REST fallback ran: SDK result looked truncated, or the SDK rejected the payload (D19). */
+export type FallbackReason = "truncated" | "sdk-error";
 
 export interface ToolkitFile {
   schemaVersion: number;
   toolkit: ToolkitSummary;
   source: ToolSource;
+  fallbackReason?: FallbackReason;
   fetchedAt: string;
   /** Tools in `tools`. */
   toolCount: number;
@@ -27,6 +30,7 @@ export interface ManifestToolkitEntry {
   deprecated: number;
   metaToolsCount: number | null;
   source: ToolSource;
+  fallbackReason?: FallbackReason;
 }
 
 export interface Manifest {
@@ -91,7 +95,7 @@ export function listSnapshotSlugs(dir: string): string[] {
     return [];
   }
   return names
-    .filter((n) => n.endsWith(".json") && n !== MANIFEST_FILE && !n.startsWith("_"))
+    .filter((n) => n.endsWith(".json") && n !== MANIFEST_FILE)
     .map((n) => n.slice(0, -".json".length))
     .sort();
 }
@@ -121,6 +125,7 @@ export function buildManifest(dir: string, input: ManifestInput): Manifest {
       deprecated,
       metaToolsCount: file.toolkit.toolsCount,
       source: file.source,
+      ...(file.fallbackReason ? { fallbackReason: file.fallbackReason } : {}),
     };
     tools += file.tools.length;
     fullTools += file.fullToolCount;
