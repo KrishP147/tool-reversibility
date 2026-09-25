@@ -40,6 +40,9 @@ describe("pass cases", () => {
     ].join("\n");
     assert.deepEqual(messages(text), []);
   });
+  it("allows the literal [[report:KEY]] used to document the syntax", () => {
+    assert.deepEqual(messages("Write `[[report:KEY]]` for report numbers."), []);
+  });
   it("allows numbers cited to the matching report stamp", () => {
     assert.deepEqual(messages("56,216 tools [report 2026-10-01, commit abc1234].", REPORT), []);
   });
