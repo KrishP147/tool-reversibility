@@ -18,8 +18,8 @@ asked Composio for exactly this flag.
 **Headline claim to prove (fill in with real numbers only):** "Of **M** tools that both classifiers call irreversible,
 **N** (**P%**) carry neither `destructiveHint` nor any tag that moves them out of the Write/ask tier, e.g.
 `GMAIL_SEND_EMAIL`." Secondary numbers: the agreement rate between the rules and the LLM, and the per-toolkit gap for the 8 Enhanced Controls apps
-(Gmail, Outlook, Slack, Sheets, Calendar, Drive, GitHub, Notion). Research hypothesis, UNVERIFIED: `GMAIL_SEND_EMAIL`
-tags = `important, openWorldHint`. The public toolkit page shows no tags, so confirm through the SDK.
+(Gmail, Outlook, Slack, Sheets, Calendar, Drive, GitHub, Notion). Research hypothesis was `GMAIL_SEND_EMAIL`
+tags = `important, openWorldHint`; the SDK actually returns `important, openWorldHint, createHint` (resolved, D21).
 
 ## 2. Stack
 TypeScript (strict), pnpm workspaces, Node 22, vitest, tsx (CLI), zod. Demo: Next.js 15 App Router + Tailwind.
@@ -34,17 +34,17 @@ on TS dashboard/SDK/docs work, and the side-quest PRs land in `ts/packages/*`. e
 ### 3a. `packages/audit`: fetch → extract → classify (rules, llm) → compare → report
 - **Fetch.** `new Composio({ apiKey: process.env.COMPOSIO_API_KEY })`. Enumerate toolkits with
   `composio.toolkits.get({ limit, cursor })`. The query fields `category, cursor, limit, managedBy, sortBy` are verified; the
-  response's next-cursor field name is UNVERIFIED. Then, per toolkit, call
+  next-cursor field is `next_cursor`, visible only on the raw client, so we page via `composio.getClient().toolkits.list` (resolved, D17). Then, per toolkit, call
   `composio.tools.getRawComposioTools({ toolkits: [slug], limit })`. `tool.types.ts` confirms `ToolListParams` is a
   union that requires one of `tools | toolkits | search | tags | authConfigIds`. There is no unfiltered call and
-  no `cursor` on this method. UNVERIFIED: whether `limit` truncates a big toolkit. Compare the count against
-  toolkit metadata. If it truncates, fall back to the REST tools list endpoint with a cursor and log it in the D-log.
+  no `cursor` on this method. `limit: 1000` does not truncate any current toolkit (max 896, github); the guard still
+  compares against toolkit metadata and falls back to the REST tools list with a cursor (resolved, D18; SDK payload rejection also falls back, D19).
   Concurrency ≤4, exponential backoff on 429/5xx, resumable (skip toolkits already snapshotted), and `--refresh`.
 - **Snapshot.** `fixtures/catalog/<date>/<toolkit>.json` holds the normalized Tool (`slug, name, description, tags,
   inputParameters, toolkit, version, isDeprecated, scopes`; fields verified in the docs). `manifest.json` records the SDK
   version, date and counts. A trimmed 5-toolkit fixture is committed so tests and CI run without a key.
-- **Hints.** Map `tags[]` to 7 booleans and keep unknown tags raw. The blog doesn't document whether the SDK exposes the Enhanced Controls tier
-  (UNVERIFIED). Check the Tool object, then any permissions API. If it's absent, derive the effective tier from
+- **Hints.** Map `tags[]` to 7 booleans and keep unknown tags raw. The SDK does not expose the Enhanced Controls tier
+  (resolved, D20: no tier field on Tool or toolkit, raw or SDK). So derive the effective tier from
   the hints (destructiveHint→Destructive, readOnlyHint→Read, else Write) and label the column "derived". Cite #4327, which
   shows the real mapping is keyed by slug and drifts.
 - **Rules** (`rules.ts`, pure, table-tested). Tokenize the slug verb (after the toolkit prefix), the description and the schema.
@@ -62,7 +62,7 @@ on TS dashboard/SDK/docs work, and the side-quest PRs land in `ts/packages/*`. e
 - **Compare/report.** For each tool, record the rule class, LLM class, agreement, hints, tier, and `GAP` = (both say irreversible) ∧
   ¬destructiveHint. REPORT.md holds totals, a confusion matrix, per-toolkit tables, the top-50 gaps and a disagreement sample.
   The header of every report is stamped with date, commit hash, SDK version, model id, prompt version and catalog manifest hash.
-- CLI: `pnpm audit fetch|classify|report|all [--toolkits gmail,slack] [--offline]`.
+- CLI: `pnpm audit:cli fetch|classify|report|all [--toolkits gmail,slack] [--offline]` (D17; `pnpm audit` is a pnpm builtin).
 
 ### 3b. `apps/inbox`: the approval inbox for "ask" actions (Zephyr's review UX, rebuilt on Sessions)
 - **List view.** Toolkit logo, slug, reversibility badge (irreversible red, compensable amber, reversible green),
@@ -165,3 +165,13 @@ A ready-to-paste Composio feature-request issue. **Problem:** the hints describe
 - D14 #4571: TypeScript first; Python only if the TS PR is acked by a maintainer.
 - D15 Branches: `krish/issue-N` (hub convention).
 - D16 Replit deploy (P4) is issue 7; `.replit` keys must be verified against docs.replit.com before commit. Replit deploy itself may cost money → user approval before deploying.
+- D17 (2026-09-24, #1) CLI entry is root script `pnpm audit:cli <cmd>` (= `pnpm --filter audit start -- <cmd>`). `pnpm audit` is a pnpm builtin (security audit) and shadows any root script named `audit`; §3a CLI line updated.
+- D18 (2026-09-24, #9, verifier on user's behalf) Side-quest fork branch `krish/4571-google-session-parity` stays local-only (`C:\Users\User\_worktrees\composio`) until a maintainer acks the #4571 comment; pushing is a human step per `side-quests/README.md`. Amends §6 item 9 "Done when: branches are pushed to the fork" → drafts in `side-quests/*.md` + local checks pass; push after ack. Why: Composio CONTRIBUTING is issue-first; an unacked public branch/PR is premature.
+
+## 10. Issue 2 findings (live, 2026-09-24, `@composio/core` 0.21.0, free tier, catalog GETs only)
+- D19 **Toolkit pagination:** the REST list returns `{ items, next_cursor, total_pages, current_page, total_items }`; `next_cursor` is an opaque base64 string (e.g. `Mi0xMDAw`), null on the last page. The SDK `toolkits.get({ limit })` returns a bare array and drops the cursor (at `limit: 1000` it silently stops at 1000 of 1562). So we list via `composio.getClient().toolkits.list({ limit: 1000, cursor })` and drain `next_cursor`.
+- D20 **Per-toolkit tools:** `getRawComposioTools({ toolkits: [slug], limit: 1000 })` returns every version-latest tool, deprecated included; it matches the raw `tools.list(...).total_items`, and no current toolkit reaches 1000 (max: github 896). `meta.tools_count` counts non-deprecated tools only (github 874 = 896 − 22). `limit` must always be passed: without it the SDK auto-adds `important=true` for a toolkits-only query and returns a curated subset (`getRawComposioTools` source, 0.21.0). Guard: if a result fills `limit` or has fewer non-deprecated tools than `tools_count`, re-fetch via raw `tools.list({ toolkit_slug, cursor })`. In the full run this guard fired 0 times.
+- D21 **SDK payload rejection:** for 8 toolkits (`coinbase_wallet_mcp, datadog_mcp, highlevel_mcp, honeycomb_mcp, longbridge_mcp, ramp_mcp, runway, tiktok_ads`) the SDK's zod schema rejects the tool list (e.g. a boolean JSON-schema node under `inputParameters.properties`). Errors with no HTTP status fall back to the raw REST list (no zod), recorded as `source: "rest-cursor", fallbackReason: "sdk-error"`. HTTP errors (401, exhausted 429/5xx) still fail the toolkit and land in `manifest.failures`.
+- D22 **Tier exposure:** not exposed. Neither the SDK `Tool` (`slug, name, description, inputParameters, outputParameters, tags, toolkit, version, isDeprecated, availableVersions, scopes, isNoAuth`) nor the raw tool (adds `scope_requirements, no_auth, human_description, deprecated`) nor the toolkit object carries a Read/Write/Destructive tier; the only `permissions` in the SDK is session elicitation config. Per D6 the tier column is **derived** from hints.
+- D23 **`GMAIL_SEND_EMAIL` tags:** `important, openWorldHint, createHint` (SDK and raw agree). No `destructiveHint`, so it is a GAP candidate under D2.
+- D24 **Snapshot shape:** `fixtures/catalog/<date>/<slug>.json` = `{ schemaVersion, toolkit, source, fallbackReason?, fetchedAt, toolCount, fullToolCount, tools[] }`; `manifest.json` = SDK version, date, command, counts, failures, per-toolkit counts. Resume skips any toolkit with a valid file; `--refresh` re-fetches. Full run: `pnpm audit:cli fetch` at commit `abdba72` (resume pass) → 1562 toolkits, 56,216 tools (659 deprecated), 0 failures, 0 truncation fallbacks, 8 sdk-error fallbacks; ~169 MB, gitignored. Trimmed fixture: `--toolkits gmail,slack,github,googlecalendar,notion --out fixtures/catalog/trimmed --max-tools 25`; slugs unchanged; 125 of 1,233 tools kept (pins `GMAIL_SEND_EMAIL` and one tool per common verb).
