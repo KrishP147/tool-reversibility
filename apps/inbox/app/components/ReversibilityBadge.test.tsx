@@ -21,13 +21,17 @@ function tool(overrides: Partial<ToolReport>): ToolReport {
 
 describe("ReversibilityBadge", () => {
   it("renders red for irreversible", () => {
-    render(<ReversibilityBadge tool={tool({ ruleClass: "irreversible", llmClass: "irreversible" })} />);
+    render(
+      <ReversibilityBadge tool={tool({ ruleClass: "irreversible", llmClass: "irreversible" })} />,
+    );
     const badge = screen.getByText("Irreversible");
     expect(badge.className).toContain("bg-red-100");
   });
 
   it("renders amber for compensable", () => {
-    render(<ReversibilityBadge tool={tool({ ruleClass: "compensable", llmClass: "compensable" })} />);
+    render(
+      <ReversibilityBadge tool={tool({ ruleClass: "compensable", llmClass: "compensable" })} />,
+    );
     expect(screen.getByText("Compensable").className).toContain("bg-amber-100");
   });
 
@@ -42,7 +46,11 @@ describe("ReversibilityBadge", () => {
   });
 
   it("most-caution-wins: disagreement between reversible and irreversible shows red", () => {
-    render(<ReversibilityBadge tool={tool({ ruleClass: "reversible", llmClass: "irreversible", agree: false })} />);
+    render(
+      <ReversibilityBadge
+        tool={tool({ ruleClass: "reversible", llmClass: "irreversible", agree: false })}
+      />,
+    );
     expect(screen.getByText("Irreversible").className).toContain("bg-red-100");
   });
 });

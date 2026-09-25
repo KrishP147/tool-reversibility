@@ -37,17 +37,12 @@ describe("loadReport", () => {
           },
         ],
       };
-      writeFileSync(
-        path.join(dir, "reports", "report.json"),
-        JSON.stringify(real),
-      );
+      writeFileSync(path.join(dir, "reports", "report.json"), JSON.stringify(real));
 
       const report = loadReport(dir);
       expect(report.stub).toBe(false);
       expect(report.tools).toHaveLength(1);
-      expect(findToolReport(report, "GMAIL_SEND_EMAIL")?.tierSource).toBe(
-        "real",
-      );
+      expect(findToolReport(report, "GMAIL_SEND_EMAIL")?.tierSource).toBe("real");
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }

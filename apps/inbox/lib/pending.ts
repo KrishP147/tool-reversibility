@@ -27,9 +27,7 @@ function pendingDir(repoRoot: string): string {
 
 /** Loads every fixtures/pending/*.json action, sorted by id for a stable
  * list order. Returns [] if the directory doesn't exist yet. */
-export function loadPendingActions(
-  repoRoot: string = findRepoRoot(),
-): PendingAction[] {
+export function loadPendingActions(repoRoot: string = findRepoRoot()): PendingAction[] {
   const dir = pendingDir(repoRoot);
   if (!existsSync(dir)) return [];
 

@@ -6,12 +6,7 @@ import type { ToolClass, ToolReport } from "./report";
  * irreversible" as the interesting gap; for display we never want to look
  * more permissive than either classifier thinks the tool is).
  */
-const CAUTION_ORDER: ToolClass[] = [
-  "irreversible",
-  "compensable",
-  "reversible",
-  "unknown",
-];
+const CAUTION_ORDER: ToolClass[] = ["irreversible", "compensable", "reversible", "unknown"];
 
 /**
  * Resolves the single reversibility class shown on a badge. Returns
@@ -20,10 +15,7 @@ const CAUTION_ORDER: ToolClass[] = [
 export function resolveDisplayClass(tool: ToolReport | undefined): ToolClass {
   if (!tool) return "unknown";
   if (tool.ruleClass === tool.llmClass) return tool.ruleClass;
-  return (
-    CAUTION_ORDER.find((c) => c === tool.ruleClass || c === tool.llmClass) ??
-    "unknown"
-  );
+  return CAUTION_ORDER.find((c) => c === tool.ruleClass || c === tool.llmClass) ?? "unknown";
 }
 
 export const CLASS_LABELS: Record<ToolClass, string> = {

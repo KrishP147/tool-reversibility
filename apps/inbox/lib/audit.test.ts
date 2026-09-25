@@ -19,7 +19,12 @@ describe("recordDecision", () => {
     const auditDir = path.join(dir, "not-yet");
     expect(existsSync(auditDir)).toBe(false);
     recordDecision(
-      { actionId: "001-a", slug: "GMAIL_SEND_EMAIL", decision: "approve", payload: { to: "a@b.com" } },
+      {
+        actionId: "001-a",
+        slug: "GMAIL_SEND_EMAIL",
+        decision: "approve",
+        payload: { to: "a@b.com" },
+      },
       auditDir,
     );
     expect(existsSync(path.join(auditDir, "audit.jsonl"))).toBe(true);
@@ -27,17 +32,25 @@ describe("recordDecision", () => {
 
   it("appends rather than overwriting", () => {
     recordDecision(
-      { actionId: "001-a", slug: "GMAIL_SEND_EMAIL", decision: "approve", payload: { to: "a@b.com" } },
+      {
+        actionId: "001-a",
+        slug: "GMAIL_SEND_EMAIL",
+        decision: "approve",
+        payload: { to: "a@b.com" },
+      },
       dir,
     );
     recordDecision(
-      { actionId: "002-b", slug: "SLACK_SEND_MESSAGE", decision: "reject", payload: { text: "hi" } },
+      {
+        actionId: "002-b",
+        slug: "SLACK_SEND_MESSAGE",
+        decision: "reject",
+        payload: { text: "hi" },
+      },
       dir,
     );
 
-    const lines = readFileSync(path.join(dir, "audit.jsonl"), "utf-8")
-      .split("\n")
-      .filter(Boolean);
+    const lines = readFileSync(path.join(dir, "audit.jsonl"), "utf-8").split("\n").filter(Boolean);
     expect(lines).toHaveLength(2);
     expect(readAuditLog(dir).map((e) => e.actionId)).toEqual(["001-a", "002-b"]);
   });
@@ -66,7 +79,12 @@ describe("recordDecision", () => {
 
   it("hashes the payload it was given, not the fixture on disk", () => {
     const entry = recordDecision(
-      { actionId: "001-a", slug: "GMAIL_SEND_EMAIL", decision: "edit", payload: { to: "edited@b.com" } },
+      {
+        actionId: "001-a",
+        slug: "GMAIL_SEND_EMAIL",
+        decision: "edit",
+        payload: { to: "edited@b.com" },
+      },
       dir,
     );
     expect(entry.payloadHash).toBe(hashPayload({ to: "edited@b.com" }));

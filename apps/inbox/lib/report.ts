@@ -58,9 +58,6 @@ export function loadReport(repoRoot: string = findRepoRoot()): Report {
   return stubReport as Report;
 }
 
-export function findToolReport(
-  report: Report,
-  slug: string,
-): ToolReport | undefined {
+export function findToolReport(report: Report, slug: string): ToolReport | undefined {
   return report.tools.find((tool) => tool.slug === slug);
 }
