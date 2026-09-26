@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { allCommand } from "./allCommand.js";
 import { classifyCommand } from "./classifyCommand.js";
 import { fetchCommand } from "./fetchCommand.js";
 import { reportCommand } from "./reportCommand.js";
@@ -16,6 +17,7 @@ async function main(argv: string[]): Promise<void> {
     fetch: (a) => fetchCommand(a),
     classify: (a) => classifyCommand(a),
     report: (a) => reportCommand(a),
+    all: (a) => allCommand(a),
   });
   const command = program.find((c) => c.name === args.command);
   if (!command) {
