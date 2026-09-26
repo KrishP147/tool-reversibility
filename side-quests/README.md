@@ -10,6 +10,7 @@ Local fork checkout: `C:\Users\User\_worktrees\composio`, branch `krish/4571-goo
 | `4571-pr-body.md` | PR body for #4571, including the exact commands and results |
 | `4286.md` | Comment for #4286: sample or types? (proposed fix included) |
 | `4509.md` | Comment for #4509: the three questions only, no fix |
+| `sdk-schema-rejection.md` | New issue draft: `getRawComposioTools` throws for 8 toolkits on malformed `inputParameters` |
 
 ## Steps
 
@@ -21,6 +22,7 @@ Local fork checkout: `C:\Users\User\_worktrees\composio`, branch `krish/4571-goo
 5. Python parity (the `python/providers/google` equivalent) comes only after a maintainer acks the TS PR (D14).
 6. #4286: once a maintainer picks option 1 or 2, branch `krish/4286-...` off `next` and apply that fix. Option 1 needs a patch changeset for `@composio/core`.
 7. #4509: wait for answers, and don't guess at a fix.
+8. `sdk-schema-rejection.md`: re-check for dups, then post as a new issue on ComposioHQ/composio (title from the draft's `## Title`); drop the leading `<!-- -->` line first.
 
 ## Open points to confirm with the maintainer
 
