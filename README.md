@@ -15,6 +15,8 @@ compares that against the hints Composio already ships, and publishes the gap. I
 approval-inbox demo of what an "ask" step looks like when reversibility is known, and a
 data-backed proposal for an `irreversibleHint` ([PROPOSAL.md](PROPOSAL.md)).
 
+Write-up: [Can this agent action be undone?](docs/WRITEUP.md)
+
 Not affiliated with Composio. MIT licensed.
 
 <!-- TODO(Krish): replace with the inbox demo GIF -->
