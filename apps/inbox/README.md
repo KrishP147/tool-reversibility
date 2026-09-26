@@ -54,6 +54,38 @@ Every Approve / Reject / Edit decision is appended to `apps/inbox/.data/audit.js
 truncated or rewritten) and is not required to exist for `build`/`start` to work. Live mode
 swaps this for SQLite (plan.md §3b); mock mode stays JSONL.
 
+## Live mode
+
+`INBOX_MODE=live` (default is `mock`; `lib/mode.ts`) swaps the fixture-backed list for a real
+Composio session:
+
+- **Flag + key.** Set `INBOX_MODE=live` and `COMPOSIO_API_KEY=<your key>` (`lib/live.ts`'s
+  `getLiveSession`; no key -> a live-mode failure banner on the list page, never a crash).
+- **Propose form.** There's no LLM agent driving tool calls in this build, so the list page shows
+  a "Propose a live action" form (`app/components/ProposeForm.tsx`) instead — tool slug, toolkit
+  slug and JSON args, submitted via the `proposeAction` server action
+  (`app/actions/propose.ts`), which inserts a pending row directly into the live store.
+- **Approve executes for real,** via `session.execute(slug, payload)` (`lib/live.ts`'s
+  `executeApproved`), and records one audit row either way; a Composio failure comes back as
+  `{ ok: false, error }` and is shown on the page, not thrown.
+- **Reject and Edit only log.** Reject marks the row rejected and audits the decision; Edit
+  persists the new payload and audits it. Neither ever calls Composio
+  (`app/actions/[id]/actions.ts`'s `decideOnAction`).
+- **Storage.** Live pending rows and the live audit log live in one SQLite file,
+  `apps/inbox/.data/live.db` (gitignored), via Node's built-in `node:sqlite` (`DatabaseSync`,
+  `lib/store.ts`) — no native build step, no `better-sqlite3`. Needs Node >=22.13; no
+  `--experimental-sqlite` flag required at that version, though Node still prints a one-line
+  experimental-feature warning on first use.
+- **Undocumented behaviour.** `@composio/core` is pinned to exactly `0.21.0` because the
+  `beforeExecute` intercept shape (`session.tools({ beforeExecute })`) and the fact that
+  `session.execute()` skips it entirely aren't in Composio's published docs — only confirmed by
+  reading that version's dist. See `lib/live.ts`'s header comment before bumping the version.
+
+There is no agent in this build calling `session.tools()`, so `lib/live.ts`'s `approvalGuard`
+intercept isn't wired to anything live yet — it's implemented and unit-tested on its own, ready
+for the moment an agent calls tools through this session (see the root README's Limitations
+bullet on the intercept being a client-side hook, not a server-side gate).
+
 ## Pages
 
 - `app/page.tsx` — list view: every pending action with its reversibility badge, tier and
