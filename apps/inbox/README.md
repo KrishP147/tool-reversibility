@@ -79,10 +79,27 @@ Composio session:
   `session.execute()` skips it entirely aren't in Composio's published docs — only confirmed by
   reading that version's dist. See `lib/live.ts`'s header comment before bumping the version.
 
-There is no agent in this build calling `session.tools()`, so `lib/live.ts`'s `approvalGuard`
-intercept isn't wired to anything live yet — it's implemented and unit-tested on its own, ready
-for the moment an agent calls tools through this session (see the root README's Limitations
-bullet on the intercept being a client-side hook, not a server-side gate).
+### Demo agent
+
+Demo: `pnpm demo:agent` (from the repo root) then `INBOX_MODE=live pnpm --filter inbox dev` shows
+the proposal.
+
+`scripts/demoAgent.ts` is a scripted, no-LLM agent. It gets its tools via
+`session.tools({ beforeExecute: approvalGuard })` and calls `GMAIL_SEND_EMAIL` with a fixed
+payload (placeholder address). `lib/live.ts`'s `approvalGuard` throws `ApprovalRequiredError` and
+queues a pending row in `.data/live.db`, so the send never runs.
+
+- **Default: mock session.** Mirrors `@composio/core` 0.21.0's `tools()` -> `executeSessionTool`
+  path (`beforeExecute` before execute, dist line numbers in the script's header) with a fake
+  execute. No key, no network.
+- **`--live`.** A real Composio session (needs `COMPOSIO_API_KEY`), using a small agentic
+  provider: the default provider drops the execute fn, so the modifier would never fire.
+- **Other db.** `DEMO_DB=<dir>/.data/live.db` or `--db <dir>/.data/live.db`. The path must end in
+  `.data/live.db` because `approvalGuard` always writes to `<cwd>/.data/live.db`.
+- **Then.** The live list needs no key to show the row. Approve without a key shows a banner and
+  the row stays pending (plan.md D43); with a key it sends for real.
+
+This is still a client-side hook, not a server-side gate (root README Limitations).
 
 ## Pages
 

@@ -162,6 +162,14 @@ Reject and Edit only log. Pending rows and the audit log live in `apps/inbox/.da
 sends for real, so use a test account. Details:
 [apps/inbox/README.md#live-mode](apps/inbox/README.md#live-mode).
 
+**Demo: `pnpm demo:agent` then `INBOX_MODE=live pnpm --filter inbox dev` shows the proposal.** A
+scripted, no-LLM agent gets its tools via `session.tools({ beforeExecute: approvalGuard })` and
+tries `GMAIL_SEND_EMAIL` to a placeholder address; the guard throws and queues a pending row in
+`apps/inbox/.data/live.db` (override: `DEMO_DB=<dir>/.data/live.db` or `--db`). The default session
+is a mock of `@composio/core` 0.21.0's execute path (no key, no network); `--live` uses a real
+session and needs `COMPOSIO_API_KEY`. Listing needs no key; Approve without a key shows a banner
+and the row stays pending (plan.md D43).
+
 ## Run on Replit
 
 [![Run on Replit](https://replit.com/badge/github/KrishP147/tool-reversibility)](https://replit.com/new/github/KrishP147/tool-reversibility)
@@ -218,7 +226,9 @@ gap.
   routed through `session.tools()`'s `modifiers.beforeExecute` (plan.md §3b); an agent that calls
   `session.execute()` directly, or any caller outside this SDK session, bypasses it entirely. This
   is a "proposal queue" pattern (the caller opts in to being intercepted), not a policy enforced by
-  Composio itself.
+  Composio itself. It also only fires through an agentic provider's wrapped tools. The only agent
+  wired to it is the scripted `pnpm demo:agent` (mock session by default); the web UI queues
+  proposals through its Propose form instead.
 
 ## Origin: Zephyr
 
