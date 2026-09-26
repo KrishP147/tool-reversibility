@@ -13,6 +13,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "audit:cli": "pnpm --filter audit start --",
+    "demo:agent": "pnpm --filter inbox exec tsx scripts/demoAgent.ts",
     "check:stamped": "node --test scripts/check-stamped.test.mjs && node scripts/check-stamped.mjs"
   },
   "pnpm": {
