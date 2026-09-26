@@ -48,6 +48,18 @@ const SAMPLE_REPORT = {
         tags: ["openWorldHint", "createHint"],
         reason: "verb:SEND",
       },
+      // Not in `tools[]` below -- `tools[]` only covers Enhanced Controls
+      // apps + pending slugs, so most real topGaps rows land here.
+      {
+        slug: "GOOGLESUPER_SEND_EMAIL",
+        toolkit: "googlesuper",
+        ruleClass: "irreversible",
+        llmClass: null,
+        confidence: 1,
+        important: true,
+        tags: ["openWorldHint", "createHint", "important", "email"],
+        reason: "verb:SEND",
+      },
     ],
   },
   tools: [
@@ -147,7 +159,7 @@ describe("getGapsSummary", () => {
       expect(summary.llmStatusLabel).toBe("rules-only — LLM pending");
       expect(summary.totals.tools).toBe(100);
 
-      expect(summary.topGaps).toHaveLength(1);
+      expect(summary.topGaps).toHaveLength(2);
       expect(summary.topGaps[0]).toMatchObject({
         slug: "GMAIL_SEND_EMAIL",
         toolkit: "gmail",
@@ -159,6 +171,22 @@ describe("getGapsSummary", () => {
       });
       expect(summary.topGaps[0]?.hints).toEqual(
         expect.arrayContaining(["openWorldHint", "createHint", "important"]),
+      );
+
+      // Row 2's slug isn't in tools[]: tier/tierSource fall back to null
+      // (never "unknown (derived)") and hints come from the row's own tags,
+      // dropping non-hint tags like "email".
+      expect(summary.topGaps[1]).toMatchObject({
+        slug: "GOOGLESUPER_SEND_EMAIL",
+        toolkit: "googlesuper",
+        ruleClass: "irreversible",
+        confidence: 1,
+        tier: null,
+        tierSource: null,
+        reasons: ["verb:SEND"],
+      });
+      expect(summary.topGaps[1]?.hints.sort()).toEqual(
+        ["createHint", "important", "openWorldHint"].sort(),
       );
 
       // All 8 Enhanced Controls toolkits are present, in order, even ones
@@ -305,6 +333,84 @@ describe("getGapDetail", () => {
       // tools[0].llmClass is "unknown" in the fixture, so still no gap.
       expect(result.detail.gap).toBe(false);
       expect(result.detail.llmStatusLabel).toBe("live");
+    } finally {
+      rmSync(repoRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("falls back to the topGaps row when the slug isn't in tools[]", () => {
+    const repoRoot = makeRepo();
+    try {
+      writeReport(repoRoot, SAMPLE_REPORT);
+      const result = getGapDetail("GOOGLESUPER_SEND_EMAIL", repoRoot);
+      expect(result.status).toBe("ok");
+      if (result.status !== "ok") return;
+
+      expect(result.detail).toMatchObject({
+        slug: "GOOGLESUPER_SEND_EMAIL",
+        toolkit: "googlesuper",
+        ruleClass: "irreversible",
+        ruleConfidence: 1,
+        reasons: ["verb:SEND"],
+        tier: null,
+        tierSource: null,
+        llmClass: null,
+        llmStatus: "recorded",
+        llmStatusLabel: "rules-only — LLM pending",
+        singleGap: true, // irreversible, no destructiveHint tag
+        gap: false, // llmStatus isn't "live"
+        partial: true,
+      });
+      // Only hint-named tags become hints; "email" is dropped as a
+      // non-hint category tag.
+      expect(result.detail.hints).toEqual({
+        openWorldHint: true,
+        createHint: true,
+        important: true,
+      });
+      expect(result.detail.spotcheck).toBeNull();
+      expect(result.detail.compensatingTool).toBeUndefined();
+    } finally {
+      rmSync(repoRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("marks a fallback row's singleGap false when its tags include destructiveHint", () => {
+    const repoRoot = makeRepo();
+    try {
+      writeReport(repoRoot, {
+        ...SAMPLE_REPORT,
+        topGaps: {
+          kind: "single-classifier (rules only)",
+          rows: [
+            {
+              slug: "SLACK_DELETE_MESSAGE",
+              toolkit: "slack",
+              ruleClass: "irreversible",
+              llmClass: null,
+              confidence: 1,
+              important: true,
+              tags: ["destructiveHint"],
+              reason: "verb:DELETE",
+            },
+          ],
+        },
+      });
+      const result = getGapDetail("SLACK_DELETE_MESSAGE", repoRoot);
+      expect(result.status).toBe("ok");
+      if (result.status !== "ok") return;
+      expect(result.detail.partial).toBe(true);
+      expect(result.detail.singleGap).toBe(false);
+    } finally {
+      rmSync(repoRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("still returns not-found for a slug in neither tools[] nor topGaps.rows", () => {
+    const repoRoot = makeRepo();
+    try {
+      writeReport(repoRoot, SAMPLE_REPORT);
+      expect(getGapDetail("TOTALLY_UNKNOWN", repoRoot)).toEqual({ status: "not-found" });
     } finally {
       rmSync(repoRoot, { recursive: true, force: true });
     }
