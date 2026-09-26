@@ -174,7 +174,7 @@ sends for real, so use a test account. Details:
 **Demo: `pnpm demo:agent` then `INBOX_MODE=live pnpm --filter inbox dev` shows the proposal.** A
 scripted, no-LLM agent gets its tools via `session.tools({ beforeExecute: approvalGuard })` and
 tries `GMAIL_SEND_EMAIL` to a placeholder address; the guard throws and queues a pending row in
-`apps/inbox/.data/live.db` (override: `DEMO_DB=<dir>/.data/live.db` or `--db`). The default session
+`apps/inbox/.data/live.db` (override: `DEMO_DB=<any path>` or `--db <any path>`). The default session
 is a mock of `@composio/core` 0.21.0's execute path (no key, no network); `--live` uses a real
 session and needs `COMPOSIO_API_KEY`. Listing needs no key; Approve without a key shows a banner
 and the row stays pending (plan.md D43).
@@ -271,6 +271,14 @@ pnpm -r test
 pnpm -r build
 pnpm check:stamped   # docs cite every Composio number (docs/stamping.md)
 pnpm format:check    # or `pnpm format` to write
+```
+
+Regenerate the README screenshots (`docs/img/*.png`; builds the inbox, runs it in mock mode with a
+temp audit dir via `INBOX_AUDIT_DIR`, drives headless Chromium; needs
+`pnpm --filter inbox exec playwright install chromium` once):
+
+```sh
+pnpm --filter inbox screenshots
 ```
 
 Regenerate the committed trimmed fixture:
