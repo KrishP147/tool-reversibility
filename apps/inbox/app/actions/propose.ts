@@ -18,11 +18,11 @@ export interface ProposeResult {
 
 /**
  * Server action backing ProposeForm (plan.md §7 item 7: "No LLM agent ->
- * manual 'propose action' form creates the pending item"). This is the only
- * way a live pending row gets created in this build — there's no agent
- * calling `session.tools()`, so `lib/live.ts`'s `approvalGuard` modifier
- * isn't wired to anything live yet (it's implemented and tested on its
- * own). Inserts directly into the live store; never calls Composio.
+ * manual 'propose action' form creates the pending item"). The UI's way to
+ * create a live pending row; the other is the scripted demo agent
+ * (`pnpm demo:agent`, scripts/demoAgent.ts), which reaches the store via
+ * `lib/live.ts`'s `approvalGuard` modifier on `session.tools()`. Inserts
+ * directly into the live store; never calls Composio.
  */
 export async function proposeAction(input: ProposeInput): Promise<ProposeResult> {
   if (getInboxMode() !== "live") {

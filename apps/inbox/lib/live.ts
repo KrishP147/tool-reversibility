@@ -63,7 +63,8 @@ export async function getLiveSession(
       const composio = new Composio({ apiKey }) as ComposioClass;
       // No `tags`/`toolkits` filter: this session only needs a sessionId to
       // execute() explicitly-approved tool calls, not to expose a curated
-      // tool list to an agent (this demo has no agent — see approvalGuard).
+      // tool list to an agent (the demo agent, scripts/demoAgent.ts, builds
+      // its own client with an agentic provider — see approvalGuard).
       const session = (await composio.create(userId, {})) as LiveSessionHandle["session"];
 
       return { composio, session };
@@ -87,14 +88,16 @@ export interface BeforeExecuteContext {
 
 /**
  * The `beforeExecute` modifier meant for `session.tools({ beforeExecute:
- * approvalGuard })` (plan.md's "intercept before execute"). There is no
- * agent driving `session.tools()` in this build (deliberate — see
- * apps/inbox/README.md and the root README's Limitations bullet on the
- * intercept being a client-side hook, not a server-side gate); this
- * function is exported and tested so the intercept itself is exercised,
- * and so it's ready to wire up the moment an agent calls tools through this
- * session. It never lets a call through: it enqueues a pending row in the
- * live store and always throws.
+ * approvalGuard })` (plan.md's "intercept before execute"). Wired end to end
+ * by the scripted, no-LLM demo agent (`pnpm demo:agent`,
+ * scripts/demoAgent.ts, issue #25): its default mock session mirrors
+ * 0.21.0's `tools()` -> `executeSessionTool` order, and `--live` uses a real
+ * session. The modifier only fires through an agentic provider's wrapped
+ * tools — the default non-agentic provider drops the execute fn (see that
+ * script's header). The web UI still has no agent and uses the Propose form.
+ * Client-side hook, not a server-side gate (root README Limitations). It
+ * never lets a call through: it enqueues a pending row in the live store
+ * and always throws.
  */
 export async function approvalGuard(context: BeforeExecuteContext): Promise<never> {
   const { insertPending } = await import("./store");
