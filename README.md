@@ -114,6 +114,39 @@ Mock mode (`INBOX_MODE=mock`) is the default. It reads the pending actions in
 `fixtures/pending/*.json` (real catalog slugs and field names, illustrative values) and `reports/report.json`; without a report it falls back to
 a stub and shows a banner saying so. Details: [apps/inbox/README.md](apps/inbox/README.md).
 
+## Run on Replit
+
+[![Run on Replit](https://replit.com/badge/github/KrishP147/tool-reversibility)](https://replit.com/new/github/KrishP147/tool-reversibility)
+
+**Import.** Click the badge (or Replit -> Create -> Import from GitHub -> this repo). Replit reads
+the committed [`.replit`](.replit) (`nodejs-22`, `pnpm --filter inbox dev` for the workspace run
+button, a Cloud Run deployment target). No `replit.nix` and no secrets are needed for this step.
+
+**Deploy.** In the Replit workspace: Deploy -> Autoscale. Build command and run command come from
+`.replit`'s `[deployment]` block (`pnpm i --frozen-lockfile && pnpm --filter inbox build`, then
+`pnpm --filter inbox start`, which binds `next start` to `0.0.0.0:$PORT`). Port 3000 is mapped to
+the public port 80. **Mock mode is the default and the deploy needs zero secrets** — the deployed
+inbox reads the committed fixtures and stub report exactly like local `pnpm --filter inbox dev`.
+
+**Live mode (optional).** Add two Replit Secrets on the deployment: `INBOX_MODE=live` and
+`COMPOSIO_API_KEY=<your key>`. Never put these in `.replit`, `.env`, or a commit. See
+[apps/inbox/README.md](apps/inbox/README.md#live-mode) for what live mode does and its one
+gap.
+
+**Deployed URL:** TODO(Krish) — fill in after the first Deploy (date: TODO).
+
+**90s Loom script** (timestamped beats for whoever records it):
+
+- `0:00-0:15` — Open the README headline and `PROPOSAL.md`: the problem (hints don't say
+  "undoable") in one breath.
+- `0:15-0:35` — Deployed inbox, list view: point at an irreversible-badged row (e.g.
+  `GMAIL_SEND_EMAIL`) with no `destructiveHint`, i.e. the gap.
+- `0:35-0:55` — Open its detail view: payload preview, compensating tool (if any), Approve /
+  Reject / Edit.
+- `0:55-1:15` — Click Approve, show the audit log entry it just wrote (who/when/decision/hash).
+- `1:15-1:30` — Close on `.replit`/README: mock-by-default, zero secrets, live mode is opt-in
+  behind Replit Secrets.
+
 ## Limitations
 
 - **Our classification is not ground truth.** Reversible / compensable / irreversible is our
@@ -133,6 +166,11 @@ a stub and shows a banner saying so. Details: [apps/inbox/README.md](apps/inbox/
   may come from them.
 - **The trimmed fixture is a sample.** `fixtures/catalog/trimmed/` keeps a few tools per toolkit
   for tests and CI; it is not the catalog.
+- **Live mode's intercept is a client-side hook, not a server-side gate.** It only catches calls
+  routed through `session.tools()`'s `modifiers.beforeExecute` (plan.md §3b); an agent that calls
+  `session.execute()` directly, or any caller outside this SDK session, bypasses it entirely. This
+  is a "proposal queue" pattern (the caller opts in to being intercepted), not a policy enforced by
+  Composio itself.
 
 ## Origin: Zephyr
 

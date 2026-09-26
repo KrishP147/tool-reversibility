@@ -4,12 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "start": "next start",
+    "start": "sh -c \"next start -H 0.0.0.0 -p ${PORT:-3000}\"",
     "lint": "eslint .",
     "test": "vitest run --passWithNoTests",
     "build": "next build"
   },
   "dependencies": {
+    "@composio/core": "0.21.0",
     "next": "^15.1.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

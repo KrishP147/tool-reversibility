@@ -4,19 +4,20 @@ import { DecisionPanel } from "../../components/DecisionPanel";
 import { PayloadDiff } from "../../components/PayloadDiff";
 import { ReversibilityBadge } from "../../components/ReversibilityBadge";
 import { SendPreview } from "../../components/SendPreview";
-import { getPendingAction } from "../../../lib/pending";
+import { getPendingActionAny } from "../../../lib/livePending";
 import { findToolReport, loadReport } from "../../../lib/report";
 import { decideOnAction } from "./actions";
 
-// Reads fixtures/pending, reports/report.json and the audit log at request
-// time (they can change between requests, e.g. after a decision is
-// recorded), so this route is never statically prerendered at build.
+// Reads fixtures/pending, reports/report.json, the audit log and (in live
+// mode) the live store at request time, so this route is never statically
+// prerendered at build.
 export const dynamic = "force-dynamic";
 
 export default async function ActionDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const action = getPendingAction(id);
-  if (!action) notFound();
+  const found = await getPendingActionAny(id);
+  if (!found) notFound();
+  const { action } = found;
 
   const report = loadReport();
   const tool = findToolReport(report, action.slug);
