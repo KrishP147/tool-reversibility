@@ -49,11 +49,13 @@ What is already verified, from the full catalog fetch
 - **rules** is a pure, table-tested classifier over the slug verb, description and schema.
 - **LLM** sends tools through the Anthropic Message Batches API with a structured-output schema
   (prompt `prompts/classify.v1.md`), caching one result per tool so re-runs are free.
-- **compare / report** (issue #5) marks a tool as a **gap** when both classifiers call it
+- **compare / report** marks a tool as a **gap** when both classifiers call it
   irreversible and it has no `destructiveHint`, and writes the stamped report.
 
 `apps/inbox` is a Next.js approval inbox for "ask" actions: a reversibility badge, a payload diff
-or rendered send preview, Approve / Reject / Edit, and an append-only audit log.
+or rendered send preview, Approve / Reject / Edit, and an append-only audit log. Mock mode (fixtures,
+zero keys) is the default; live mode (`INBOX_MODE=live`) proposes and executes real Composio
+actions through a session, with approval before anything runs.
 
 ## Reproduce
 
@@ -111,8 +113,21 @@ pnpm --filter inbox dev     # http://localhost:3000
 ```
 
 Mock mode (`INBOX_MODE=mock`) is the default. It reads the pending actions in
-`fixtures/pending/*.json` (real catalog slugs and field names, illustrative values) and `reports/report.json`; without a report it falls back to
-a stub and shows a banner saying so. Details: [apps/inbox/README.md](apps/inbox/README.md).
+`fixtures/pending/*.json` (real catalog slugs and field names, illustrative values) and the committed
+`reports/report.json` (rules-only until the live LLM run). Details:
+[apps/inbox/README.md](apps/inbox/README.md).
+
+### Live inbox (optional)
+
+```sh
+INBOX_MODE=live COMPOSIO_API_KEY=<your key> pnpm --filter inbox dev
+```
+
+A "Propose a live action" form queues a real tool call; Approve runs it via `session.execute`,
+Reject and Edit only log. Pending rows and the audit log live in `apps/inbox/.data/live.db`
+(`node:sqlite`, needs Node >=22.13). A failure shows a banner and falls back to fixtures. Approve
+sends for real, so use a test account. Details:
+[apps/inbox/README.md#live-mode](apps/inbox/README.md#live-mode).
 
 ## Run on Replit
 
@@ -126,7 +141,7 @@ button, a Cloud Run deployment target). No `replit.nix` and no secrets are neede
 `.replit`'s `[deployment]` block (`pnpm i --frozen-lockfile && pnpm --filter inbox build`, then
 `pnpm --filter inbox start`, which binds `next start` to `0.0.0.0:$PORT`). Port 3000 is mapped to
 the public port 80. **Mock mode is the default and the deploy needs zero secrets** — the deployed
-inbox reads the committed fixtures and stub report exactly like local `pnpm --filter inbox dev`.
+inbox reads the committed fixtures and report exactly like local `pnpm --filter inbox dev`.
 
 **Live mode (optional).** Add two Replit Secrets on the deployment: `INBOX_MODE=live` and
 `COMPOSIO_API_KEY=<your key>`. Never put these in `.replit`, `.env`, or a commit. See
@@ -195,7 +210,7 @@ pipeline were teammates' work.
 ## Development
 
 pnpm workspaces monorepo: `packages/audit` (CLI) and `apps/inbox` (Next.js demo). Node 22+
-(`.nvmrc`), pnpm 10.28.1 (`packageManager`; CI reads it via `pnpm/action-setup`).
+(`.nvmrc`; inbox live mode needs >=22.13), pnpm 10.28.1 (`packageManager`; CI reads it via `pnpm/action-setup`).
 
 ```sh
 pnpm i --frozen-lockfile

@@ -76,7 +76,7 @@ on TS dashboard/SDK/docs work, and the side-quest PRs land in `ts/packages/*`. e
 - **Mock mode is the default** (`INBOX_MODE=mock`, zero keys). It reads `fixtures/pending/*.json` and `reports/report.json`.
 - **Live mode** is optional and behind a flag. It creates a session with the verified shape
   `composio.create(userId, { tags: { enable: [...], disable: [...] } })`, runs a tiny agent, and intercepts calls before
-  execution. The intercept hook (modifiers / `tools.executeSessionTool`) is UNVERIFIED. Live mode must never block the demo.
+  execution. Intercept resolved in #7 (D42): `session.tools()` `modifiers.beforeExecute` in `@composio/core` 0.21.0 (pinned exact); `session.execute()` skips it. Live mode must never block the demo.
 
 ### 3c. `PROPOSAL.md`
 A ready-to-paste Composio feature-request issue. **Problem:** the hints describe *what changes*, not *whether it can be undone*; sending is not destructive. **Data:** tables from the stamped report. **Proposal:** `irreversibleHint: boolean` on tools, plus an Enhanced Controls "Irreversible" tier/modifier defaulting to Ask-with-preview; optional `compensatingTool` slug. **Migration:** seed from the classifier, starting with the 8 EC apps. **Prior art:** MCP tool annotations, Zephyr. **Offer to help.** Krish posts it himself (issue-first policy).
@@ -96,27 +96,28 @@ A ready-to-paste Composio feature-request issue. **Problem:** the hints describe
   - `.replit`: `run = "pnpm --filter inbox start"`; `[deployment] build = ["sh","-c","corepack enable && pnpm i --frozen-lockfile && pnpm --filter inbox build"]`; `deploymentTarget = "cloudrun"` (Autoscale); `[[ports]] localPort = 3000`.
   - `replit.nix` with `pkgs.nodejs_22`, or a Dockerfile fallback (`node:22-slim`, Next `output: "standalone"`).
   - These `.replit` keys are UNVERIFIED; check them against the Replit docs.
+  - As built (#7, D41): `.replit` with `modules = ["nodejs-22"]`, no `replit.nix`, no Dockerfile, no `output: "standalone"`; `start` = `next start -H 0.0.0.0 -p ${PORT:-3000}`. The deploy itself is user-gated (§13).
 - **Runtime:** Next binds `0.0.0.0:$PORT`. Mock mode is the default, so the deploy needs zero secrets. Live mode reads Replit Secrets only.
 - **Done when:** a fresh GitHub import followed by Deploy works with no manual steps, the URL shows the inbox with fixtures, and the README has the URL, the date and a "Run on Replit" badge.
 
 ## 6. Issues (ordered; each ≤3 h implementer session)
-1. **Scaffold monorepo + CI** (sonnet). Files: root `package.json`, `pnpm-workspace.yaml`, `tsconfig.base.json`, `.github/workflows/ci.yml`, LICENSE, `.env.example`, `.gitignore`, README stub.
+1. **Scaffold monorepo + CI** (sonnet). **Done** (PR #10). Files: root `package.json`, `pnpm-workspace.yaml`, `tsconfig.base.json`, `.github/workflows/ci.yml`, LICENSE, `.env.example`, `.gitignore`, README stub.
    - Done when: CI is green with no secrets, gitleaks runs and lint passes. Deps: none.
-2. **Catalog fetcher + snapshot** (opus, because the API shape is uncertain). Files: `packages/audit/src/{fetch,normalize,snapshot}.ts` and mocked-SDK tests.
+2. **Catalog fetcher + snapshot** (opus, because the API shape is uncertain). **Done** (PR #11). Files: `packages/audit/src/{fetch,normalize,snapshot}.ts` and mocked-SDK tests.
    - Done when: every §3a UNVERIFIED item is resolved into the D-log; pagination/truncation, backoff and resume are handled; the full snapshot is local; the trimmed fixture is committed; the manifest has counts. Deps: 1. HUMAN step: provide `COMPOSIO_API_KEY`.
-3. **Hints/tier extraction + rule classifier** (sonnet). Files: `packages/audit/src/{hints,rules}.ts` and ≥40 table-driven tests, including GMAIL_SEND_EMAIL, `*_DELETE_*` and `*_LIST_*`.
+3. **Hints/tier extraction + rule classifier** (sonnet). **Done** (PR #14; verbs PR #19, #16). Files: `packages/audit/src/{hints,rules}.ts` and ≥40 table-driven tests, including GMAIL_SEND_EMAIL, `*_DELETE_*` and `*_LIST_*`.
    - Done when: every fixture tool has a class and reasons, and the tier is labelled derived or real. Deps: 2 (fixture only).
-4. **LLM classifier + cache** (opus). Files: `packages/audit/src/llm.ts`, `prompts/classify.v1.md`.
+4. **LLM classifier + cache** (opus). **Done** (PR #15); live run user-gated (§13). Files: `packages/audit/src/llm.ts`, `prompts/classify.v1.md`.
    - Done when: the Batches + structured-output round-trip works; a re-run is 100% cache hits; `--dry-run` shows the cost; tests use a recorded response with no key. Deps: 2. HUMAN steps: provide `ANTHROPIC_API_KEY`; approve the spend after the dry-run.
-5. **Compare + report + spot-check labels** (opus, because the labels and the claim need judgment). Files: `packages/audit/src/{compare,report}.ts`, `fixtures/labels/spotcheck.json`, `reports/*`.
+5. **Compare + report + spot-check labels** (opus, because the labels and the claim need judgment). **Done** (PR #20, rules-only; regen after D35 in ecf5a7d); headline + LLM columns wait on the live run (§13). Files: `packages/audit/src/{compare,report}.ts`, `fixtures/labels/spotcheck.json`, `reports/*`.
    - Done when: the stamped report is committed with a confusion matrix and P/R against ≥50 labels, and the headline is filled from the data (or reworded if the data disagrees). Deps: 3, 4.
-6. **Inbox UI, mock mode** (sonnet). Files: `apps/inbox/**`, `fixtures/pending/*.json`.
+6. **Inbox UI, mock mode** (sonnet). **Done** (PR #13). Files: `apps/inbox/**`, `fixtures/pending/*.json`.
    - Done when: list, detail, diff/preview, badge, approve/reject and the audit log all work with zero keys; component tests exist; CI builds the app. Deps: 5 (stub the report until then).
-7. **Inbox live mode + P4 Replit deploy** (sonnet; opus if the intercept stays unclear). Files: `apps/inbox/lib/live.ts`, `.replit`, `replit.nix` or Dockerfile.
+7. **Inbox live mode + P4 Replit deploy** (sonnet; opus if the intercept stays unclear). **Done** (PR #21) except user-gated: Replit deploy + URL, live smoke with a real key (§13, D40-D43). Files: `apps/inbox/lib/live.ts`, `.replit`, `replit.nix` or Dockerfile.
    - Done when: §5 is met; live mode works behind its flag or is documented as a stretch goal; the README has a 90 s Loom script. Deps: 6.
-8. **PROPOSAL.md + README write-up** (opus).
+8. **PROPOSAL.md + README write-up** (opus). **Done** (PR #17) except Krish review, GIF, Devpost link, posting (§13).
    - Done when: every number is a stamped one; the README has the pitch, headline, repro steps, GIF and limitations; Krish has reviewed it. Posting the issue is a HUMAN step. Deps: 5.
-9. **Side quest: ComposioHQ/composio fork** (opus for #4571, sonnet for the docs issues). Parallel lane, no deps.
+9. **Side quest: ComposioHQ/composio fork** (opus for #4571, sonnet for the docs issues). Parallel lane, no deps. **Done** locally (D18); posting user-gated.
    - Fork, then branch `krish/4571-google-session-parity` off `next`.
    - **Comment on #4571 FIRST** with the plan (a `ToolCallSession` overload mirroring the Anthropic provider and routed via `executeToolForTarget` on `BaseProvider`, in TS + Python, with tests), then wait for an ack.
    - Implement in TS (path `ts/packages/providers/google` is UNVERIFIED), then Python. Add tests and `pnpm changeset`, and run `pnpm build && pnpm test && pnpm lint && pnpm typecheck`.
@@ -124,6 +125,7 @@ A ready-to-paste Composio feature-request issue. **Problem:** the hints describe
    - #4509: comment with the 3 questions and wait for an answer; the fix depends on a maintainer's reply, so don't guess.
    - Done when: branches are pushed to the fork, PR bodies are drafted in `side-quests/*.md` and checks pass locally.
    - **Opening PRs = human/orchestrator step:** base `next`, review from @jkomyno, issue linked.
+12. **Side quest: SDK schema rejection upstream draft** (sonnet; issue #12, from D21). **Done** (PR #22): `side-quests/sdk-schema-rejection.md` + offline repro `packages/audit/scripts/sdk-schema-repro.ts` (D44). Posting is a human step.
 
 **What each issue asks.** These are summaries from the fetch tool; re-read the originals before commenting.
 - **#4571** "[Feature]: Google provider's executeToolCall doesn't accept a session (unlike OpenAI/Anthropic)". It proposes to "mirror the Anthropic provider's implementation by adding an overload that accepts a session parameter and routes through the existing `executeToolForTarget` helper on `BaseProvider`". The gap is in both the TS and Python SDKs.
@@ -142,7 +144,7 @@ A ready-to-paste Composio feature-request issue. **Problem:** the hints describe
 - **D6 Tier column:** real if the SDK exposes it, otherwise labelled "derived".
 - **D7:** mock-first; live mode is opt-in.
 - **D8 Repo:** `KrishP147/tool-reversibility`, MIT, branches `krish/<issue>-<slug>`.
-- **D9 Stack:** Next.js 15 App Router + Tailwind; SQLite (better-sqlite3) in live mode only.
+- **D9 Stack:** Next.js 15 App Router + Tailwind; SQLite in live mode only (~~better-sqlite3~~ -> built-in `node:sqlite`, D40).
 
 ## 8. Open questions (Krish)
 1. Composio free tier OK, or paid project for rate limits?
@@ -197,3 +199,19 @@ A ready-to-paste Composio feature-request issue. **Problem:** the hints describe
 - D37 **Placeholder tokens (#8):** only two placeholders are legal: `[[pending live run]]` (not measured yet; the README headline until a live run) and `[[report:KEY]]` (file must also link reports/REPORT.md). Anything else in `[[...]]` fails the check. Code fences and inline code are scanned; `--max-tools`-style flags are exempt.
 - D38 **Plan-verified facts exception (#8):** a number from a plan-verified snapshot (§10, D19-D24) may appear in docs with `[snapshot YYYY-MM-DD, @composio/core X.Y.Z]` on the same physical line; only snapshots in `KNOWN_SNAPSHOTS` (today 2026-09-24 / 0.21.0) pass. Why: §4 requires a reproducible run for every number, and the §10 fetch is one; hard-coded list until committed manifests replace it.
 - D39 **Zephyr wording (#8, D13):** README ownership list matches the content-bank notes (optimizer, HITL approval fixes, Connections page, sponsor integrations behind mock twins; "top 12 of the Warp track", not a placement). Added: Gemini/GPTZero were not run live at submission. No Praxic users/pilots are claimed anywhere.
+
+## 13. P1 status 2026-09-26 (issues 5/7/12 verification, verifier on user's behalf)
+- D40 **SQLite driver (#7, amends D9):** live mode uses Node's built-in `node:sqlite` (`DatabaseSync`, `apps/inbox/lib/store.ts`), not better-sqlite3. Why: no native build, no `onlyBuiltDependencies` change, nothing extra for Replit. Cost: needs Node >=22.13 (prints an experimental warning); vitest needs a virtual-module shim for `node:sqlite` (`apps/inbox/vitest.config.ts`), re-check on vitest upgrades. Mock mode stays JSONL.
+- D41 **Replit config (#7, amends §5):** `.replit` only (`nodejs-22` module, `[deployment]` cloudrun build/run, port 3000 -> 80); no `replit.nix`, no Dockerfile, no Next `output: "standalone"`. Why: the Replit nodejs module supplies Node + corepack; standalone output only matters for the Dockerfile fallback. Fall back to Dockerfile + standalone only if the first Deploy fails. Unverified until the deploy: that Replit's nodejs-22 is >=22.13 (only matters for live mode).
+- D42 **Intercept (#7, resolves §3b UNVERIFIED):** `approvalGuard` hooks `session.tools()` `modifiers.beforeExecute`; `session.execute()` skips modifiers. Both are undocumented `@composio/core` 0.21.0 behaviour read from its dist, so the dependency is pinned exact; re-verify before any bump. Client-side "proposal queue", not a server gate (README Limitations). No agent calls `session.tools()` in this build, so the guard is unit-tested but unwired; the UI uses a Propose form instead. Accepted as the §6 item 7 "documented stretch" path.
+- D43 **Re-decide guard (#7):** live Approve/Reject/Edit act only on a `pending` row; a settled row is refused (manager fix ae06bd6 + regression test), so a second Approve never re-sends. A failed execute leaves the row `pending` (retry allowed). No lock against a concurrent double-click: single-user demo, accepted.
+- D44 **SDK schema rejection (#12, extends D21):** offline repro against the 2026-09-24 snapshot reproduces 6 of 8 (coinbase_wallet_mcp, datadog_mcp, honeycomb_mcp: boolean `items`; ramp_mcp: boolean `exclusiveMinimum`; runway: top-level `oneOf`, no `type`; tiktok_ads: boolean schema in `allOf.then`). highlevel_mcp and longbridge_mcp pass on `inputParameters`; the draft says "presumably `outputParameters` (not snapshotted)", which stays unverified until a live call with a key (free catalog GET, user-run). Dup check: none open; closest #3354 (closed via #3397).
+
+**Complete (merged on main, CI green, no keys):** scaffold + CI + gitleaks (#1); full catalog fetch + trimmed fixture (#2); hints + rules (#3, #16); LLM classifier + cache + `--dry-run` cost gate (#4, never run live); compare + stamped rules-only report + 74 blind spot-check labels (#5); inbox mock mode (#6); inbox live mode behind `INBOX_MODE=live` + `.replit` (#7); PROPOSAL + README + `check:stamped` (#8); side-quest drafts (#9, #12). Local gate at 078b824: audit 323 passed + 1 skipped, inbox 65, lint/build/check:stamped ok.
+
+**User-gated (nothing else is open):**
+1. Live LLM run (D11): trimmed fixture first (~$0.12, sonnet-5), then the full pass (~$48.69, sonnet-5) after re-approving the `--dry-run` number; then regenerate the report from a clean tree and fill the headline + LLM placeholders.
+2. Replit: import, Deploy -> Autoscale, fill "Deployed URL" + date in README (D16 approval if it costs money); optional live smoke with a real `COMPOSIO_API_KEY`.
+3. Devpost link + demo GIF in README; review the Zephyr ownership wording.
+4. Review the 74 spot-check labels (`fixtures/labels/spotcheck.json`, "pending Krish review").
+5. Post the 4 side-quest drafts (`side-quests/`: #4571 comment, #4286, #4509, SDK schema rejection) per `side-quests/README.md`; post PROPOSAL after the Litmus submit (D12).
