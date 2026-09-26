@@ -13,10 +13,11 @@ export interface PendingAction {
   payload: Record<string, unknown>;
   /** Prior state, for update actions that support a before/after diff. */
   before?: Record<string, unknown>;
-  /** Always true: these are hand-written illustrative fixtures, not a
-   * trimmed catalog snapshot (fixtures/catalog/ doesn't exist yet, issue #2
-   * is unmerged). */
-  illustrative: true;
+  /** True for hand-written illustrative fixtures (fixtures/pending/*.json,
+   * not a trimmed catalog snapshot). False for a real live-mode proposal
+   * (issue #7's lib/livePending.ts adapts SQLite pending rows to this same
+   * shape for the shared list/detail UI). */
+  illustrative: boolean;
   note: string;
   createdAt: string;
 }
