@@ -71,6 +71,36 @@ describe("parseArgs", () => {
     const result = parseArgs(["report", "--help"]);
     expect(result.help).toBe(true);
   });
+
+  it("parses explain's positional slug and --json/--snapshot/--model", () => {
+    const r = parseArgs([
+      "explain",
+      "GMAIL_SEND_EMAIL",
+      "--snapshot",
+      "fixtures/catalog/trimmed",
+      "--model",
+      "claude-opus-5",
+      "--json",
+    ]);
+    expect(r).toMatchObject({
+      command: "explain",
+      slug: "GMAIL_SEND_EMAIL",
+      snapshot: "fixtures/catalog/trimmed",
+      model: "claude-opus-5",
+      json: true,
+    });
+  });
+
+  it("leaves explain's slug null when none is given", () => {
+    const r = parseArgs(["explain", "--json"]);
+    expect(r.slug).toBeNull();
+    expect(r.json).toBe(true);
+  });
+
+  it("does not treat other commands' stray positionals as a slug", () => {
+    const r = parseArgs(["fetch", "stray"]);
+    expect(r.slug).toBeNull();
+  });
 });
 
 describe("helpText", () => {
@@ -80,13 +110,14 @@ describe("helpText", () => {
     expect(text).toContain("classify");
     expect(text).toContain("report");
     expect(text).toContain("all");
+    expect(text).toContain("explain");
   });
 });
 
 describe("buildProgram", () => {
   it("registers stub commands that report not implemented", async () => {
     const program = buildProgram();
-    expect(program.map((c) => c.name)).toEqual(["fetch", "classify", "report", "all"]);
+    expect(program.map((c) => c.name)).toEqual(["fetch", "classify", "report", "all", "explain"]);
     for (const command of program) {
       expect((await command.run({} as never)).output).toBe(`${command.name}: not implemented`);
     }
