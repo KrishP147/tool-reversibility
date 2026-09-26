@@ -77,7 +77,8 @@ export async function allCommand(
 
   // D33: rules only, never the LLM. Offline pins the snapshot explicitly so
   // resolveSnapshotDir can't pick up a local (multi-hundred-MB) dated one.
-  const snapshot = args.snapshot ?? (args.offline ? TRIMMED_SNAPSHOT : null);
+  // Online, `--out` is where fetch just wrote, so classify/report read it.
+  const snapshot = args.snapshot ?? (args.offline ? TRIMMED_SNAPSHOT : args.out);
 
   log("all: classify --rules");
   const classifyRes = await runClassify({

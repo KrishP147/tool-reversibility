@@ -218,4 +218,22 @@ describe("allCommand", () => {
     });
     expect(classifyArgs).toMatchObject({ snapshot: "fixtures/catalog/custom" });
   });
+  it("online --out <dir> points classify and report at the fetched snapshot", async () => {
+    const snaps: (string | null)[] = [];
+    await allCommand(parseArgs(["all", "--out", "fixtures/catalog/mine"]), {
+      repoRoot: root,
+      log: () => {},
+      runFetch: ok("FETCH_OK"),
+      runClassify: async (a) => {
+        snaps.push(a.snapshot);
+        return { output: "CLASSIFY_OK", exitCode: 0 };
+      },
+      runReport: async (a, d) => {
+        snaps.push(a.snapshot);
+        expect(d).toEqual({});
+        return { output: "REPORT_OK", exitCode: 0 };
+      },
+    });
+    expect(snaps).toEqual(["fixtures/catalog/mine", "fixtures/catalog/mine"]);
+  });
 });
