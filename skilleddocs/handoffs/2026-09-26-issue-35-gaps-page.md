@@ -87,6 +87,52 @@ Task is **complete**, not partial/blocked. No deviations from the issue's checkl
 design choices noted above (all within the issue's stated ownership and constraints). No new
 ideas/innovations surfaced beyond what's captured in the design notes above.
 
+## Round 2 (2026-09-26, manager-verified review finding)
+
+Fixed a review finding: 21 of the 50 `topGaps.rows` slugs in `reports/report.json` are not in
+`tools[]` (`tools[]` only holds the 8 EC apps + pending slugs). That was breaking
+`/gaps/[slug]` for 21 of the 50 links on `/gaps` (404 via `getGapDetail` → `not-found`) and
+showing tier `"unknown (derived)"` on the list page for those rows.
+
+Fix, in `apps/inbox/lib/gaps.ts`:
+- `getGapDetail`: when a slug isn't in `tools[]` but is a `topGaps.rows` entry, build an `"ok"`
+  detail from the row alone — `hints` from `row.tags` filtered to real hint names (a new
+  `HINT_TAG_NAMES` set: `readOnlyHint`/`destructiveHint`/`idempotentHint`/`openWorldHint`/
+  `createHint`/`updateHint`/`important` — matches `tools[].hints` keys exactly; everything else
+  in `tags` is a toolkit-specific category tag, e.g. `email`/`repos`/`admin.users`, and is
+  dropped), `tier`/`tierSource` left `null` (never invented), `agree` derived the same way
+  `packages/audit/src/report.ts` does (`llmClass !== null && llmClass === ruleClass`), and a new
+  `partial: true` flag. Still `"not-found"` when the slug is in neither.
+- `getGapsSummary`: same fallback for `topGaps` table rows — `tier`/`tierSource: null` instead of
+  `"unknown"`/`"derived"`, `hints` from `row.tags`.
+- `GapsTableRow.tier`/`tierSource` and `GapDetail.tier`/`tierSource` widened to `string | null`.
+- `GapsTable.tsx`: null tier renders `"—"` alone (no `tierSource` parens).
+- `GapDetail.tsx`: null tier renders `"— (not in report's tools[] slice)"`; an amber
+  `data-testid="gaps-partial-note"` banner appears when `detail.partial` is set.
+
+Tests added: `lib/gaps.test.ts` (fallback row in `getGapsSummary`'s topGaps table; 3 new
+`getGapDetail` cases — fallback ok/partial, `destructiveHint` tag suppressing `singleGap`,
+still-not-found for a slug in neither), `GapsTable.test.tsx` (null-tier row), `GapDetail.test.tsx`
+(partial note present/absent).
+
+Sanity check (not committed, one-off `tsx` script): ran `getGapDetail` against every one of the
+real `reports/report.json`'s 50 `topGaps.rows` slugs — 29 resolve fully via `tools[]`, 21 via the
+new fallback, 0 `not-found`.
+
+Verification: `pnpm --filter inbox test` → 22 files / 100 tests pass (94 + 6 new).
+`pnpm --filter inbox lint` clean. `pnpm --filter inbox build` (no env) succeeds, `/gaps` and
+`/gaps/[slug]` still dynamic (ƒ). `pnpm exec prettier --check --end-of-line auto` on all 6
+changed files passes (one file needed `--write` first).
+
+Commits (on top of the 5 from round 1, still on `krish/issue-35`):
+1. `8527adf` fix(inbox): getGapDetail/getGapsSummary fall back for slugs missing from tools[]
+2. `399fcfb` fix(inbox): GapsTable renders a dash for rows with no tier
+3. `483b43c` fix(inbox): GapDetail shows a partial-data note for fallback slugs
+
+Scope: only `apps/inbox/lib/gaps.ts`(+test) and `apps/inbox/app/gaps/**` touched, per this
+round's brief. Task complete, not partial/blocked. No board/label exists for issue #35 (see
+round 1 notes above) — nothing to move.
+
 ## Suggested skills for the next session
 
 - None needed to pick up remaining work — it's a single manual step (run the screenshot script,
