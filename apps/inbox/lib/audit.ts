@@ -58,9 +58,11 @@ export function hashPayload(payload: unknown): string {
 
 /** apps/inbox/.data — the Next.js process's cwd is apps/inbox itself
  * (repoRoot.ts), so this needs no repo-root walk. Callers (and tests) may
- * inject a different directory. */
+ * inject a different directory. INBOX_AUDIT_DIR overrides this (used by
+ * scripts/screenshots.ts to isolate its audit writes to a temp dir instead
+ * of apps/inbox/.data). */
 export function defaultAuditDir(): string {
-  return path.join(process.cwd(), ".data");
+  return process.env.INBOX_AUDIT_DIR ?? path.join(process.cwd(), ".data");
 }
 
 function auditLogPath(auditDir: string): string {
