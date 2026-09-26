@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { allCommand } from "./allCommand.js";
 import { classifyCommand } from "./classifyCommand.js";
+import { explainCommand } from "./explainCommand.js";
 import { fetchCommand } from "./fetchCommand.js";
 import { reportCommand } from "./reportCommand.js";
 import { buildProgram, helpText, parseArgs } from "./program.js";
@@ -18,6 +19,7 @@ async function main(argv: string[]): Promise<void> {
     classify: (a) => classifyCommand(a),
     report: (a) => reportCommand(a),
     all: (a) => allCommand(a),
+    explain: (a) => explainCommand(a),
   });
   const command = program.find((c) => c.name === args.command);
   if (!command) {

@@ -3,7 +3,7 @@
  * side-effect-free so it can be unit-tested without spawning a process.
  */
 
-export const COMMANDS = ["fetch", "classify", "report", "all"] as const;
+export const COMMANDS = ["fetch", "classify", "report", "all", "explain"] as const;
 export type Command = (typeof COMMANDS)[number];
 
 export interface ParsedArgs {
@@ -27,6 +27,10 @@ export interface ParsedArgs {
   snapshot: string | null;
   /** classify: send deprecated tools to the LLM too. */
   includeDeprecated: boolean;
+  /** explain: tool slug, positional (e.g. `audit explain GMAIL_SEND_EMAIL`). */
+  slug: string | null;
+  /** explain: emit JSON instead of the plain-text block. */
+  json: boolean;
 }
 
 function isCommand(value: string): value is Command {
@@ -53,6 +57,8 @@ export function parseArgs(argv: string[]): ParsedArgs {
     model: null,
     snapshot: null,
     includeDeprecated: false,
+    slug: null,
+    json: false,
   };
 
   // `pnpm <script> -- <args>` (and `npm run` before it) forwards the literal
@@ -83,6 +89,8 @@ export function parseArgs(argv: string[]): ParsedArgs {
       result.live = true;
     } else if (arg === "--include-deprecated") {
       result.includeDeprecated = true;
+    } else if (arg === "--json") {
+      result.json = true;
     } else if (arg === "--model" || arg === "--snapshot") {
       const value = rest[i + 1];
       if (value && !value.startsWith("--")) {
@@ -111,6 +119,14 @@ export function parseArgs(argv: string[]): ParsedArgs {
           .filter(Boolean);
         i += 1;
       }
+    } else if (
+      arg !== undefined &&
+      result.command === "explain" &&
+      result.slug === null &&
+      !arg.startsWith("--")
+    ) {
+      // explain's only positional: the tool slug (e.g. `explain GMAIL_SEND_EMAIL`).
+      result.slug = arg;
     }
   }
 
@@ -131,6 +147,10 @@ export function helpText(): string {
     "  report     Build the stamped REPORT.md / report.json",
     "  all        fetch -> classify --rules -> report, stopping at the first",
     "             non-zero exit. Never runs the LLM; --live/--llm exit 2.",
+    "  explain    Explain one tool by slug: hints, derived tier, rule verdict,",
+    "             LLM cache state, GAP flags, spot-check label. Reads the local",
+    "             snapshot + on-disk LLM cache only, never the network/API.",
+    "             Usage: audit explain <SLUG>",
     "",
     "Options:",
     "  --toolkits <a,b,c>  Limit to specific toolkit slugs",
@@ -145,9 +165,10 @@ export function helpText(): string {
     "  --llm               classify: run the LLM classifier (neither flag = both)",
     "  --live              classify: submit uncached tools to the paid Batches API",
     "                      (needs ANTHROPIC_API_KEY and the user's approval of the dry-run cost)",
-    "  --model <id>        classify/report: model id (default $CLASSIFIER_MODEL, else claude-sonnet-5)",
-    "  --snapshot <dir>    classify/report: snapshot dir (default latest fixtures/catalog/<date>, else trimmed)",
+    "  --model <id>        classify/report/explain: model id (default $CLASSIFIER_MODEL, else claude-sonnet-5)",
+    "  --snapshot <dir>    classify/report/explain: snapshot dir (default latest fixtures/catalog/<date>, else trimmed)",
     "  --include-deprecated  classify: also send deprecated tools to the LLM",
+    "  --json              explain: emit the same data as JSON instead of plain text",
     "  -h, --help          Show this help",
   ].join("\n");
 }
