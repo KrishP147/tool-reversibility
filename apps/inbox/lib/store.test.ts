@@ -31,7 +31,10 @@ afterEach(() => {
 describe("store", () => {
   it("creates the db file lazily on first use, not just from getDb()", () => {
     expect(existsSync(dbPath)).toBe(false);
-    insertPending({ slug: "GMAIL_SEND_EMAIL", toolkitSlug: "gmail", payload: { to: "a@b.com" } }, dbPath);
+    insertPending(
+      { slug: "GMAIL_SEND_EMAIL", toolkitSlug: "gmail", payload: { to: "a@b.com" } },
+      dbPath,
+    );
     expect(existsSync(dbPath)).toBe(true);
   });
 
@@ -60,7 +63,12 @@ describe("store", () => {
     expect(getPending(id, dbPath)?.status).toBe("approved");
 
     const auditRow = insertAudit(
-      { actionId: id, slug: "GMAIL_SEND_EMAIL", decision: "approve", payload: { to: "edited@b.com" } },
+      {
+        actionId: id,
+        slug: "GMAIL_SEND_EMAIL",
+        decision: "approve",
+        payload: { to: "edited@b.com" },
+      },
       dbPath,
     );
     expect(auditRow.actionId).toBe(id);
@@ -68,7 +76,11 @@ describe("store", () => {
 
     const audits = listAudit(dbPath);
     expect(audits).toHaveLength(1);
-    expect(audits[0]).toMatchObject({ actionId: id, slug: "GMAIL_SEND_EMAIL", decision: "approve" });
+    expect(audits[0]).toMatchObject({
+      actionId: id,
+      slug: "GMAIL_SEND_EMAIL",
+      decision: "approve",
+    });
   });
 
   it("keeps rows for a second db path separate from the first", () => {

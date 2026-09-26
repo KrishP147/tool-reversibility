@@ -49,7 +49,11 @@ describe("loadLivePendingActions", () => {
 
     expect(result.error).toBeUndefined();
     expect(result.actions).toHaveLength(1);
-    expect(result.actions[0]).toMatchObject({ id: "live-1", slug: "GMAIL_SEND_EMAIL", illustrative: false });
+    expect(result.actions[0]).toMatchObject({
+      id: "live-1",
+      slug: "GMAIL_SEND_EMAIL",
+      illustrative: false,
+    });
   });
 
   it("returns {actions: [], error} when the live store throws, never throwing itself", async () => {
