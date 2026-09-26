@@ -1,5 +1,5 @@
 import { type ChildProcess, spawn, spawnSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, statSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, statSync } from "node:fs";
 import http from "node:http";
 import net from "node:net";
 import { tmpdir } from "node:os";
@@ -184,6 +184,11 @@ async function main() {
   } finally {
     console.log("Stopping inbox server...");
     killServer(server);
+    try {
+      rmSync(auditDir, { recursive: true, force: true });
+    } catch {
+      // best effort: a lingering handle on Windows must not fail the run
+    }
   }
 
   console.log("Done.");
