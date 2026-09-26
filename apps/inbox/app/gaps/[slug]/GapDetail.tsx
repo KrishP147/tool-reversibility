@@ -21,6 +21,16 @@ export function GapDetail({ detail }: { detail: GapDetailData }) {
         <p className="text-sm text-gray-500">{detail.toolkit}</p>
       </div>
 
+      {detail.partial && (
+        <p
+          data-testid="gaps-partial-note"
+          className="rounded border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-800"
+        >
+          This slug is in the top-50 gaps table but not in the report&apos;s <code>tools[]</code>{" "}
+          slice, so only the fields the gaps table itself carries are shown below.
+        </p>
+      )}
+
       <section>
         <h2 className="text-xs font-medium uppercase text-gray-500">Hints</h2>
         {hintEntries.length > 0 ? (
@@ -39,7 +49,13 @@ export function GapDetail({ detail }: { detail: GapDetailData }) {
       <section>
         <h2 className="text-xs font-medium uppercase text-gray-500">Derived tier</h2>
         <p className="text-sm">
-          {detail.tier} <span className="text-xs text-gray-500">({detail.tierSource})</span>
+          {detail.tier !== null ? (
+            <>
+              {detail.tier} <span className="text-xs text-gray-500">({detail.tierSource})</span>
+            </>
+          ) : (
+            "— (not in report's tools[] slice)"
+          )}
         </p>
       </section>
 
