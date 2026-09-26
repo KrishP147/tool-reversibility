@@ -2,7 +2,7 @@ import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { hashPayload, readAuditLog, recordDecision } from "./audit";
+import { defaultAuditDir, hashPayload, readAuditLog, recordDecision } from "./audit";
 
 let dir: string;
 
@@ -107,5 +107,29 @@ describe("hashPayload", () => {
 describe("readAuditLog", () => {
   it("returns [] when the log doesn't exist", () => {
     expect(readAuditLog(path.join(dir, "nope"))).toEqual([]);
+  });
+});
+
+describe("defaultAuditDir", () => {
+  it("uses INBOX_AUDIT_DIR when set", () => {
+    const prev = process.env.INBOX_AUDIT_DIR;
+    try {
+      process.env.INBOX_AUDIT_DIR = dir;
+      expect(defaultAuditDir()).toBe(dir);
+    } finally {
+      if (prev === undefined) delete process.env.INBOX_AUDIT_DIR;
+      else process.env.INBOX_AUDIT_DIR = prev;
+    }
+  });
+
+  it("falls back to <cwd>/.data when unset", () => {
+    const prev = process.env.INBOX_AUDIT_DIR;
+    try {
+      delete process.env.INBOX_AUDIT_DIR;
+      expect(defaultAuditDir()).toBe(path.join(process.cwd(), ".data"));
+    } finally {
+      if (prev === undefined) delete process.env.INBOX_AUDIT_DIR;
+      else process.env.INBOX_AUDIT_DIR = prev;
+    }
   });
 });
