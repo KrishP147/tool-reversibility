@@ -25,13 +25,11 @@ inbox reads:
 - `<repoRoot>/reports/report.json` — the stamped classifier report from issue #5's
   `packages/audit` pipeline, if it exists.
 
-**Until issue #5 ships a real report**, the app falls back to `lib/stub/report.stub.json`
-(`stub: true`, no invented Composio numbers) and the list page shows a banner saying so. Issue #5
-must either conform to the `Report`/`ToolReport` shape in `lib/report.ts`, or that file gets
-updated to match — whichever lands second reconciles with the other.
+`reports/report.json` is committed (rules-only until the live LLM run). If it is missing, the app
+falls back to `lib/stub/report.stub.json` (`stub: true`, no invented Composio numbers) and the
+list page shows a banner saying so. The shape is `Report`/`ToolReport` in `lib/report.ts`.
 
-Live mode (`INBOX_MODE=live`, a real Composio session) is issue #7's job; see
-[Live mode](#live-mode) below and the root README's "Run on Replit" section for how its secrets
+Live mode (`INBOX_MODE=live`, a real Composio session): see [Live mode](#live-mode) below and the root README's "Run on Replit" section for how its secrets
 are set on a deployment.
 
 ## Audit log
