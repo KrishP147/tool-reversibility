@@ -2,7 +2,7 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { ApprovalRequiredError } from "./live";
+import { ApprovalRequiredError, makeApprovalGuard } from "./live";
 import { __closeDbForTests, listPending } from "./store";
 import {
   DEMO_PARAMS,
@@ -19,7 +19,8 @@ let dbPath: string;
 
 beforeEach(() => {
   tmp = mkdtempSync(path.join(tmpdir(), "demo-agent-"));
-  dbPath = path.join(tmp, ".data", "live.db");
+  // Plain path, no `.data/live.db` suffix (issue #31: any path works).
+  dbPath = path.join(tmp, "demo.db");
 });
 
 afterEach(() => {
@@ -81,9 +82,33 @@ describe("runDemo (mock session, real approvalGuard)", () => {
     ).rejects.toThrow(/executed without approval/);
   });
 
-  it("rejects a db path approvalGuard cannot write to", async () => {
-    await expect(runDemo({ dbPath: path.join(tmp, "other.db") })).rejects.toThrow(
-      /\.data\/live\.db/,
-    );
+  it("accepts a plain db path with no .data/live.db suffix", async () => {
+    const { row } = await runDemo({ dbPath: path.join(tmp, "any.db") });
+    expect(row.status).toBe("pending");
+  });
+});
+
+describe("makeApprovalGuard dbPath (issue #31, D49)", () => {
+  it("writes the pending row to dbPath, not to the default store path", async () => {
+    const cwdSpy = vi.spyOn(process, "cwd").mockReturnValue(tmp);
+    try {
+      const customDbPath = path.join(tmp, "custom.db");
+      const defaultDbPath = path.join(tmp, ".data", "live.db");
+      const guard = makeApprovalGuard({ dbPath: customDbPath });
+
+      await expect(
+        guard({
+          toolSlug: DEMO_TOOL_SLUG,
+          toolkitSlug: DEMO_TOOLKIT_SLUG,
+          sessionId: "s-1",
+          params: { a: 1 },
+        }),
+      ).rejects.toBeInstanceOf(ApprovalRequiredError);
+
+      expect(listPending(customDbPath)).toHaveLength(1);
+      expect(listPending(defaultDbPath)).toHaveLength(0);
+    } finally {
+      cwdSpy.mockRestore();
+    }
   });
 });
