@@ -1,14 +1,14 @@
-import { mkdirSync } from "node:fs";
 import path from "node:path";
-import { ApprovalRequiredError, approvalGuard, type BeforeExecuteContext } from "../lib/live";
+import { ApprovalRequiredError, makeApprovalGuard, type BeforeExecuteContext } from "../lib/live";
 import type { LivePendingRow } from "../lib/store";
 
 /**
  * `pnpm demo:agent` (issue #25): a scripted, no-LLM "agent" that gets its
- * tools from a session with `approvalGuard` as the `beforeExecute` modifier,
- * then tries to send an email. The guard queues a pending row in the live
- * store and throws `ApprovalRequiredError`, so the send never runs; the row
- * then shows up in `INBOX_MODE=live pnpm --filter inbox dev`.
+ * tools from a session with `makeApprovalGuard({ dbPath })` (issue #31,
+ * D49) as the `beforeExecute` modifier, then tries to send an email. The
+ * guard queues a pending row in the live store and throws
+ * `ApprovalRequiredError`, so the send never runs; the row then shows up in
+ * `INBOX_MODE=live pnpm --filter inbox dev`.
  *
  * Intercept shape, pinned to @composio/core 0.21.0 (read from
  * node_modules/@composio/core/dist/index.mjs; re-read before any bump):
@@ -141,9 +141,9 @@ export async function createLiveSession(
 }
 
 export interface RunDemoOptions {
-  /** Live store file. approvalGuard (lib/live.ts) always writes to
-   * `<cwd>/.data/live.db` (store.ts's defaultStorePath), so this must end in
-   * `.data/live.db`; runDemo chdirs to its grandparent for the call. */
+  /** Live store file, passed straight through to `makeApprovalGuard({
+   * dbPath })` (issue #31, D49) — any path works, no cwd coupling. Defaults
+   * to `<cwd>/.data/live.db`. */
   dbPath?: string;
   session?: DemoSession;
   /** The modifier under test; defaults to the real approvalGuard. */
@@ -161,41 +161,28 @@ export interface RunDemoResult {
 export async function runDemo(options: RunDemoOptions = {}): Promise<RunDemoResult> {
   const log = options.log ?? (() => {});
   const dbPath = path.resolve(options.dbPath ?? path.join(process.cwd(), ".data", "live.db"));
-  if (path.basename(dbPath) !== "live.db" || path.basename(path.dirname(dbPath)) !== ".data") {
-    throw new Error(
-      `Demo db must end in .data/live.db (approvalGuard writes to <cwd>/.data/live.db): ${dbPath}`,
-    );
-  }
 
   const session = options.session ?? createMockSession();
-  const beforeExecute = options.beforeExecute ?? (approvalGuard as BeforeExecute);
+  const beforeExecute = options.beforeExecute ?? (makeApprovalGuard({ dbPath }) as BeforeExecute);
 
-  const root = path.dirname(path.dirname(dbPath));
-  mkdirSync(root, { recursive: true });
-  const originalCwd = process.cwd();
-  process.chdir(root);
+  // 0.21.0 shape: modifiers flat in the first argument (see header).
+  const tools = await session.tools({ beforeExecute });
+  const tool = tools.find((t) => t.slug === DEMO_TOOL_SLUG);
+  if (!tool) throw new Error(`Session exposed no ${DEMO_TOOL_SLUG} tool`);
+
+  log(`agent: calling ${DEMO_TOOL_SLUG} ${JSON.stringify(DEMO_PARAMS)}`);
   try {
-    // 0.21.0 shape: modifiers flat in the first argument (see header).
-    const tools = await session.tools({ beforeExecute });
-    const tool = tools.find((t) => t.slug === DEMO_TOOL_SLUG);
-    if (!tool) throw new Error(`Session exposed no ${DEMO_TOOL_SLUG} tool`);
-
-    log(`agent: calling ${DEMO_TOOL_SLUG} ${JSON.stringify(DEMO_PARAMS)}`);
-    try {
-      await tool.execute(DEMO_PARAMS);
-    } catch (err) {
-      if (!(err instanceof ApprovalRequiredError)) throw err;
-      const { getPending } = await import("../lib/store");
-      const row = getPending(err.pendingId, dbPath);
-      if (!row) throw new Error(`Guard threw but no pending row ${err.pendingId} in ${dbPath}`);
-      log(`guard: ${err.message}`);
-      log(`store: pending row ${row.id} (${row.status}) in ${dbPath}`);
-      return { error: err, row, dbPath };
-    }
-    throw new Error(`${DEMO_TOOL_SLUG} executed without approval — the guard did not run`);
-  } finally {
-    process.chdir(originalCwd);
+    await tool.execute(DEMO_PARAMS);
+  } catch (err) {
+    if (!(err instanceof ApprovalRequiredError)) throw err;
+    const { getPending } = await import("../lib/store");
+    const row = getPending(err.pendingId, dbPath);
+    if (!row) throw new Error(`Guard threw but no pending row ${err.pendingId} in ${dbPath}`);
+    log(`guard: ${err.message}`);
+    log(`store: pending row ${row.id} (${row.status}) in ${dbPath}`);
+    return { error: err, row, dbPath };
   }
+  throw new Error(`${DEMO_TOOL_SLUG} executed without approval — the guard did not run`);
 }
 
 function parseArgs(argv: string[]): { live: boolean; db?: string } {
@@ -207,8 +194,9 @@ function parseArgs(argv: string[]): { live: boolean; db?: string } {
 
 async function main(): Promise<void> {
   const { live, db } = parseArgs(process.argv.slice(2));
-  // pnpm runs this in apps/inbox; resolve a user-given path against where
-  // they invoked pnpm (INIT_CWD) so `--db ./x/.data/live.db` means what it says.
+  // pnpm runs this in apps/inbox; resolve a user-given path (any path works,
+  // issue #31) against where they invoked pnpm (INIT_CWD) so a relative
+  // `--db ./x/demo.db` means what it says.
   const dbPath = db ? path.resolve(process.env.INIT_CWD ?? process.cwd(), db) : undefined;
   const session = live ? await createLiveSession() : createMockSession();
   console.log(`demo:agent (${live ? "LIVE Composio session" : "mock session, no network"})`);
