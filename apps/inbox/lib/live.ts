@@ -26,7 +26,9 @@ import type { Composio as ComposioClass } from "@composio/core";
 export class ApprovalRequiredError extends Error {
   constructor(
     public readonly toolSlug: string,
+    public readonly toolkitSlug: string,
     public readonly pendingId: string,
+    public readonly params: Record<string, unknown>,
   ) {
     super(`Approval required for ${toolSlug} (queued as ${pendingId})`);
     this.name = "ApprovalRequiredError";
@@ -87,9 +89,9 @@ export interface BeforeExecuteContext {
 }
 
 /**
- * The `beforeExecute` modifier meant for `session.tools({ beforeExecute:
- * approvalGuard })` (plan.md's "intercept before execute"). Wired end to end
- * by the scripted, no-LLM demo agent (`pnpm demo:agent`,
+ * Builds the `beforeExecute` modifier meant for `session.tools({
+ * beforeExecute })` (flat, D47) (plan.md's "intercept before execute").
+ * Wired end to end by the scripted, no-LLM demo agent (`pnpm demo:agent`,
  * scripts/demoAgent.ts, issue #25): its default mock session mirrors
  * 0.21.0's `tools()` -> `executeSessionTool` order, and `--live` uses a real
  * session. The modifier only fires through an agentic provider's wrapped
@@ -98,18 +100,33 @@ export interface BeforeExecuteContext {
  * Client-side hook, not a server-side gate (root README Limitations). It
  * never lets a call through: it enqueues a pending row in the live store
  * and always throws.
+ *
+ * `dbPath` (issue #31, D49) lets a caller (the demo script) point the guard
+ * at a store file of its choosing; omitted, it falls through to `insertPending`'s
+ * own default (store.ts's `defaultStorePath()`, `<cwd>/.data/live.db`) so the
+ * web app — which uses the plain `approvalGuard` export below — is unchanged.
  */
-export async function approvalGuard(context: BeforeExecuteContext): Promise<never> {
-  const { insertPending } = await import("./store");
+export function makeApprovalGuard(
+  options: { dbPath?: string } = {},
+): (context: BeforeExecuteContext) => Promise<never> {
+  return async (context: BeforeExecuteContext): Promise<never> => {
+    const { insertPending } = await import("./store");
 
-  const id = insertPending({
-    slug: context.toolSlug,
-    toolkitSlug: context.toolkitSlug,
-    payload: context.params,
-  });
+    const id = insertPending(
+      {
+        slug: context.toolSlug,
+        toolkitSlug: context.toolkitSlug,
+        payload: context.params,
+      },
+      options.dbPath,
+    );
 
-  throw new ApprovalRequiredError(context.toolSlug, id);
+    throw new ApprovalRequiredError(context.toolSlug, context.toolkitSlug, id, context.params);
+  };
 }
+
+/** Default guard, writing to `<cwd>/.data/live.db` — what the web app uses. */
+export const approvalGuard = makeApprovalGuard();
 
 export interface ExecuteApprovedResult {
   ok: boolean;
