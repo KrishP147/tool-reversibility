@@ -7,7 +7,8 @@
     "start": "sh -c \"next start -H 0.0.0.0 -p ${PORT:-3000}\"",
     "lint": "eslint .",
     "test": "vitest run --passWithNoTests",
-    "build": "next build"
+    "build": "next build",
+    "screenshots": "tsx scripts/screenshots.ts"
   },
   "dependencies": {
     "@composio/core": "0.21.0",
@@ -23,6 +24,7 @@
     "@types/react-dom": "^19.0.2",
     "@vitejs/plugin-react": "^4.7.0",
     "jsdom": "^30.1.1",
+    "playwright": "^1.51.1",
     "postcss": "^8.4.49",
     "tailwindcss": "^4.0.0",
     "tsx": "^4.23.15",
