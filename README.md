@@ -159,6 +159,12 @@ Mock mode (`INBOX_MODE=mock`) is the default. It reads the pending actions in
 `reports/report.json` (rules-only until the live LLM run). Details:
 [apps/inbox/README.md](apps/inbox/README.md).
 
+`/gaps` is a read-only, server-rendered view of the same `reports/report.json`: the stamp, totals,
+the top single-classifier gaps table and a per-toolkit summary, each row linking to a
+`/gaps/[slug]` detail (issue #35).
+
+![Gaps page](docs/img/gaps.png)
+
 ### Live inbox (optional)
 
 ```sh
