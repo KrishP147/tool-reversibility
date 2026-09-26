@@ -38,7 +38,13 @@ export function GapsTable({ rows }: { rows: GapsTableRow[] }) {
               {row.hints.length > 0 ? row.hints.join(", ") : "(none)"}
             </td>
             <td className="pr-4 py-2">
-              {row.tier} <span className="text-xs text-gray-500">({row.tierSource})</span>
+              {row.tier !== null ? (
+                <>
+                  {row.tier} <span className="text-xs text-gray-500">({row.tierSource})</span>
+                </>
+              ) : (
+                <span title="Not in report's tools[] slice">&mdash;</span>
+              )}
             </td>
             <td className="py-2 text-xs text-gray-600">{row.reasons.join("; ")}</td>
           </tr>

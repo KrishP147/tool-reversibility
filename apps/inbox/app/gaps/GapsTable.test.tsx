@@ -38,4 +38,10 @@ describe("GapsTable", () => {
     render(<GapsTable rows={[{ ...row, hints: [] }]} />);
     expect(screen.getByText("(none)")).toBeTruthy();
   });
+
+  it("shows a dash, not a tierSource, when tier is null", () => {
+    render(<GapsTable rows={[{ ...row, tier: null, tierSource: null }]} />);
+    expect(screen.getByText("—")).toBeTruthy();
+    expect(screen.queryByText(/derived/)).toBeNull();
+  });
 });
