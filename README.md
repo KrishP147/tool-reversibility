@@ -67,6 +67,21 @@ pnpm i --frozen-lockfile
 pnpm audit:cli --help
 ```
 
+### Try it in 60 s, zero keys
+
+No `COMPOSIO_API_KEY`, no `ANTHROPIC_API_KEY`, no network:
+
+```sh
+pnpm i --frozen-lockfile
+pnpm audit:cli all --offline
+```
+
+`all --offline` skips fetch, runs `classify --rules` against the committed
+`fixtures/catalog/trimmed` fixture, then `report`. Output lands in `reports/offline/`
+(`REPORT.md`, `report.json`, `full/tools.csv`), which is gitignored — the committed
+`reports/REPORT.md` and `reports/report.json` are never touched. Pass `--out <dir>` to write
+somewhere else instead.
+
 **1. Fetch the catalog.** Needs `COMPOSIO_API_KEY` in `.env` at the repo root (see
 `.env.example`; never logged). Free-tier catalog GETs only.
 
@@ -98,13 +113,13 @@ per-tool CSV goes to `reports/full/tools.csv` (gitignored).
 
 **Current CLI state** (see `packages/audit/src/program.ts`, `classifyCommand.ts`):
 
-| command            | status                                                                                              |
-| ------------------ | --------------------------------------------------------------------------------------------------- |
-| `fetch`            | works (resumable, backoff on 429/5xx, REST fallback where the SDK rejects a payload)                |
-| `classify --llm`   | works: `--dry-run` cost gate, cache replay, `--live` Batches submission behind the key and approval |
-| `classify --rules` | works: rule classifier table (`rules.ts`) with derived tier; default `classify` runs rules then LLM |
-| `report`           | works: stamped `reports/REPORT.md` + `report.json`; rules-only until a live LLM pass (D31)          |
-| `all`              | prints `not implemented`                                                                            |
+| command            | status                                                                                                                                                      |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `fetch`            | works (resumable, backoff on 429/5xx, REST fallback where the SDK rejects a payload)                                                                        |
+| `classify --llm`   | works: `--dry-run` cost gate, cache replay, `--live` Batches submission behind the key and approval                                                         |
+| `classify --rules` | works: rule classifier table (`rules.ts`) with derived tier; default `classify` runs rules then LLM                                                         |
+| `report`           | works: stamped `reports/REPORT.md` + `report.json`; rules-only until a live LLM pass (D31)                                                                  |
+| `all`              | works: fetch -> `classify --rules` -> report, stops at the first failure; `--offline` skips fetch and writes to `reports/offline/`; `--live`/`--llm` exit 2 |
 
 ### Mock inbox (zero keys)
 
