@@ -2,15 +2,15 @@
 
 ## Title
 
-`[Bug]: getRawComposioTools throws ZodError for a whole toolkit when one tool's inputParameters isn't a strict JSON-schema object (8 toolkits: boolean/oneOf/allOf nodes)
+[Bug]: `getRawComposioTools` throws ZodError for a whole toolkit when one tool's inputParameters isn't a strict JSON-schema object (8 toolkits: boolean/oneOf/allOf nodes)
 
 ## Summary
 
-`@composio/core@0.21.0` (confirmed via `packages/audit/node_modules/@composio/core/package.json`).
+`@composio/core@0.21.0`.
 
 `Tools.getRawComposioTools({ toolkits })` runs every tool's `inputParameters` through `ToolSchema.parse` in `transformToolCases` (not `safeParse`). If one tool's `inputParameters` doesn't conform (boolean JSON-schema node, draft-04-style boolean keyword, top-level `oneOf`/`allOf` with no `type: "object"`), the whole call throws and no tools for that toolkit return. #3354/#3397 normalized *empty* `input_parameters`/`output_parameters` before strict validation, but left non-empty malformed schemas unchanged.
 
-Reproduced offline, no live calls, against a committed catalog snapshot (`packages/audit/scripts/sdk-schema-repro.ts`, re-parses stored REST tool JSON via `ToolSchema.safeParse`). 8 of 1562 toolkits fail:
+Reproduced offline by re-parsing stored REST tool JSON via `ToolSchema.safeParse`. 8 of 1562 toolkits fail:
 
 | Toolkit (fail/total) | Failing tool | zod path | Message |
 | --- | --- | --- | --- |
@@ -32,7 +32,7 @@ Throws `ZodError` at `inputParameters.type` before returning anything. Offline, 
 
 ## Expected vs actual
 
-Expected: tools returned, non-conforming per-tool schemas tolerated or skipped. Actual: entire toolkit call throws, for all 8 toolkits above.
+Expected: tools returned, non-conforming per-tool schemas tolerated or skipped. Actual: the whole call throws `ZodError` (all 8 toolkits fall back in our audit).
 
 ## Suggestion
 
