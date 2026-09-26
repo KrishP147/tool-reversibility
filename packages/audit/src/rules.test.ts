@@ -346,7 +346,11 @@ describe("classifyTool: issue #16 — missing verbs resolve fixture unknowns (D2
       "irreversible",
       "ABORT, description says queued/in progress",
     ],
-    ["GITHUB_REMOVE_TEAM_MEMBERSHIP", "irreversible", "REMOVE, description says irreversible"],
+    [
+      "GITHUB_REMOVE_TEAM_MEMBERSHIP",
+      "compensable",
+      "REMOVE, re-add/restore documented beats irreversible (D35)",
+    ],
     ["GOOGLECALENDAR_ACL_WATCH", "compensable", "WATCH verb"],
     ["GOOGLECALENDAR_EVENTS_WATCH", "compensable", "WATCH verb"],
     ["GOOGLECALENDAR_SETTINGS_WATCH", "compensable", "WATCH verb"],
@@ -388,10 +392,19 @@ describe("classifyTool: issue #16 — missing verbs resolve fixture unknowns (D2
     expect(result.reasons.some((r) => r.startsWith('desc:"'))).toBe(true);
   });
 
-  it("GITHUB_REMOVE_TEAM_MEMBERSHIP cites the REMOVE verb and the irreversible description evidence", () => {
+  it("GITHUB_REMOVE_TEAM_MEMBERSHIP cites the REMOVE verb and the restore evidence (D35)", () => {
     const result = classifyTool(fixture("GITHUB_REMOVE_TEAM_MEMBERSHIP"));
     expect(result.reasons).toContain("verb:REMOVE");
-    expect(result.reasons).toContain('desc:"irreversible"');
+    expect(result.reasons).toContain('desc:"restore"');
+  });
+
+  it("REMOVE/REVOKE with 'cannot be undone' and no re-add path stays irreversible (D35)", () => {
+    const result = classifyTool({
+      ...fixture("GITHUB_REMOVE_TEAM_MEMBERSHIP"),
+      description: "Removes the member. This cannot be undone.",
+    });
+    expect(result.class).toBe("irreversible");
+    expect(result.reasons).toContain('desc:"cannot be undone"');
   });
 
   it("NOTION_SEND_FILE_UPLOAD is compensable via updateHint+id-param, not a masked SEND verb", () => {

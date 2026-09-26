@@ -142,8 +142,8 @@ export function helpText(): string {
     "  --llm               classify: run the LLM classifier (neither flag = both)",
     "  --live              classify: submit uncached tools to the paid Batches API",
     "                      (needs ANTHROPIC_API_KEY and the user's approval of the dry-run cost)",
-    "  --model <id>        classify: model id (default $CLASSIFIER_MODEL, else claude-sonnet-5)",
-    "  --snapshot <dir>    classify: snapshot dir (default latest fixtures/catalog/<date>, else trimmed)",
+    "  --model <id>        classify/report: model id (default $CLASSIFIER_MODEL, else claude-sonnet-5)",
+    "  --snapshot <dir>    classify/report: snapshot dir (default latest fixtures/catalog/<date>, else trimmed)",
     "  --include-deprecated  classify: also send deprecated tools to the LLM",
     "  -h, --help          Show this help",
   ].join("\n");

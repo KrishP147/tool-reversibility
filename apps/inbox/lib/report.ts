@@ -30,12 +30,35 @@ export interface ToolReport {
   compensatingTool?: string;
 }
 
+export type LlmStatus = "live" | "recorded" | "pending";
+
+export interface ReportStamp {
+  date: string;
+  generatedAt: string;
+  commit: string;
+  dirty: boolean;
+  sdkVersion: string;
+  model: string;
+  llmStatus: LlmStatus;
+  promptVersion: string;
+  manifestSha256: string;
+  regenerate: string;
+}
+
 export interface Report {
   /** True when this report is the bundled placeholder, not a real audit run. */
   stub: boolean;
   /** Human-readable explanation shown in the UI when stub === true. */
   note?: string;
   generatedAt?: string;
+  /**
+   * LLM status of a real report (packages/audit, issue #5). Only "live" means
+   * llmClass is real model output; otherwise llmClass is "unknown" and agree
+   * is false.
+   */
+  llmStatus?: LlmStatus;
+  /** Stamp block of a real report (docs/stamping.md). */
+  stamp?: ReportStamp;
   tools: ToolReport[];
 }
 

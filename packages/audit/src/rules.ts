@@ -57,9 +57,24 @@ const READ_VERBS: ReadonlySet<string> = new Set([
  * REMOVE/REVOKE (#16/D27): default compensable (an add/grant inverse exists,
  * e.g. re-add the member, re-share the link), unless the description states
  * the removal itself is permanent/irreversible (reuses IRREVERSIBLE_KEYWORDS,
- * e.g. GITHUB_REMOVE_TEAM_MEMBERSHIP: "This action is irreversible").
+ * e.g. SLACK_REVOKE_FILE_PUBLIC_SHARING). D35: a documented re-add/restore
+ * path beats that keyword (D1: an inverse exists), e.g.
+ * GITHUB_REMOVE_TEAM_MEMBERSHIP: "irreversible — ... re-added ... to restore".
+ * Opposite of D26 on purpose: DELETE loses data, REMOVE/REVOKE loses a link.
  */
 const REMOVE_REVOKE_VERBS: ReadonlySet<string> = new Set(["REMOVE", "REVOKE"]);
+
+/**
+ * Re-add/restore evidence for REMOVE/REVOKE (D35). Narrower than
+ * RESTORE_KEYWORDS and positive-only: no "undo"/"trash", and "to restore" not
+ * bare "restore", so "cannot be undone"/"cannot be restored" never count.
+ */
+const REGRANT_KEYWORDS: DescKeyword[] = [
+  { stem: "to restore", label: "restore" },
+  { stem: "re-add", label: "re-add" },
+  { stem: "re-grant", label: "re-grant" },
+  { stem: "re-share", label: "re-share" },
+];
 
 /**
  * ABORT/CANCEL (#16/D27): stopping something not yet started is compensable
@@ -262,11 +277,20 @@ export function classifyTool(tool: SnapshotTool): ClassifierResult {
   for (const t of tokens) {
     if (REMOVE_REVOKE_VERBS.has(t)) {
       const irreversibleHit = findDescKeyword(description, IRREVERSIBLE_KEYWORDS);
-      if (irreversibleHit) {
+      const regrantHit = findDescKeyword(description, REGRANT_KEYWORDS);
+      if (irreversibleHit && !regrantHit) {
         return {
           class: "irreversible",
           confidence: 0.85,
           reasons: [`verb:${t}`, `desc:"${irreversibleHit}"`],
+        };
+      }
+      if (regrantHit) {
+        // D35: documented re-add/restore path wins over "irreversible" text.
+        return {
+          class: "compensable",
+          confidence: irreversibleHit ? 0.6 : 0.75,
+          reasons: [`verb:${t}`, `desc:"${regrantHit}"`],
         };
       }
       return { class: "compensable", confidence: 0.75, reasons: [`verb:${t}`] };
