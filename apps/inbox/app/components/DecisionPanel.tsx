@@ -5,6 +5,10 @@ import type { AuditDecision } from "../../lib/audit";
 
 export interface DecideResult {
   payloadHash: string;
+  /** Set when a live-mode "approve" recorded the decision but the real
+   * Composio execution failed (lib/live.ts never throws for this case) —
+   * shown alongside the confirmation, not as a silent success. */
+  error?: string;
 }
 
 export interface DecisionPanelProps {
@@ -19,7 +23,7 @@ export interface DecisionPanelProps {
 type Mode = "view" | "editing";
 type Feedback =
   | { kind: "pending" }
-  | { kind: "done"; decision: AuditDecision; hash: string }
+  | { kind: "done"; decision: AuditDecision; hash: string; liveError?: string }
   | { kind: "error"; message: string };
 
 /**
@@ -36,7 +40,7 @@ export function DecisionPanel({ payload, decide }: DecisionPanelProps) {
     setFeedback({ kind: "pending" });
     try {
       const result = await decide(decision, decidedPayload);
-      setFeedback({ kind: "done", decision, hash: result.payloadHash });
+      setFeedback({ kind: "done", decision, hash: result.payloadHash, liveError: result.error });
     } catch (err) {
       setFeedback({
         kind: "error",
@@ -58,10 +62,17 @@ export function DecisionPanel({ payload, decide }: DecisionPanelProps) {
 
   if (feedback?.kind === "done") {
     return (
-      <p data-testid="decision-confirmation" className="text-sm text-green-700">
-        Recorded: {feedback.decision}. Payload hash:{" "}
-        <span className="font-mono">{feedback.hash}</span>
-      </p>
+      <div className="space-y-1">
+        <p data-testid="decision-confirmation" className="text-sm text-green-700">
+          Recorded: {feedback.decision}. Payload hash:{" "}
+          <span className="font-mono">{feedback.hash}</span>
+        </p>
+        {feedback.liveError && (
+          <p data-testid="decision-live-error" role="alert" className="text-sm text-red-700">
+            Live execution failed: {feedback.liveError}
+          </p>
+        )}
+      </div>
     );
   }
 
