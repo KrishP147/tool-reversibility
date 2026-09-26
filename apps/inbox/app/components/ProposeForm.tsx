@@ -10,7 +10,11 @@ export interface ProposeFormProps {
   /** Server action from app/actions/propose.ts in the real page; a stub in
    * tests. Kept as a prop (same pattern as DecisionPanel's `decide`) so this
    * component needs no router/server context to render in RTL. */
-  propose: (input: { slug: string; toolkitSlug: string; payload: unknown }) => Promise<ProposeResult>;
+  propose: (input: {
+    slug: string;
+    toolkitSlug: string;
+    payload: unknown;
+  }) => Promise<ProposeResult>;
 }
 
 type Feedback =
@@ -71,8 +75,8 @@ export function ProposeForm({ propose }: ProposeFormProps) {
     >
       <h2 className="font-medium">Propose a live action</h2>
       <p className="text-xs text-gray-600">
-        No agent runs here: this form is the pending-item creator for live mode. Approve executes
-        it for real, through the Composio session; Reject and Edit only log the decision.
+        No agent runs here: this form is the pending-item creator for live mode. Approve executes it
+        for real, through the Composio session; Reject and Edit only log the decision.
       </p>
 
       <label className="block">
@@ -119,8 +123,7 @@ export function ProposeForm({ propose }: ProposeFormProps) {
 
       {feedback.kind === "done" && (
         <p data-testid="propose-confirmation" className="text-green-700">
-          Queued as <span className="font-mono">{feedback.id}</span>. Refresh to see it in the
-          list.
+          Queued as <span className="font-mono">{feedback.id}</span>. Refresh to see it in the list.
         </p>
       )}
       {feedback.kind === "error" && (

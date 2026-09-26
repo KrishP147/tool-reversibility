@@ -73,7 +73,9 @@ describe("decideOnAction — live branch", () => {
       updatePendingPayload: vi.fn(),
     }));
     vi.doMock(LIVE_SPECIFIER, () => ({
-      executeApproved: vi.fn().mockResolvedValue({ ok: false, error: "composio boom", payloadHash: "hash-fail" }),
+      executeApproved: vi
+        .fn()
+        .mockResolvedValue({ ok: false, error: "composio boom", payloadHash: "hash-fail" }),
     }));
 
     const { decideOnAction } = await import("./actions");

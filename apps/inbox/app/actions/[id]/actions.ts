@@ -62,9 +62,8 @@ export async function decideOnAction(
     throw new Error(`Unknown pending action: ${id}`);
   }
 
-  const { getPending, insertAudit, markPendingStatus, updatePendingPayload } = await import(
-    "../../../lib/store"
-  );
+  const { getPending, insertAudit, markPendingStatus, updatePendingPayload } =
+    await import("../../../lib/store");
   const row = getPending(id);
   if (!row) {
     throw new Error(`Unknown pending action: ${id}`);
@@ -77,7 +76,12 @@ export async function decideOnAction(
   }
 
   if (decision === "reject") {
-    const entry = insertAudit({ actionId: id, slug: row.slug, decision: "reject", payload: row.payload });
+    const entry = insertAudit({
+      actionId: id,
+      slug: row.slug,
+      decision: "reject",
+      payload: row.payload,
+    });
     markPendingStatus(id, "rejected");
     return { payloadHash: entry.payloadHash };
   }
@@ -86,6 +90,11 @@ export async function decideOnAction(
   // execute anything (plan.md §3b: Edit only logs).
   const editedPayload = asPayloadObject(payload);
   updatePendingPayload(id, editedPayload);
-  const entry = insertAudit({ actionId: id, slug: row.slug, decision: "edit", payload: editedPayload });
+  const entry = insertAudit({
+    actionId: id,
+    slug: row.slug,
+    decision: "edit",
+    payload: editedPayload,
+  });
   return { payloadHash: entry.payloadHash };
 }

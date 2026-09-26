@@ -160,7 +160,15 @@ export function insertPending(input: InsertPendingInput, dbPath?: string): strin
       `INSERT INTO pending (id, slug, toolkitSlug, kind, payload, status, createdAt)
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
     )
-    .run(row.id, row.slug, row.toolkitSlug, row.kind, JSON.stringify(row.payload), row.status, row.createdAt);
+    .run(
+      row.id,
+      row.slug,
+      row.toolkitSlug,
+      row.kind,
+      JSON.stringify(row.payload),
+      row.status,
+      row.createdAt,
+    );
 
   return id;
 }
@@ -175,8 +183,7 @@ export function listPending(dbPath?: string): LivePendingRow[] {
 
 export function getPending(id: string, dbPath?: string): LivePendingRow | undefined {
   const row = getDb(dbPath).prepare(`SELECT * FROM pending WHERE id = ?`).get(id) as
-    | PendingRowRaw
-    | undefined;
+    PendingRowRaw | undefined;
   return row ? toPendingRow(row) : undefined;
 }
 
@@ -223,7 +230,9 @@ export function insertAudit(input: InsertAuditInput, dbPath?: string): LiveAudit
 }
 
 export function listAudit(dbPath?: string): LiveAuditRow[] {
-  const rows = getDb(dbPath).prepare(`SELECT * FROM audit ORDER BY id ASC`).all() as unknown as Array<{
+  const rows = getDb(dbPath)
+    .prepare(`SELECT * FROM audit ORDER BY id ASC`)
+    .all() as unknown as Array<{
     id: number;
     actionId: string;
     slug: string;
