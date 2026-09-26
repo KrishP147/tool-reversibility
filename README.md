@@ -139,6 +139,9 @@ in `fixtures/labels/spotcheck.json`. An unknown slug exits 2 and lists the 5 clo
 | `all`              | works: fetch -> `classify --rules` -> report, stops at the first failure; `--offline` skips fetch and writes to `reports/offline/`; `--live`/`--llm` exit 2 |
 | `explain <slug>`   | works: hints/tier/rule/LLM-cache-state/GAP for one tool, offline (cache + snapshot only); `--json` for machine-readable output                              |
 
+Online `all` (no `--offline`) regenerates the committed `reports/REPORT.md` and `report.json` by
+design; there `--out` is the fetch snapshot dir, not the report dir (plan.md D45).
+
 ### Mock inbox (zero keys)
 
 ```sh
