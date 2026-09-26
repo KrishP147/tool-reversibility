@@ -111,6 +111,23 @@ catalog. LLM columns come from the cache only, and only `live` entries count: un
 live pass exists, every LLM-dependent number is `[[pending live run]]` (plan.md D31). The full
 per-tool CSV goes to `reports/full/tools.csv` (gitignored).
 
+**4. Explain one tool.** `pnpm audit:cli explain <SLUG>` is a single-tool deep-dive: no network, no
+LLM calls, reads the local snapshot and the on-disk LLM cache only.
+
+```sh
+pnpm audit:cli explain GMAIL_SEND_EMAIL --snapshot fixtures/catalog/trimmed
+```
+
+Prints the toolkit; the raw `tags[]` mapped onto the 7 known hints via `deriveHints` (plus any
+unknown raw tags); the derived tier (`deriveTier`, always "derived" — D20/D22); the rule
+classifier's class/confidence/reasons (`classifyTool`); the LLM cache state for the current model
+(`--model`, else `$CLASSIFIER_MODEL`, else `claude-sonnet-5`) and `PROMPT_VERSION` — `live` (a real
+Batches verdict), `recorded` (labelled `recorded-synthetic — NOT a model verdict`, D31: never
+presented as the LLM's own class), or `miss`; the GAP and single-gap flags (D2; a recorded cache
+entry never counts toward GAP); and the spot-check label + rationale when the slug is hand-labelled
+in `fixtures/labels/spotcheck.json`. An unknown slug exits 2 and lists the 5 closest slugs. Pass
+`--json` for the same data as JSON.
+
 **Current CLI state** (see `packages/audit/src/program.ts`, `classifyCommand.ts`):
 
 | command            | status                                                                                                                                                      |
@@ -120,6 +137,7 @@ per-tool CSV goes to `reports/full/tools.csv` (gitignored).
 | `classify --rules` | works: rule classifier table (`rules.ts`) with derived tier; default `classify` runs rules then LLM                                                         |
 | `report`           | works: stamped `reports/REPORT.md` + `report.json`; rules-only until a live LLM pass (D31)                                                                  |
 | `all`              | works: fetch -> `classify --rules` -> report, stops at the first failure; `--offline` skips fetch and writes to `reports/offline/`; `--live`/`--llm` exit 2 |
+| `explain <slug>`   | works: hints/tier/rule/LLM-cache-state/GAP for one tool, offline (cache + snapshot only); `--json` for machine-readable output                              |
 
 ### Mock inbox (zero keys)
 
