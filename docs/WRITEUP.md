@@ -11,8 +11,8 @@ exactly that flag.
 Composio tags every tool with MCP-style hints (`readOnlyHint`, `destructiveHint`, `createHint` and
 so on), and Enhanced Controls groups tools into Read / Write / Destructive tiers. Those describe
 what an action changes. They don't say whether it can be undone, which is what an agent gate needs
-to know. A delivered email deletes nothing, so it isn't "destructive", but it can't
-be taken back either. `GMAIL_SEND_EMAIL` is tagged `important`, `openWorldHint` and `createHint`,
+to know. A delivered email deletes nothing, so it isn't "destructive", but it can't be taken back
+either. `GMAIL_SEND_EMAIL` is tagged `important`, `openWorldHint` and `createHint`,
 with no `destructiveHint` [snapshot 2026-09-24, @composio/core 0.21.0](../skilleddocs/plan.md).
 
 So I built [tool-reversibility](../README.md) to measure that gap across the catalog.
@@ -81,7 +81,8 @@ default.
 
 `pnpm demo:agent` runs a scripted agent (no LLM, mock session by default) that tries to send an
 email. Its tools come from `session.tools()` with a `beforeExecute` guard, which throws and queues
-a pending row for the live inbox, so nothing is sent. This is a proposal queue, not a server-side gate. The hook relies on
+a pending row for the live inbox, so nothing is sent.
+This is a proposal queue, not a server-side gate. The hook relies on
 undocumented `@composio/core` 0.21.0 behaviour, and a caller that uses `session.execute()` directly
 skips it entirely. That limit is the argument for putting this in Composio itself.
 
