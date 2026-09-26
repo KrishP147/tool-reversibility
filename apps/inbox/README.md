@@ -94,8 +94,8 @@ queues a pending row in `.data/live.db`, so the send never runs.
   execute. No key, no network.
 - **`--live`.** A real Composio session (needs `COMPOSIO_API_KEY`), using a small agentic
   provider: the default provider drops the execute fn, so the modifier would never fire.
-- **Other db.** `DEMO_DB=<dir>/.data/live.db` or `--db <dir>/.data/live.db`. The path must end in
-  `.data/live.db` because `approvalGuard` always writes to `<cwd>/.data/live.db`.
+- **Other db.** `DEMO_DB=<any path>` or `--db <any path>` — `makeApprovalGuard` takes any `dbPath`
+  (issue #31); default is still `<cwd>/.data/live.db`.
 - **Then.** The live list needs no key to show the row. Approve without a key shows a banner and
   the row stays pending (plan.md D43); with a key it sends for real.
 
