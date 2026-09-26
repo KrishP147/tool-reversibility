@@ -19,9 +19,13 @@ Write-up: [Can this agent action be undone?](docs/WRITEUP.md)
 
 Not affiliated with Composio. MIT licensed.
 
-<!-- TODO(Krish): replace with the inbox demo GIF -->
+![Inbox list](docs/img/list.png)
+![Send action detail](docs/img/detail-send.png)
+![Approved decision](docs/img/approved.png)
+![Update action diff](docs/img/detail-update.png)
 
-_Demo GIF: coming soon._
+_The mock inbox: pending actions, a send preview, an approve confirmation, and an update diff._
+A GIF/Loom walkthrough is a user step (not automated here).
 
 ## Headline
 
