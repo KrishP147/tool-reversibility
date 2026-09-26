@@ -14,3 +14,4 @@ next-env.d.ts
 .pnpm-store/
 apps/inbox/.data/
 reports/full/
+reports/offline/
