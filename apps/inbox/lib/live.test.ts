@@ -38,25 +38,60 @@ afterEach(() => {
 });
 
 describe("approvalGuard", () => {
-  it("enqueues a pending row and throws ApprovalRequiredError", async () => {
+  it("enqueues a pending row and throws ApprovalRequiredError with toolkitSlug+params", async () => {
     insertPendingMock.mockReturnValue("live-123");
     const { approvalGuard, ApprovalRequiredError } = await import("./live");
 
+    const params = { to: "a@b.com" };
+    let caught: InstanceType<typeof ApprovalRequiredError> | undefined;
+    try {
+      await approvalGuard({
+        toolSlug: "GMAIL_SEND_EMAIL",
+        toolkitSlug: "gmail",
+        sessionId: "session-1",
+        params,
+      });
+    } catch (err) {
+      caught = err as InstanceType<typeof ApprovalRequiredError>;
+    }
+
+    expect(caught).toBeInstanceOf(ApprovalRequiredError);
+    expect(caught?.toolSlug).toBe("GMAIL_SEND_EMAIL");
+    expect(caught?.toolkitSlug).toBe("gmail");
+    expect(caught?.pendingId).toBe("live-123");
+    expect(caught?.params).toEqual(params);
+
+    expect(insertPendingMock).toHaveBeenCalledTimes(1);
+    expect(insertPendingMock).toHaveBeenCalledWith(
+      {
+        slug: "GMAIL_SEND_EMAIL",
+        toolkitSlug: "gmail",
+        payload: { to: "a@b.com" },
+      },
+      undefined,
+    );
+  });
+});
+
+describe("makeApprovalGuard", () => {
+  it("passes dbPath through to insertPending; default guard passes undefined", async () => {
+    insertPendingMock.mockReturnValue("live-456");
+    const { makeApprovalGuard } = await import("./live");
+
+    const guard = makeApprovalGuard({ dbPath: "/tmp/custom.db" });
     await expect(
-      approvalGuard({
+      guard({
         toolSlug: "GMAIL_SEND_EMAIL",
         toolkitSlug: "gmail",
         sessionId: "session-1",
         params: { to: "a@b.com" },
       }),
-    ).rejects.toBeInstanceOf(ApprovalRequiredError);
+    ).rejects.toMatchObject({ pendingId: "live-456" });
 
-    expect(insertPendingMock).toHaveBeenCalledTimes(1);
-    expect(insertPendingMock).toHaveBeenCalledWith({
-      slug: "GMAIL_SEND_EMAIL",
-      toolkitSlug: "gmail",
-      payload: { to: "a@b.com" },
-    });
+    expect(insertPendingMock).toHaveBeenCalledWith(
+      { slug: "GMAIL_SEND_EMAIL", toolkitSlug: "gmail", payload: { to: "a@b.com" } },
+      "/tmp/custom.db",
+    );
   });
 });
 
