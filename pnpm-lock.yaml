@@ -32,6 +32,9 @@ importers:
 
   apps/inbox:
     dependencies:
+      '@composio/core':
+        specifier: 0.21.0
+        version: 0.21.0(zod@4.6.5)
       next:
         specifier: ^15.1.3
         version: 15.5.26(@babel/core@7.29.7)(@types/node@22.20.4)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)

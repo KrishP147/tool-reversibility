@@ -1,16 +1,21 @@
 import { ActionList } from "./components/ActionList";
+import { ProposeForm } from "./components/ProposeForm";
+import { proposeAction } from "./actions/propose";
 import { getInboxMode } from "../lib/mode";
+import { loadLivePendingActions } from "../lib/livePending";
 import { loadPendingActions } from "../lib/pending";
 import { loadReport } from "../lib/report";
 
-// fixtures/pending and reports/report.json can change between requests
-// (mock mode is meant to be re-run locally), so this is never statically
-// prerendered at build.
+// fixtures/pending, reports/report.json and (in live mode) the live store
+// can all change between requests, so this is never statically prerendered
+// at build.
 export const dynamic = "force-dynamic";
 
-export default function HomePage() {
+export default async function HomePage() {
   const mode = getInboxMode();
-  const actions = loadPendingActions();
+  const fixtureActions = loadPendingActions();
+  const live = await loadLivePendingActions();
+  const actions = [...fixtureActions, ...live.actions];
   const report = loadReport();
 
   return (
@@ -26,6 +31,14 @@ export default function HomePage() {
           pipeline (issue #5) to replace it with a real one.
         </p>
       )}
+
+      {live.error && (
+        <p className="rounded border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800">
+          Live mode failed to load pending actions ({live.error}); showing fixtures only.
+        </p>
+      )}
+
+      {mode === "live" && <ProposeForm propose={proposeAction} />}
 
       <ActionList actions={actions} report={report} />
     </main>
