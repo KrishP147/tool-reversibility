@@ -1,0 +1,315 @@
+import { existsSync, readFileSync } from "node:fs";
+import path from "node:path";
+import { findRepoRoot } from "./repoRoot";
+
+/**
+ * Read-only slices of `reports/report.json` for the `/gaps` pages (issue
+ * #35). Deliberately independent of `lib/report.ts`: that module's
+ * `Report`/`ToolReport` types cover only the per-action lookup the inbox
+ * list/detail views need, and don't carry the report's `stamp`, `totals`,
+ * `perToolkit` or `topGaps` blocks (plan.md §3b, §15 D36/D37). Rather than
+ * widen that contract, this file reads the same file itself and returns
+ * only bounded slices a server component needs -- never the full parsed
+ * report or the 1600+-entry `tools` array -- so nothing here ships the full
+ * JSON to the client.
+ *
+ * Stub-safe (issue #35 acceptance): a missing `reports/report.json`, or one
+ * with `stub: true`, resolves to `{ available: false }` everywhere below.
+ * This never falls back to the bundled `lib/stub/report.stub.json` the way
+ * `lib/report.ts` does for the inbox list -- that stub has no `stamp`,
+ * `totals`, `perToolkit` or `topGaps`, so there is nothing gap-shaped to
+ * show, and "no report yet" is the honest state (plan.md D31/D36: no
+ * invented Composio numbers).
+ */
+
+export type GapsLlmStatus = "live" | "recorded" | "pending" | string;
+
+export interface GapsStamp {
+  date: string;
+  commit: string;
+  llmStatus: GapsLlmStatus;
+  model: string;
+  generatedAt?: string;
+}
+
+export interface GapsTotals {
+  tools: number;
+  toolkits: number;
+  deprecatedExcluded: number;
+}
+
+/** One row of the top-50 single-classifier gaps table, enriched from the
+ * matching `tools[]` entry (topGaps rows carry confidence/tags but not
+ * tier/hints/reasons, which live only on the full per-tool entry). */
+export interface GapsTableRow {
+  slug: string;
+  toolkit: string;
+  ruleClass: string;
+  confidence: number;
+  /** Hint tags that are `true` for this tool (e.g. "openWorldHint"). */
+  hints: string[];
+  tier: string;
+  tierSource: string;
+  reasons: string[];
+}
+
+export interface ToolkitSummaryRow {
+  toolkit: string;
+  tools: number;
+  irreversible: number;
+  gap: number;
+}
+
+export type GapsSummary =
+  | { available: false; note: string }
+  | {
+      available: true;
+      stamp: GapsStamp;
+      llmStatusLabel: string;
+      totals: GapsTotals;
+      topGaps: GapsTableRow[];
+      perToolkit: ToolkitSummaryRow[];
+    };
+
+export interface GapSpotcheck {
+  label: string;
+  rationale: string;
+}
+
+export interface GapDetail {
+  slug: string;
+  toolkit: string;
+  ruleClass: string;
+  ruleConfidence: number | null;
+  reasons: string[];
+  hints: Record<string, boolean>;
+  tier: string;
+  tierSource: string;
+  llmClass: string | null;
+  llmStatus: GapsLlmStatus;
+  llmStatusLabel: string;
+  agree: boolean;
+  compensatingTool?: string;
+  /** rules irreversible, no destructiveHint (mirrors `audit:cli explain`'s
+   * single-gap flag, plan.md D2/D46). */
+  singleGap: boolean;
+  /** rules + live LLM both irreversible, no destructiveHint. A "recorded"
+   * (synthetic) llmClass never counts, per D31/D46. */
+  gap: boolean;
+  spotcheck: GapSpotcheck | null;
+}
+
+export type GapDetailResult =
+  { status: "no-report" } | { status: "not-found" } | { status: "ok"; detail: GapDetail };
+
+/** The 8 Enhanced Controls apps this page reports per-toolkit (plan.md §3b),
+ * in the order they should be displayed. */
+export const GAPS_TOOLKITS = [
+  "gmail",
+  "outlook",
+  "slack",
+  "googlesheets",
+  "googlecalendar",
+  "googledrive",
+  "github",
+  "notion",
+] as const;
+
+const NO_REPORT_NOTE = "No report yet — run the audit pipeline (issue #5) to produce one.";
+
+interface RawTool {
+  slug: string;
+  toolkit: string;
+  ruleClass: string;
+  llmClass: string;
+  agree: boolean;
+  hints?: Record<string, boolean>;
+  tier: string;
+  tierSource: string;
+  reasons: string[];
+  ruleConfidence?: number;
+  compensatingTool?: string;
+}
+
+interface RawTopGapRow {
+  slug: string;
+  toolkit: string;
+  ruleClass: string;
+  llmClass: string | null;
+  confidence: number;
+  important: boolean;
+  tags: string[];
+  reason: string;
+}
+
+interface RawReport {
+  stub?: boolean;
+  stamp?: GapsStamp;
+  totals?: GapsTotals;
+  perToolkit?: Record<string, { tools: number; rulesIrreversible: number; singleGap: number }>;
+  topGaps?: { kind: string; rows: RawTopGapRow[] };
+  tools?: RawTool[];
+}
+
+interface RawLabel {
+  slug: string;
+  label: string;
+  rationale: string;
+}
+
+interface RawLabelsFile {
+  labels?: RawLabel[];
+}
+
+// Module-level cache (per resolved file path): the report and label files
+// are read from disk once per process, not once per request/render.
+const reportCache = new Map<string, RawReport | null>();
+const labelsCache = new Map<string, RawLabel[]>();
+
+function readJson<T>(filePath: string): T | null {
+  if (!existsSync(filePath)) return null;
+  try {
+    return JSON.parse(readFileSync(filePath, "utf-8")) as T;
+  } catch {
+    return null;
+  }
+}
+
+function readRawReport(repoRoot: string): RawReport | null {
+  const reportPath = path.join(repoRoot, "reports", "report.json");
+  if (reportCache.has(reportPath)) return reportCache.get(reportPath) ?? null;
+
+  const parsed = readJson<RawReport>(reportPath);
+  reportCache.set(reportPath, parsed);
+  return parsed;
+}
+
+function readLabels(repoRoot: string): RawLabel[] {
+  const labelsPath = path.join(repoRoot, "fixtures", "labels", "spotcheck.json");
+  if (labelsCache.has(labelsPath)) return labelsCache.get(labelsPath) ?? [];
+
+  const parsed = readJson<RawLabelsFile>(labelsPath);
+  const labels = parsed?.labels ?? [];
+  labelsCache.set(labelsPath, labels);
+  return labels;
+}
+
+/** "live" is the only state that means llmClass/gap are real model output
+ * (plan.md D31); everything else (including a missing status) is rules-only. */
+export function llmStatusLabel(llmStatus: string | undefined): string {
+  return llmStatus === "live" ? "live" : "rules-only — LLM pending";
+}
+
+function isUsableReport(raw: RawReport | null): raw is RawReport & {
+  stamp: GapsStamp;
+  totals: GapsTotals;
+  perToolkit: NonNullable<RawReport["perToolkit"]>;
+  topGaps: NonNullable<RawReport["topGaps"]>;
+  tools: RawTool[];
+} {
+  return (
+    raw !== null &&
+    raw.stub !== true &&
+    raw.stamp !== undefined &&
+    raw.totals !== undefined &&
+    raw.perToolkit !== undefined &&
+    raw.topGaps !== undefined &&
+    Array.isArray(raw.tools)
+  );
+}
+
+function trueHintKeys(hints: Record<string, boolean> | undefined): string[] {
+  if (!hints) return [];
+  return Object.keys(hints).filter((key) => hints[key] === true);
+}
+
+/** Server-side summary for the `/gaps` list page: stamp, totals, the
+ * top-50 single-classifier gaps table and the per-toolkit breakdown for the
+ * 8 Enhanced Controls apps. Never throws; `available: false` when there is
+ * no real report yet. */
+export function getGapsSummary(repoRoot: string = findRepoRoot()): GapsSummary {
+  const raw = readRawReport(repoRoot);
+  if (!isUsableReport(raw)) {
+    return { available: false, note: NO_REPORT_NOTE };
+  }
+
+  const toolsBySlug = new Map(raw.tools.map((tool) => [tool.slug, tool]));
+
+  const topGaps: GapsTableRow[] = raw.topGaps.rows.slice(0, 50).map((row) => {
+    const tool = toolsBySlug.get(row.slug);
+    return {
+      slug: row.slug,
+      toolkit: row.toolkit,
+      ruleClass: row.ruleClass,
+      confidence: row.confidence,
+      hints: trueHintKeys(tool?.hints),
+      tier: tool?.tier ?? "unknown",
+      tierSource: tool?.tierSource ?? "derived",
+      reasons: tool?.reasons ?? [row.reason],
+    };
+  });
+
+  const perToolkit: ToolkitSummaryRow[] = GAPS_TOOLKITS.map((toolkit) => {
+    const entry = raw.perToolkit[toolkit];
+    return {
+      toolkit,
+      tools: entry?.tools ?? 0,
+      irreversible: entry?.rulesIrreversible ?? 0,
+      gap: entry?.singleGap ?? 0,
+    };
+  });
+
+  return {
+    available: true,
+    stamp: raw.stamp,
+    llmStatusLabel: llmStatusLabel(raw.stamp.llmStatus),
+    totals: raw.totals,
+    topGaps,
+    perToolkit,
+  };
+}
+
+/** Server-side detail for `/gaps/[slug]`: the fields `audit:cli explain`
+ * prints (plan.md D46), read from report.json + the spot-check labels only
+ * -- no CLI call. Never throws: `no-report` when there's no real report,
+ * `not-found` when the slug isn't in it. */
+export function getGapDetail(slug: string, repoRoot: string = findRepoRoot()): GapDetailResult {
+  const raw = readRawReport(repoRoot);
+  if (!isUsableReport(raw)) {
+    return { status: "no-report" };
+  }
+
+  const tool = raw.tools.find((t) => t.slug === slug);
+  if (!tool) {
+    return { status: "not-found" };
+  }
+
+  const hints = tool.hints ?? {};
+  const singleGap = tool.ruleClass === "irreversible" && hints.destructiveHint !== true;
+  const llmStatus = raw.stamp.llmStatus;
+  const gap = singleGap && llmStatus === "live" && tool.llmClass === "irreversible";
+
+  const label = readLabels(repoRoot).find((l) => l.slug === slug);
+
+  return {
+    status: "ok",
+    detail: {
+      slug: tool.slug,
+      toolkit: tool.toolkit,
+      ruleClass: tool.ruleClass,
+      ruleConfidence: tool.ruleConfidence ?? null,
+      reasons: tool.reasons,
+      hints,
+      tier: tool.tier,
+      tierSource: tool.tierSource,
+      llmClass: tool.llmClass ?? null,
+      llmStatus,
+      llmStatusLabel: llmStatusLabel(llmStatus),
+      agree: tool.agree,
+      compensatingTool: tool.compensatingTool,
+      singleGap,
+      gap,
+      spotcheck: label ? { label: label.label, rationale: label.rationale } : null,
+    },
+  };
+}
