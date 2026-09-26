@@ -33,7 +33,7 @@ export function GapsTable({ rows }: { rows: GapsTableRow[] }) {
             </td>
             <td className="pr-4 py-2">{row.toolkit}</td>
             <td className="pr-4 py-2">{row.ruleClass}</td>
-            <td className="pr-4 py-2">{row.confidence}</td>
+            <td className="pr-4 py-2">{Number(row.confidence.toFixed(2))}</td>
             <td className="pr-4 py-2 text-xs text-gray-600">
               {row.hints.length > 0 ? row.hints.join(", ") : "(none)"}
             </td>

@@ -63,7 +63,9 @@ export function GapDetail({ detail }: { detail: GapDetailData }) {
         <h2 className="text-xs font-medium uppercase text-gray-500">Rule classifier</h2>
         <p className="text-sm">
           class: {detail.ruleClass}
-          {detail.ruleConfidence !== null && <> &middot; confidence: {detail.ruleConfidence}</>}
+          {detail.ruleConfidence !== null && (
+            <> &middot; confidence: {Number(detail.ruleConfidence.toFixed(2))}</>
+          )}
         </p>
         {detail.reasons.length > 0 && (
           <ul className="mt-1 list-disc pl-4 text-xs text-gray-600">

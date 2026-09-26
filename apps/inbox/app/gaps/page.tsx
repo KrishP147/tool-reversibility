@@ -13,7 +13,7 @@ export default function GapsPage() {
   const summary = getGapsSummary();
 
   return (
-    <main className="mx-auto max-w-4xl space-y-6 p-8">
+    <main className="mx-auto max-w-6xl space-y-6 p-8">
       <div>
         <a href="/" className="text-sm text-blue-600 hover:underline">
           &larr; Back to inbox
