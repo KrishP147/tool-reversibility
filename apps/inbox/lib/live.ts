@@ -129,6 +129,10 @@ export async function executeApproved(id: string): Promise<ExecuteApprovedResult
   if (!row) {
     throw new Error(`Unknown live pending action: ${id}`);
   }
+  if (row.status !== "pending") {
+    // Never re-execute: an approved row already ran (possibly irreversibly).
+    throw new Error(`Live pending action ${id} is already ${row.status}`);
+  }
 
   try {
     const { session } = await getLiveSession();
