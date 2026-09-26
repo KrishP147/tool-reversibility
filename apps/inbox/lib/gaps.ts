@@ -40,7 +40,12 @@ export interface GapsTotals {
 
 /** One row of the top-50 single-classifier gaps table, enriched from the
  * matching `tools[]` entry (topGaps rows carry confidence/tags but not
- * tier/hints/reasons, which live only on the full per-tool entry). */
+ * tier/hints/reasons, which live only on the full per-tool entry).
+ *
+ * `tools[]` only holds the Enhanced Controls apps plus pending slugs -- not
+ * every slug that can appear in `topGaps.rows`. When a row's slug isn't in
+ * `tools[]`, `tier`/`tierSource` are `null` (never invented) and `hints` is
+ * derived from the row's own `tags` instead. */
 export interface GapsTableRow {
   slug: string;
   toolkit: string;
@@ -48,8 +53,8 @@ export interface GapsTableRow {
   confidence: number;
   /** Hint tags that are `true` for this tool (e.g. "openWorldHint"). */
   hints: string[];
-  tier: string;
-  tierSource: string;
+  tier: string | null;
+  tierSource: string | null;
   reasons: string[];
 }
 
@@ -83,8 +88,10 @@ export interface GapDetail {
   ruleConfidence: number | null;
   reasons: string[];
   hints: Record<string, boolean>;
-  tier: string;
-  tierSource: string;
+  /** `null` when this slug isn't in the report's `tools[]` slice (see
+   * `partial`) -- never invented from the topGaps row alone. */
+  tier: string | null;
+  tierSource: string | null;
   llmClass: string | null;
   llmStatus: GapsLlmStatus;
   llmStatusLabel: string;
@@ -97,6 +104,11 @@ export interface GapDetail {
    * (synthetic) llmClass never counts, per D31/D46. */
   gap: boolean;
   spotcheck: GapSpotcheck | null;
+  /** true when this detail was built from a `topGaps.rows` entry that has
+   * no matching `tools[]` entry -- only the row's own fields are real,
+   * `tier`/`tierSource` are unknown and `agree`/`compensatingTool` are
+   * derived, not sourced from a full per-tool record. */
+  partial?: boolean;
 }
 
 export type GapDetailResult =
@@ -223,6 +235,30 @@ function trueHintKeys(hints: Record<string, boolean> | undefined): string[] {
   return Object.keys(hints).filter((key) => hints[key] === true);
 }
 
+/** The hint-tag names that also appear as `tools[].hints` keys (plan.md
+ * §3b). `topGaps.rows[].tags` mixes these in with unrelated category tags
+ * (toolkit-specific scope names like "email"/"repos"/"admin.users"); this is
+ * how a fallback row (slug not in `tools[]`) tells hints from noise. */
+const HINT_TAG_NAMES = new Set([
+  "readOnlyHint",
+  "destructiveHint",
+  "idempotentHint",
+  "openWorldHint",
+  "createHint",
+  "updateHint",
+  "important",
+]);
+
+/** Builds a `tag -> true` hints record from a topGaps row's `tags`,
+ * keeping only the tags that are actually hint names. */
+function hintsFromTags(tags: string[]): Record<string, boolean> {
+  const hints: Record<string, boolean> = {};
+  for (const tag of tags) {
+    if (HINT_TAG_NAMES.has(tag)) hints[tag] = true;
+  }
+  return hints;
+}
+
 /** Server-side summary for the `/gaps` list page: stamp, totals, the
  * top-50 single-classifier gaps table and the per-toolkit breakdown for the
  * 8 Enhanced Controls apps. Never throws; `available: false` when there is
@@ -237,15 +273,30 @@ export function getGapsSummary(repoRoot: string = findRepoRoot()): GapsSummary {
 
   const topGaps: GapsTableRow[] = raw.topGaps.rows.slice(0, 50).map((row) => {
     const tool = toolsBySlug.get(row.slug);
+    if (tool) {
+      return {
+        slug: row.slug,
+        toolkit: row.toolkit,
+        ruleClass: row.ruleClass,
+        confidence: row.confidence,
+        hints: trueHintKeys(tool.hints),
+        tier: tool.tier,
+        tierSource: tool.tierSource,
+        reasons: tool.reasons,
+      };
+    }
+    // Fallback: this slug isn't in the report's `tools[]` slice (it only
+    // holds Enhanced Controls apps + pending slugs, not every topGaps
+    // slug). Don't invent a tier -- null renders as "--" (see GapsTable).
     return {
       slug: row.slug,
       toolkit: row.toolkit,
       ruleClass: row.ruleClass,
       confidence: row.confidence,
-      hints: trueHintKeys(tool?.hints),
-      tier: tool?.tier ?? "unknown",
-      tierSource: tool?.tierSource ?? "derived",
-      reasons: tool?.reasons ?? [row.reason],
+      hints: Object.keys(hintsFromTags(row.tags)),
+      tier: null,
+      tierSource: null,
+      reasons: [row.reason],
     };
   });
 
@@ -280,36 +331,72 @@ export function getGapDetail(slug: string, repoRoot: string = findRepoRoot()): G
   }
 
   const tool = raw.tools.find((t) => t.slug === slug);
-  if (!tool) {
+  const llmStatus = raw.stamp.llmStatus;
+  const label = readLabels(repoRoot).find((l) => l.slug === slug);
+
+  if (tool) {
+    const hints = tool.hints ?? {};
+    const singleGap = tool.ruleClass === "irreversible" && hints.destructiveHint !== true;
+    const gap = singleGap && llmStatus === "live" && tool.llmClass === "irreversible";
+
+    return {
+      status: "ok",
+      detail: {
+        slug: tool.slug,
+        toolkit: tool.toolkit,
+        ruleClass: tool.ruleClass,
+        ruleConfidence: tool.ruleConfidence ?? null,
+        reasons: tool.reasons,
+        hints,
+        tier: tool.tier,
+        tierSource: tool.tierSource,
+        llmClass: tool.llmClass ?? null,
+        llmStatus,
+        llmStatusLabel: llmStatusLabel(llmStatus),
+        agree: tool.agree,
+        compensatingTool: tool.compensatingTool,
+        singleGap,
+        gap,
+        spotcheck: label ? { label: label.label, rationale: label.rationale } : null,
+      },
+    };
+  }
+
+  // Fallback: slug is in `topGaps.rows` but not in the report's `tools[]`
+  // slice. Build an "ok" detail from the row alone rather than 404 --
+  // `tools[]` only covers Enhanced Controls apps + pending slugs, so most of
+  // the top-50 gaps table's own slugs land here. `tier` is never invented;
+  // `agree` mirrors packages/audit/src/report.ts's own definition
+  // (llmClass !== null && llmClass === ruleClass), same as a full row.
+  const row = raw.topGaps.rows.find((r) => r.slug === slug);
+  if (!row) {
     return { status: "not-found" };
   }
 
-  const hints = tool.hints ?? {};
-  const singleGap = tool.ruleClass === "irreversible" && hints.destructiveHint !== true;
-  const llmStatus = raw.stamp.llmStatus;
-  const gap = singleGap && llmStatus === "live" && tool.llmClass === "irreversible";
-
-  const label = readLabels(repoRoot).find((l) => l.slug === slug);
+  const hints = hintsFromTags(row.tags);
+  const singleGap = row.ruleClass === "irreversible" && hints.destructiveHint !== true;
+  const gap = singleGap && llmStatus === "live" && row.llmClass === "irreversible";
 
   return {
     status: "ok",
     detail: {
-      slug: tool.slug,
-      toolkit: tool.toolkit,
-      ruleClass: tool.ruleClass,
-      ruleConfidence: tool.ruleConfidence ?? null,
-      reasons: tool.reasons,
+      slug: row.slug,
+      toolkit: row.toolkit,
+      ruleClass: row.ruleClass,
+      ruleConfidence: row.confidence ?? null,
+      reasons: [row.reason],
       hints,
-      tier: tool.tier,
-      tierSource: tool.tierSource,
-      llmClass: tool.llmClass ?? null,
+      tier: null,
+      tierSource: null,
+      llmClass: row.llmClass,
       llmStatus,
       llmStatusLabel: llmStatusLabel(llmStatus),
-      agree: tool.agree,
-      compensatingTool: tool.compensatingTool,
+      agree: row.llmClass !== null && row.llmClass === row.ruleClass,
+      compensatingTool: undefined,
       singleGap,
       gap,
       spotcheck: label ? { label: label.label, rationale: label.rationale } : null,
+      partial: true,
     },
   };
 }
