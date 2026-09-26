@@ -67,4 +67,25 @@ describe("GapDetail", () => {
     render(<GapDetail detail={{ ...detail, hints: {} }} />);
     expect(screen.getByText("(none)")).toBeTruthy();
   });
+
+  it("renders a partial note and the tier fallback for a slug not in tools[]", () => {
+    render(
+      <GapDetail
+        detail={{
+          ...detail,
+          tier: null,
+          tierSource: null,
+          partial: true,
+        }}
+      />,
+    );
+
+    expect(screen.getByTestId("gaps-partial-note")).toBeTruthy();
+    expect(screen.getByText("— (not in report's tools[] slice)")).toBeTruthy();
+  });
+
+  it("renders no partial note when partial is not set", () => {
+    render(<GapDetail detail={detail} />);
+    expect(screen.queryByTestId("gaps-partial-note")).toBeNull();
+  });
 });
