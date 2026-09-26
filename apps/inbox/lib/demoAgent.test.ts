@@ -41,6 +41,7 @@ describe("runDemo (mock session, real approvalGuard)", () => {
     expect(error).toBeInstanceOf(ApprovalRequiredError);
     expect(error.toolSlug).toBe(DEMO_TOOL_SLUG);
     expect(error.pendingId).toBe(row.id);
+    expect(error.params).toEqual(DEMO_PARAMS);
 
     expect(row).toMatchObject({
       slug: DEMO_TOOL_SLUG,
