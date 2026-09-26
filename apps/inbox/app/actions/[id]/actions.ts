@@ -68,6 +68,9 @@ export async function decideOnAction(
   if (!row) {
     throw new Error(`Unknown pending action: ${id}`);
   }
+  if (row.status !== "pending") {
+    throw new Error(`Pending action ${id} is already ${row.status}`);
+  }
 
   if (decision === "approve") {
     const { executeApproved } = await import("../../../lib/live");

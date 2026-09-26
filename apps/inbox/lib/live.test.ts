@@ -133,4 +133,13 @@ describe("executeApproved", () => {
     expect(result.error).toBe("composio boom");
     expect(result.payloadHash).toBe("hash-fail");
   });
+
+  it("never re-executes a row that is no longer pending", async () => {
+    getPendingMock.mockReturnValue({ ...row, status: "approved" });
+
+    const { executeApproved } = await import("./live");
+    await expect(executeApproved(row.id)).rejects.toThrow(/already approved/);
+    expect(executeMock).not.toHaveBeenCalled();
+    expect(insertAuditMock).not.toHaveBeenCalled();
+  });
 });
