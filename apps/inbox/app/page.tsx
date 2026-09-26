@@ -23,6 +23,9 @@ export default async function HomePage() {
       <div>
         <h1 className="text-2xl font-semibold">tool-reversibility inbox</h1>
         <p className="text-sm text-gray-500">mode: {mode}</p>
+        <a href="/gaps" className="text-sm text-blue-600 hover:underline">
+          Reversibility gaps &rarr;
+        </a>
       </div>
 
       {report.stub && (

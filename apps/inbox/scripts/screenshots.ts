@@ -175,6 +175,12 @@ async function main() {
         const detailUpdatePath = path.join(IMG_DIR, "detail-update.png");
         await page.screenshot({ path: detailUpdatePath, type: "png", fullPage: false });
         assertSmallEnough(detailUpdatePath);
+
+        console.log("Capturing gaps.png...");
+        await page.goto(`${base}/gaps`, { waitUntil: "networkidle" });
+        const gapsPath = path.join(IMG_DIR, "gaps.png");
+        await page.screenshot({ path: gapsPath, type: "png", fullPage: false });
+        assertSmallEnough(gapsPath);
       } finally {
         await context.close();
       }
