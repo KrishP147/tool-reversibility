@@ -6,7 +6,7 @@
 
 ## Summary
 
-`@composio/core@0.21.0`.
+`@composio/core@0.21.0`, still reproduces on `0.22.0` and on `next` at 2a1e9001 (`ToolSchema.parse` in `transformToolCases`, `items`/`exclusiveMinimum`/top-level `type` unchanged in `tool.types.ts`).
 
 `Tools.getRawComposioTools({ toolkits })` runs every tool's `inputParameters` through `ToolSchema.parse` in `transformToolCases` (not `safeParse`). If one tool's `inputParameters` doesn't conform (boolean JSON-schema node, draft-04-style boolean keyword, top-level `oneOf`/`allOf` with no `type: "object"`), the whole call throws and no tools for that toolkit return. #3354/#3397 normalized *empty* `input_parameters`/`output_parameters` before strict validation, but left non-empty malformed schemas unchanged.
 
@@ -40,4 +40,4 @@ Expected: tools returned, non-conforming per-tool schemas tolerated or skipped. 
 
 ## Duplicate check
 
-Searched `gh search issues --repo ComposioHQ/composio schema getRawComposioTools`, plus "ZodError inputParameters", "boolean schema", "ToolSchema" (2026-09-26). No match. Closest: #3354 (closed, fixed by #3397), same code path but for empty `outputParameters`, not malformed non-empty `inputParameters`.
+Searched `gh search issues --repo ComposioHQ/composio schema getRawComposioTools`, plus "ZodError inputParameters", "boolean schema", "ToolSchema" (2026-09-26; re-run 2026-10-05 with "exclusiveMinimum" and "Invalid literal value, expected object" added). No match. Closest: #3354 (closed, fixed by #3397), same code path but for empty `outputParameters`, not malformed non-empty `inputParameters`. Related but separate: #4750 (Google providers forward schema keywords Gemini rejects; provider-side, not the core parse).
