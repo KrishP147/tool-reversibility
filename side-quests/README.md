@@ -1,30 +1,29 @@
 # Side quests: ComposioHQ/composio
 
-Drafts for plan §6 item 9. Nothing here has been posted or pushed. Every step below is done by a human.
+Drafts for plan §6 item 9. Nothing here has been posted or pushed (as of 2026-10-05). Every step below is done by a human.
 
-Local fork checkout: `C:\Users\User\_worktrees\composio`, branch `krish/4571-google-session-parity` (off `next` at d3005fb). It has three local commits and hasn't been pushed.
+## Status (2026-10-05)
 
-| File | What it is |
-| --- | --- |
-| `4571-comment.md` | Issue-first comment for #4571, which asks for a go-ahead |
-| `4571-pr-body.md` | PR body for #4571, including the exact commands and results |
-| `4286.md` | Comment for #4286: sample or types? (proposed fix included) |
-| `4509.md` | Comment for #4509: the three questions only, no fix |
-| `sdk-schema-rejection.md` | New issue draft: `getRawComposioTools` throws for 8 toolkits on malformed `inputParameters` |
+- **#4571 superseded.** jkomyno merged ComposioHQ/composio#4675 on 2026-09-28. It adds session overloads to Google + Cloudflare `executeToolCall`, OpenAI Responses `handleResponse` and Python Google, and closes #4571. Our local fork branch `krish/4571-google-session-parity` (`C:\Users\User\_worktrees\composio`, 3 commits, never pushed) is redundant. Don't post `4571-comment.md` or `4571-pr-body.md`; they're kept as a record only.
+- **#4286 superseded.** tarunvashishth posted the same diagnosis and opened ComposioHQ/composio#4665 (widens `ToolRouterAuthorizeFn`, still open on 2026-10-05). Don't post `4286.md`.
+- **#4509 still open.** No comments yet, so `4509.md` is still postable.
+- **`sdk-schema-rejection.md` still valid.** Re-verified on `@composio/core@0.22.0` and on `next` at 2a1e9001: the same 6/8 toolkits fail offline, and the dup check was re-run with no match.
 
-## Steps
+| File | What it is | Status |
+| --- | --- | --- |
+| `4571-comment.md` | Issue-first comment for #4571 | superseded by #4675 |
+| `4571-pr-body.md` | PR body for #4571 | superseded by #4675 |
+| `4286.md` | Comment for #4286 (sample or types?) | superseded by #4665 |
+| `4509.md` | Comment for #4509: the three questions only, no fix | postable |
+| `sdk-schema-rejection.md` | New issue: `getRawComposioTools` throws for 8 toolkits on malformed `inputParameters` | postable |
 
-1. Post `4571-comment.md` on #4571, `4286.md` on #4286 and `4509.md` on #4509. Drop the leading `<!-- -->` line from each before posting.
-2. Wait for a maintainer to ack on #4571 (CONTRIBUTING.md asks for issue-first).
-3. Once it's acked, re-run the checks if `next` has moved: rebase onto `upstream/next`, then run `pnpm --filter @composio/google test` and `pnpm lint`. Then push the branch:
-   `git -C C:\Users\User\_worktrees\composio push -u origin krish/4571-google-session-parity`
-4. Open a PR from `KrishP147:krish/4571-google-session-parity` against `ComposioHQ:next`. Use the title in the header of `4571-pr-body.md` and the rest of that file as the body, then request review from @jkomyno.
-5. Python parity (the `python/providers/google` equivalent) comes only after a maintainer acks the TS PR (D14).
-6. #4286: once a maintainer picks option 1 or 2, branch `krish/4286-...` off `next` and apply that fix. Option 1 needs a patch changeset for `@composio/core`.
-7. #4509: wait for answers, and don't guess at a fix.
-8. `sdk-schema-rejection.md`: re-check for dups, then post as a new issue on ComposioHQ/composio (title from the draft's `## Title`); drop the leading `<!-- -->` line first.
+## Steps (human)
 
-## Open points to confirm with the maintainer
+1. `sdk-schema-rejection.md`: re-check for dups, drop the leading `<!-- -->` line, then post it as a new issue on ComposioHQ/composio (title from `## Title`). If a maintainer agrees with the `safeParse` + warn/skip suggestion, a fix PR off `next` (`krish/schema-safeparse`) is a natural follow-up.
+2. `4509.md`: drop the leading `<!-- -->` line and post it on #4509. Wait for answers and don't guess at a fix.
+3. Optional cleanup: delete the stale fork branch with `git -C C:\Users\User\_worktrees\composio switch next` and then `git branch -D krish/4571-google-session-parity`.
+
+## Open points from the #4571 draft (historical; #4675 resolved them)
 
 - The `@composio/core` peer lower bound for `@composio/google` stays at `>=0.16.0`, which mirrors Anthropic/OpenAI, but the change needs core >= 0.17.0. Raise it?
 - The session path returns the OpenAI-style full result, not Anthropic's `data`/`{ error }`. It was chosen to keep Google's current success payload.
