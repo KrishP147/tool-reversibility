@@ -15,3 +15,6 @@ next-env.d.ts
 apps/inbox/.data/
 reports/full/
 reports/offline/
+
+# agent planning docs and handoffs stay local
+skilleddocs/
