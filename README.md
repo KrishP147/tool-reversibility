@@ -39,9 +39,9 @@ live, the headline stays `[[pending live run]]`. How numbers are stamped and che
 [docs/stamping.md](docs/stamping.md).
 
 What is already verified, from the full catalog fetch
-[snapshot 2026-09-24, @composio/core 0.21.0](skilleddocs/plan.md): 1,562 toolkits and 56,216 tools, 659 of them deprecated.
+[snapshot 2026-09-24, @composio/core 0.21.0](docs/snapshot.md): 1,562 toolkits and 56,216 tools, 659 of them deprecated.
 `GMAIL_SEND_EMAIL` is tagged `important`, `openWorldHint` and `createHint`, and has no
-`destructiveHint` [snapshot 2026-09-24, @composio/core 0.21.0](skilleddocs/plan.md).
+`destructiveHint` [snapshot 2026-09-24, @composio/core 0.21.0](docs/snapshot.md).
 
 ## How it works
 
@@ -114,7 +114,7 @@ It prints the tool and request counts, estimated tokens and the Batch-priced dol
 `reports/report.json`, stamped with date, commit, SDK version, model, LLM status, prompt version,
 manifest hash and the regenerate command. Pass `--snapshot fixtures/catalog/<date>` for the full
 catalog. LLM columns come from the cache only, and only `live` entries count: until the approved
-live pass exists, every LLM-dependent number is `[[pending live run]]` (plan.md D31). The full
+live pass exists, every LLM-dependent number is `[[pending live run]]`. The full
 per-tool CSV goes to `reports/full/tools.csv` (gitignored).
 
 **4. Explain one tool.** `pnpm audit:cli explain <SLUG>` is a single-tool deep-dive: no network, no
@@ -146,7 +146,7 @@ in `fixtures/labels/spotcheck.json`. An unknown slug exits 2 and lists the 5 clo
 | `explain <slug>`   | works: hints/tier/rule/LLM-cache-state/GAP for one tool, offline (cache + snapshot only); `--json` for machine-readable output                              |
 
 Online `all` (no `--offline`) regenerates the committed `reports/REPORT.md` and `report.json` by
-design; there `--out` is the fetch snapshot dir, not the report dir (plan.md D45).
+design; there `--out` is the fetch snapshot dir, not the report dir.
 
 ### Mock inbox (zero keys)
 
@@ -183,7 +183,7 @@ tries `GMAIL_SEND_EMAIL` to a placeholder address; the guard throws and queues a
 `apps/inbox/.data/live.db` (override: `DEMO_DB=<any path>` or `--db <any path>`). The default session
 is a mock of `@composio/core` 0.21.0's execute path (no key, no network); `--live` uses a real
 session and needs `COMPOSIO_API_KEY`. Listing needs no key; Approve without a key shows a banner
-and the row stays pending (plan.md D43).
+and the row stays pending.
 
 ## Run on Replit
 
@@ -227,7 +227,7 @@ gap.
   74 tools, "irreversible" precision 0.667, recall 0.8 [report 2026-09-24, commit a9d50c0].
   See [reports/REPORT.md](reports/REPORT.md).
 - **The tier is derived, not Composio's.** Neither the SDK nor the REST tool objects expose the
-  Enhanced Controls tier, so it is derived from the hints (plan.md D22). The real mapping may
+  Enhanced Controls tier, so it is derived from the hints ([docs/snapshot.md](docs/snapshot.md)). The real mapping may
   differ per slug (ComposioHQ/composio#4327).
 - **Rules only until the live run.** The LLM pass costs money and waits on approval, so until it
   runs every LLM-dependent number here is `[[pending live run]]`.
@@ -238,7 +238,7 @@ gap.
 - **The trimmed fixture is a sample.** `fixtures/catalog/trimmed/` keeps a few tools per toolkit
   for tests and CI; it is not the catalog.
 - **Live mode's intercept is a client-side hook, not a server-side gate.** It only catches calls
-  routed through `session.tools()`'s `modifiers.beforeExecute` (plan.md §3b); an agent that calls
+  routed through `session.tools()`'s `modifiers.beforeExecute`; an agent that calls
   `session.execute()` directly, or any caller outside this SDK session, bypasses it entirely. This
   is a "proposal queue" pattern (the caller opts in to being intercepted), not a policy enforced by
   Composio itself. It also only fires through an agentic provider's wrapped tools. The only agent
@@ -247,8 +247,8 @@ gap.
 
 ## Origin: Zephyr
 
-The idea comes from **Zephyr** ([github.com/KrishP147/Zephyr](https://github.com/KrishP147/Zephyr),
-Devpost: TODO(Krish)), built at Hack the North 2026, where it made the top 12 of the Warp track.
+The idea comes from **Zephyr** ([github.com/KrishP147/Zephyr](https://github.com/KrishP147/Zephyr)),
+built at Hack the North 2026, where it made the top 12 of the Warp track.
 Zephyr hand-gated `GMAIL_SEND_EMAIL` as irreversible, and its Devpost feedback asked Composio for
 exactly this flag.
 
@@ -295,7 +295,7 @@ pnpm audit:cli fetch --toolkits gmail,slack,github,googlecalendar,notion --out f
 
 Tests use fake clients and recorded responses and need no keys. The live fetch test is opt-in:
 `AUDIT_LIVE=1 pnpm --filter audit test`. No secrets are needed to lint, test or build; CI runs
-gitleaks on every push and PR. Design record: [skilleddocs/plan.md](skilleddocs/plan.md).
+gitleaks on every push and PR.
 
 ## License
 

@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-// Stamp check for prose docs: no Composio number without a stamp (plan.md §4, CONTRIBUTING.md).
+// Stamp check for prose docs: no Composio number without a stamp (CONTRIBUTING.md, docs/stamping.md).
 // Plain Node, no deps. Convention: docs/stamping.md. Run: `pnpm check:stamped`.
 /* global process, console */
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-/** Snapshots whose counts were verified live (plan.md §10 D19–D24). Only these may be cited. */
+/** Snapshots whose counts were verified live (docs/snapshot.md). Only these may be cited. */
 export const KNOWN_SNAPSHOTS = [{ date: "2026-09-24", sdk: "0.21.0" }];
 
 /** Report keys the docs may reference; the contract with issue #5's reports/report.json. */

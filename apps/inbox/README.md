@@ -1,6 +1,6 @@
 # apps/inbox
 
-The approval inbox for "ask" actions (plan.md §3b): a list of pending tool calls, each with a
+The approval inbox for "ask" actions: a list of pending tool calls, each with a
 reversibility badge, a payload diff or send preview, and Approve / Reject / Edit.
 
 ## Run
@@ -20,8 +20,8 @@ pnpm --filter inbox build && pnpm --filter inbox start
 inbox reads:
 
 - `fixtures/pending/*.json` — hand-written, illustrative pending actions (`lib/pending.ts`).
-  Slugs and payload field names match the real catalog snapshot (`fixtures/catalog/`, plan.md
-  D34); values are made up, so every fixture stays marked `"illustrative": true`.
+  Slugs and payload field names match the real catalog snapshot (`fixtures/catalog/`);
+  values are made up, so every fixture stays marked `"illustrative": true`.
 - `<repoRoot>/reports/report.json` — the stamped classifier report from issue #5's
   `packages/audit` pipeline, if it exists.
 
@@ -50,7 +50,7 @@ Every Approve / Reject / Edit decision is appended to `apps/inbox/.data/audit.js
 
 `who` comes from `INBOX_USER` if set, else `"mock-user"`. The log is append-only (never
 truncated or rewritten) and is not required to exist for `build`/`start` to work. Live mode
-swaps this for SQLite (plan.md §3b); mock mode stays JSONL.
+swaps this for SQLite; mock mode stays JSONL.
 
 ## Live mode
 
@@ -97,7 +97,7 @@ queues a pending row in `.data/live.db`, so the send never runs.
 - **Other db.** `DEMO_DB=<any path>` or `--db <any path>` — `makeApprovalGuard` takes any `dbPath`
   (issue #31); default is still `<cwd>/.data/live.db`.
 - **Then.** The live list needs no key to show the row. Approve without a key shows a banner and
-  the row stays pending (plan.md D43); with a key it sends for real.
+  the row stays pending (no key, no send); with a key it sends for real.
 
 This is still a client-side hook, not a server-side gate (root README Limitations).
 
