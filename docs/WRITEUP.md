@@ -13,7 +13,7 @@ so on), and Enhanced Controls groups tools into Read / Write / Destructive tiers
 what an action changes. They don't say whether it can be undone, which is what an agent gate needs
 to know. A delivered email deletes nothing, so it isn't "destructive", but it can't be taken back
 either. `GMAIL_SEND_EMAIL` is tagged `important`, `openWorldHint` and `createHint`,
-with no `destructiveHint` [snapshot 2026-09-24, @composio/core 0.21.0](../skilleddocs/plan.md).
+with no `destructiveHint` [snapshot 2026-09-24, @composio/core 0.21.0](snapshot.md).
 
 So I built [tool-reversibility](../README.md) to measure that gap across the catalog.
 
@@ -30,7 +30,7 @@ I sort each tool into one of four classes (my classification, not ground truth):
 
 ## Method
 
-1. **Fetch.** I paged the full catalog, 1,562 toolkits and 56,216 tools [snapshot 2026-09-24, @composio/core 0.21.0](../skilleddocs/plan.md).
+1. **Fetch.** I paged the full catalog, 1,562 toolkits and 56,216 tools [snapshot 2026-09-24, @composio/core 0.21.0](snapshot.md).
 2. **Hints and tier.** Tags map to seven hint booleans. The SDK doesn't expose the Enhanced
    Controls tier on tools or toolkits, so I derive one (destructiveHint gives Destructive,
    readOnlyHint gives Read, anything else is Write) and label the column "derived".

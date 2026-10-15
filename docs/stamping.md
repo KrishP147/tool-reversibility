@@ -1,6 +1,6 @@
 # Stamping convention for Composio numbers
 
-Rule (plan.md §4, CONTRIBUTING.md): no number about Composio's catalog appears in prose unless it
+Rule (CONTRIBUTING.md): no number about Composio's catalog appears in prose unless it
 comes from a reproducible, stamped run. `pnpm check:stamped` (`scripts/check-stamped.mjs`, plain
 Node, no dependencies) enforces this on `README.md`, `PROPOSAL.md` and `docs/**/*.md`. CI runs it
 after Build, together with its `node:test` suite (`scripts/check-stamped.test.mjs`).
@@ -16,7 +16,7 @@ after Build, together with its `node:test` suite (`scripts/check-stamped.test.mj
    - `rules.byClass.<class>`, `llm.byClass.<class>`, where class is `reversible`, `compensable`,
      `irreversible` or `unknown`
    - `agreement.rate`
-   - `gap.M`, `gap.N`, `gap.P` (headline, D2) and `singleGap.rules.M|N|P`
+   - `gap.M`, `gap.N`, `gap.P` (headline gap) and `singleGap.rules.M|N|P`
    - `perToolkit.<slug>.<field>`
    - `spotcheck.n`, `spotcheck.rules.precision`, `spotcheck.rules.recall`
 
@@ -31,7 +31,7 @@ after Build, together with its `node:test` suite (`scripts/check-stamped.test.mj
 
 - Snapshot: `[snapshot YYYY-MM-DD, @composio/core X.Y.Z]`. Only snapshots listed in
   `KNOWN_SNAPSHOTS` are accepted. Today that is the 2026-09-24 full fetch with `@composio/core`
-  0.21.0 (plan.md §10, D19 to D24). A marker may be wrapped in a link to its source.
+  0.21.0 ([snapshot.md](snapshot.md)). A marker may be wrapped in a link to its source.
 - Report: `[report YYYY-MM-DD, commit <hex>]`. It must match `date` and the start of `commit` in
   the `stamp` block of `reports/report.json` (or its top level, if there is no `stamp` block).
 

@@ -7,7 +7,7 @@
  * (Tools.ts `transformToolCases`, not `safeParse`), so the first tool whose
  * `inputParameters` the schema rejects throws a ZodError with no HTTP
  * status; `fetch.ts` treats that as `fallbackReason: "sdk-error"` and falls
- * back to the raw REST list (D21, skilleddocs/plan.md).
+ * back to the raw REST list (docs/snapshot.md).
  *
  * This script re-parses the REST-shaped tools already on disk (the fallback
  * path fetched them without the SDK's zod check) through the SDK's own

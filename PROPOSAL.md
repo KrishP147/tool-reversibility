@@ -1,11 +1,3 @@
-<!--
-Posting note (remove before pasting): Krish posts this issue himself on ComposioHQ/composio, after
-the Litmus take-home is submitted and before or with the application (plan.md D12). Composio is
-issue-first, so this goes up as an issue, not a PR. Every [[pending live run]] / [[report:KEY]]
-placeholder must be filled from a stamped reports/REPORT.md first (docs/stamping.md), and
-`pnpm check:stamped` must pass.
--->
-
 # Feature request: `irreversibleHint` for tools whose effect can't be undone
 
 ## Problem
@@ -21,7 +13,7 @@ back either. MCP defines `destructiveHint: false` as "only additive updates", an
 email is additive. An agent gate keyed on `destructiveHint` or the Destructive tier lets every one
 of these through at the same level as "create a draft".
 
-Concrete case: `GMAIL_SEND_EMAIL` carries `important`, `openWorldHint` and `createHint`, and no `destructiveHint` [snapshot 2026-09-24, @composio/core 0.21.0](https://github.com/KrishP147/tool-reversibility/blob/main/skilleddocs/plan.md).
+Concrete case: `GMAIL_SEND_EMAIL` carries `important`, `openWorldHint` and `createHint`, and no `destructiveHint` [snapshot 2026-09-24, @composio/core 0.21.0](https://github.com/KrishP147/tool-reversibility/blob/main/docs/snapshot.md).
 Those are exactly the tags on `GMAIL_CREATE_EMAIL_DRAFT`, so a policy built on tags or the derived
 tier treats sending an email like saving a draft. Meanwhile `GMAIL_SEND_DRAFT`, which delivers a
 message just the same, does carry `destructiveHint` ([fixture](https://github.com/KrishP147/tool-reversibility/blob/main/fixtures/catalog/trimmed/gmail.json), [snapshot 2026-09-24, @composio/core 0.21.0]).
